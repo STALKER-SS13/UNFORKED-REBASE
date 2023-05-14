@@ -7,7 +7,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	icon = 'stalker/icons/anomalies.dmi'
 	icon_state = null
 	plane = GAME_PLANE
-	layer = ABOVE_LYING_MOB_LAYER
+	layer = BELOW_MOB_LAYER
 	density = FALSE
 	anchored = TRUE
 	pass_flags = PASSTABLE | PASSMOB
