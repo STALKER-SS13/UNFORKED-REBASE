@@ -4,6 +4,8 @@
 	var/turf/center
 	/// Radius of movement
 	var/radius = 2
+	/// Variation of radius when moving around
+	var/radius_variation = 0
 	/// Current angle of movement
 	var/current_angle = 0
 	/// How much we increase the angle every process
