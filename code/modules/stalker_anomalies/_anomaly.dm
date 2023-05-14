@@ -54,8 +54,8 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	GLOB.zona_anomalies += src
 	spawn_artifact()
 	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = PROC_REF(on_entered)
-		COMSIG_ATOM_EXITED = PROC_REF(on_exited)
+		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
+		COMSIG_ATOM_EXITED = PROC_REF(on_exited),
 	)
 	AddComponent(/datum/component/connect_loc, loc_connections)
 	if(constant_processing)
