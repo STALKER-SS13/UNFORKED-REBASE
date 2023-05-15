@@ -59,15 +59,15 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	)
 	AddComponent(/datum/component/connect_loc, loc_connections)
 	if(constant_processing)
-		START_PROCESSING(SSanomalies, src)
+		START_PROCESSING(SSzona_anomalies, src)
 
 /obj/effect/zona_anomaly/Destroy()
 	. = ..()
 	GLOB.zona_anomalies -= src
-	STOP_PROCESSING(SSanomalies, src)
+	STOP_PROCESSING(SSzona_anomalies, src)
 
 /obj/effect/zona_anomaly/process(seconds_per_tick)
-	if(!COOLDOWN_FINISHED(affect_cooldown))
+	if(!COOLDOWN_FINISHED(src, affect_cooldown))
 		return
 
 	// mobs might have left
@@ -90,7 +90,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	if(!length(loot) || (loot_amount <= 0))
 		return
 	var/picked_loot = pick_weight(loot)
-	for(var/i = 1 in 1 to loot_amount)
+	for(var/i in 1 to loot_amount)
 		if(!picked_loot || (loot == NO_LOOT))
 			return
 
@@ -143,13 +143,13 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	RegisterSignal(affected, COMSIG_PARENT_QDELETING, PROC_REF(trapped_mob_deleted))
 	LAZYADD(trapped, affecteed)
 	if(!constant_processing)
-		START_PROCESSING(SSanomalies, src)
+		START_PROCESSING(SSzona_anomalies, src)
 
 /obj/effect/zona_anomaly/proc/untrap_mob(mob/living/affected)
 	UnregisterSignal(affected, COMSIG_PARENT_QDELETING)
 	LAZYREMOVE(trapped, affected)
 	if(!length(trapped) && !constant_processing)
-		STOP_PROCESSING(SSanomalies, src)
+		STOP_PROCESSING(SSzona_anomalies, src)
 
 /obj/effect/zona_anomaly/proc/trapped_mob_deleted(mob/living/source)
 	SIGNAL_HANDLER
