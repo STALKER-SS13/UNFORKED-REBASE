@@ -6,10 +6,6 @@ GLOBAL_LIST_EMPTY(all_artifacts)
 	icon = 'icons/stalker/artifacts.dmi'
 	w_class = WEIGHT_CLASS_SMALL
 	invisibility = INVISIBILITY_ARTIFACT
-	/// Current charge
-	var/charge = 0
-	/// Maximum charge
-	var/maxcharge = 1000
 	/// Amounts of rads we apply to user on process
 	var/rads_amount = 2
 	/// Artifact level, higher = better
@@ -24,11 +20,10 @@ GLOBAL_LIST_EMPTY(all_artifacts)
 /obj/item/artifact/Initialize(mapload)
 	. = ..()
 	GLOB.all_artifacts += src
-	maxcharge = rand(1000, 10000)
-	charge = maxcharge
 	if(artifact_armor)
 		artifact_armor = get_armor_by_type(artifact_armor)
 	detector_appearance = new(src)
+	detector_appearance.alpha = 127
 	detector_appearance.invisibility = 0
 	detector_appearance.loc = src
 	detector_appearance.override = TRUE
@@ -50,8 +45,6 @@ GLOBAL_LIST_EMPTY(all_artifacts)
 	detector_appearance = null
 
 /obj/item/artifact/proc/handle_user(mob/living/user, seconds_per_tick = 2)
-	if(!charge)
-		return FALSE
 	return TRUE
 
 /* radiation unfuckening pending, i hate you tg

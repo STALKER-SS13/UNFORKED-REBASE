@@ -15,7 +15,7 @@
 
 /obj/item/t_scanner/artifact_detector/attack_self(mob/user)
 	. = ..()
-	playsound(src, "sound/stalker/detector/detector_draw.ogg", vol = 50, vary = FALSE)
+	playsound(src, 'sound/stalker/detector/detector_draw.ogg', vol = 50, vary = FALSE)
 
 /obj/item/t_scanner/artifact_detector/toggle_on()
 	on = !on
@@ -31,11 +31,13 @@
 
 /obj/item/t_scanner/artifact_detector/equipped(mob/user, slot, initial)
 	. = ..()
-	user.client?.images += active_images
+	if(active_images)
+		user.client?.images += active_images
 
 /obj/item/t_scanner/artifact_detector/dropped(mob/user, silent)
 	. = ..()
-	user.client?.images -= active_images
+	if(active_images)
+		user.client?.images -= active_images
 
 /obj/item/t_scanner/artifact_detector/scan()
 	if(!COOLDOWN_FINISHED(src, cooldown))
@@ -51,19 +53,19 @@
 	active_images = list()
 	var/smallest_artifact_distance
 	var/dir_to_artifact
-	for(var/obj/item/artifact/artifact in range(range, src))
-		if(artifact.artifact_level > artifact_level)
+	for(var/obj/item/artifact/artifact in range(range, loc))
+		if((artifact.artifact_level > artifact_level) || !artifact.detector_appearance)
 			continue
-		var/dist = get_dist(src, artifact)
+		var/dist = get_dist(loc, artifact)
 		if(isnull(smallest_artifact_distance) || (dist < smallest_artifact_distance))
-			smallest_artifact_distance = get_dist(src, artifact)
-			dir_to_artifact = get_dir(src, artifact)
+			smallest_artifact_distance = get_dist(loc, artifact)
+			dir_to_artifact = get_dir(loc, artifact)
 		active_images += artifact.detector_appearance
 	if(user)
 		user.client.images += active_images
 	if(isnull(smallest_artifact_distance))
 		icon_state = icon_state_active
 	else
-		playsound(user, "sound/stalker/detector/contact_1.ogg", vol = 50, vary = FALSE)
+		playsound(src, 'sound/stalker/detector/contact_1.ogg', vol = 50, vary = FALSE)
 		icon_state = icon_state_target
 		dir = dir_to_artifact
