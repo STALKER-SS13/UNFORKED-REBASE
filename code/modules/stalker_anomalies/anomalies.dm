@@ -110,7 +110,7 @@
 		/obj/item/artifact/droplet = 45,
 		/obj/item/artifact/fireball = 40,
 		/obj/item/artifact/crystal = 10,
-		/obj/item/artifact/maminibusi = 5
+		/obj/item/artifact/maminibusi = 5,
 	)
 	loot_amount = 2
 

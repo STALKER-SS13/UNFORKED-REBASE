@@ -1,0 +1,20 @@
+/obj/item/detector
+	name = "detector"
+	desc = "The cheapest and least effective detector."
+	icon = 'stalker/icons/device_new.dmi'
+	icon_state = "echo_off"
+	worn_icon_state = "electronic"
+	w_class = WEIGHT_CLASS_SMALL
+	var/icon_state_inactive = "echo_off"
+	var/icon_state_active = "echo_on"
+	var/icon_state_null = "echo_null"
+	var/atom/target = null
+	var/min_dist = 8
+	var/on = 0
+	var/level_s = 0
+	var/list/arts = list()
+	var/mob/living/carbon/human/user = null
+	var/cooldown = 0
+	var/kostil = 0
+	var/timer_detector = 0
+	var/list/fakearts = list()
