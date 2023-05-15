@@ -121,9 +121,9 @@
 	icon_state = "holodec"
 	active_icon_state = "holodec" //needs activate icon
 	light_range = 3
-	activated_light_range = 4
+	active_light_range = 4
 	light_color = "#70cc33"
-	activated_light_color = "#70cc33"
+	active_light_color = "#70cc33"
 	activation_sound = 'sound/stalker/anomalies/buzz_hit.ogg'
 	damage = 60
 	damage_type = BURN
