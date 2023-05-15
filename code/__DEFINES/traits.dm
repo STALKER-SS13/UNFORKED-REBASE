@@ -942,8 +942,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define CHOKING_TRAIT "choking_trait"
 /// Trait given by hallucinations
 #define HALLUCINATION_TRAIT "hallucination_trait"
-/// Trait given by /obj/effect/stalker_anomaly
-#define ANOMALY_TRAIT "anomaly"
 
 /**
 * Trait granted by [/mob/living/carbon/Initialize] and
