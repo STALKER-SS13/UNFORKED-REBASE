@@ -23,7 +23,7 @@ GLOBAL_LIST_EMPTY(all_artifacts)
 	if(artifact_armor)
 		artifact_armor = get_armor_by_type(artifact_armor)
 	detector_appearance = new(src)
-	detector_appearance.alpha = 127
+	detector_appearance.alpha = 100
 	detector_appearance.invisibility = 0
 	detector_appearance.loc = src
 	detector_appearance.override = TRUE

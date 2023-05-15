@@ -2,11 +2,10 @@
 	name = "artifact detector"
 	desc = "The cheapest and least effective detector."
 	icon = 'icons/stalker/device.dmi'
-	icon_state = "echo_off"
+	base_icon_state = "echo"
+	icon_state = "echo"
 	worn_icon_state = "electronic"
 	w_class = WEIGHT_CLASS_SMALL
-	var/icon_state_active = "echo_on"
-	var/icon_state_target = "echo_target"
 	var/range = 7
 	var/artifact_level = 0
 	COOLDOWN_DECLARE(cooldown)
@@ -27,7 +26,7 @@
 
 /obj/item/t_scanner/artifact_detector/update_icon_state()
 	. = ..()
-	icon_state = (on ? icon_state_active : initial(icon_state))
+	icon_state = (on ? "[base_icon_state]_on" : base_icon_state)
 
 /obj/item/t_scanner/artifact_detector/equipped(mob/user, slot, initial)
 	. = ..()
@@ -63,9 +62,8 @@
 		active_images += artifact.detector_appearance
 	if(user)
 		user.client.images += active_images
+	update_appearance()
 	if(isnull(smallest_artifact_distance))
-		icon_state = icon_state_active
-	else
 		playsound(src, 'sound/stalker/detector/contact_1.ogg', vol = 50, vary = FALSE)
-		icon_state = icon_state_target
+		icon_state = "[base_icon_state]_target"
 		dir = dir_to_artifact
