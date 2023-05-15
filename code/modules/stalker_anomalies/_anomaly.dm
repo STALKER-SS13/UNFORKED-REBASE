@@ -7,7 +7,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	icon = 'stalker/icons/anomalies.dmi'
 	icon_state = null
 	plane = GAME_PLANE
-	layer = ABOVE_LYING_MOB_LAYER
+	layer = BELOW_MOB_LAYER
 	density = FALSE
 	anchored = TRUE
 	pass_flags = PASSTABLE | PASSMOB
@@ -54,8 +54,8 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	GLOB.zona_anomalies += src
 	spawn_artifact()
 	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = PROC_REF(on_entered)
-		COMSIG_ATOM_EXITED = PROC_REF(on_exited)
+		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
+		COMSIG_ATOM_EXITED = PROC_REF(on_exited),
 	)
 	AddComponent(/datum/component/connect_loc, loc_connections)
 	if(constant_processing)
