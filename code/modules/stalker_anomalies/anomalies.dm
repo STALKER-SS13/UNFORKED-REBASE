@@ -16,10 +16,10 @@
 	// this loot table seems very wrong
 	loot = list(
 		NO_LOOT = 90,
-		/obj/item/stalker_artifact/flash = 2.5,
-		/obj/item/stalker_artifact/moonlight = 1.75,
-		/obj/item/stalker_artifact/battery = 0.75,
-		/obj/item/stalker_artifact/pustishka = 0.25,
+		/obj/item/artifact/flash = 2.5,
+		/obj/item/artifact/moonlight = 1.75,
+		/obj/item/artifact/battery = 0.75,
+		/obj/item/artifact/pustishka = 0.25,
 	)
 
 /obj/effect/zona_anomaly/vortex
@@ -37,10 +37,10 @@
 	affect_cooldown_duration = 4 SECONDS
 	loot = list(
 		NO_LOOT = 76,
-		/obj/item/stalker_artifact/meduza = 10,
-		/obj/item/stalker_artifact/stoneflower_depleted = 8,
-		/obj/item/stalker_artifact/nightstar_depleted = 4,
-		/obj/item/stalker_artifact/soul = 2,
+		/obj/item/artifact/meduza = 10,
+		/obj/item/artifact/stoneflower/depleted = 8,
+		/obj/item/artifact/nightstar/depleted = 4,
+		/obj/item/artifact/soul = 2,
 	)
 
 /obj/effect/zona_anomaly/vortex/Initialize()
@@ -57,24 +57,24 @@
 	damage = 15
 	damage_type = BRUTE
 	armor_check = BOMB
-	gibbing = TRUE
 	affect_mob_delay = 0.5 SECONDS
 	affect_cooldown_duration = 2 SECONDS
 	loot = list(
 		NO_LOOT = 80,
-		/obj/item/stalker_artifact/meduza = 12,
-		/obj/item/stalker_artifact/stoneflower_depleted = 5.5,
-		/obj/item/stalker_artifact/nightstar_depleted = 2,
-		/obj/item/stalker_artifact/soul = 0.5,
+		/obj/item/artifact/meduza = 12,
+		/obj/item/artifact/stoneflower/depleted = 5.5,
+		/obj/item/artifact/nightstar/depleted = 2,
+		/obj/item/artifact/soul = 0.5,
 	)
 
-/obj/effect/zona_anomaly/springboard/fuck_mob_up(mob/living/affected)
+/obj/effect/zona_anomaly/springboard/affect_mob(mob/living/affected, first_affect = FALSE)
 	. = ..()
 	if(QDELETED(affected))
 		return
 
-	var/turf/target_turf = get_turf_in_angle(rand(0, 360), src, rand(1, 6))
-	affected.throw_at(target_turf)
+	var/range = rand(1, 6)
+	var/turf/target_turf = get_turf_in_angle(rand(0, 360), get_turf(src), rand(1, 6))
+	affected.throw_at(target_turf, range, 2)
 
 /obj/effect/zona_anomaly/burner
 	name = "burner anomaly"
@@ -88,27 +88,29 @@
 	damage = 20
 	damage_type = BURN
 	armor_check = FIRE
+	fire_stacks = 3
 	igniting = TRUE
 	affect_mob_delay = 0
 	affect_cooldown_duration = 2 SECONDS
 	loot = list(
 		NO_LOOT = 90,
-		/obj/item/stalker_artifact/droplet = 5,
-		/obj/item/stalker_artifact/fireball = 3,
-		/obj/item/stalker_artifact/crystal = 1.5,
-		/obj/item/stalker_artifact/maminibusi = 0.5,
+		/obj/item/artifact/droplet = 5,
+		/obj/item/artifact/fireball = 3,
+		/obj/item/artifact/crystal = 1.5,
+		/obj/item/artifact/maminibusi = 0.5,
 	)
 
 /obj/effect/zona_anomaly/burner/comet
 	name = "comet anomaly"
-	icon_state = "jarka0"
+	icon_state = "jarka1"
 	active_icon_state = "jarka1"
 	damage = 40
+	fire_stacks = 10
 	loot = list(
-		/obj/item/stalker_artifact/droplet = 45,
-		/obj/item/stalker_artifact/fireball = 40,
-		/obj/item/stalker_artifact/crystal = 10,
-		/obj/item/stalker_artifact/maminibusi = 5
+		/obj/item/artifact/droplet = 45,
+		/obj/item/artifact/fireball = 40,
+		/obj/item/artifact/crystal = 10,
+		/obj/item/artifact/maminibusi = 5
 	)
 	loot_amount = 2
 
@@ -132,10 +134,10 @@
 	affect_cooldown_duration = 2 SECONDS
 	loot = list(
 		NO_LOOT = 80,
-		/obj/item/stalker_artifact/stone_blood = 10,
-		/obj/item/stalker_artifact/bubble = 5.5,
-		/obj/item/stalker_artifact/mica = 3,
-		/obj/item/stalker_artifact/firefly = 1.5,
+		/obj/item/artifact/stone_blood = 10,
+		/obj/item/artifact/bubble = 5.5,
+		/obj/item/artifact/mica = 3,
+		/obj/item/artifact/firefly = 1.5,
 	)
 	constant_processing = TRUE
 	var/can_have_son = TRUE
@@ -154,14 +156,14 @@
 		son.prepare_affect_mob(my_enemy)
 	else
 		for(var/obj/item/my_item in oview(1, src))
-			if(istype(my_item, /obj/item/stalker_artifact))
+			if(istype(my_item, /obj/item/artifact))
 				continue
 			create_son(my_item.loc)
 			do_attack_animation(son)
 			son.affect_item(my_item)
 			return
 
-/obj/effect/zona_anomaly/fruit_punch/proc/create_son(turf/creation_loc, qdel_time = 2 SECONDS)
+/obj/effect/zona_anomaly/fruit_punch/proc/create_son(turf/creation_loc, qdel_time = 4 SECONDS)
 	son = new /obj/effect/zona_anomaly/fruit_punch/splash(creation_loc)
 	RegisterSignal(son, COMSIG_PARENT_QDELETING, PROC_REF(son_deleted))
 	if(qdel_time)
@@ -173,6 +175,7 @@
 	son = null
 
 /obj/effect/zona_anomaly/fruit_punch/splash
+	name = "fruit punch splash"
 	icon_state = "holodec_splash"
 	active_icon_state = "holodec_splash" //needs active icon
 	light_range = 0
@@ -187,7 +190,7 @@
 		flick("holodec_splash_creation", src)
 
 /obj/effect/zona_anomaly/burnt_fuzz
-	name = "burnt fuzz"
+	name = "burnt fuzz anomaly"
 	icon_state = "puh"
 	active_icon_state = "puh" //needs active icon
 	activation_sound = 'sound/stalker/anomalies/buzz_hit.ogg'

@@ -3,7 +3,8 @@
 GLOBAL_LIST_EMPTY(zona_anomalies)
 
 /obj/effect/zona_anomaly
-	name = "Anomaly"
+	name = "anomaly"
+	desc = "A dangerous anomaly."
 	icon = 'icons/stalker/anomalies.dmi'
 	icon_state = null
 	plane = GAME_PLANE
@@ -61,11 +62,11 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	)
 	AddElement(/datum/element/connect_loc, loc_connections)
 	if(idle_sound)
-		idle_sound = new idle_sound(src)
+		idle_sound = new idle_sound(src, TRUE)
 	if(constant_processing)
 		START_PROCESSING(SSzona_anomalies, src)
 
-/obj/effect/zona_anomaly/Destroy()
+/obj/effect/zona_anomaly/Destroy(force)
 	. = ..()
 	GLOB.zona_anomalies -= src
 	if(idle_sound)
@@ -81,8 +82,11 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 		return PROCESS_KILL
 
 	COOLDOWN_START(src, affect_cooldown, affect_cooldown_duration)
-	flare_up(1 SECONDS)
+	var/flared_up = FALSE
 	for(var/mob/living/affected as anything in trapped)
+		if(!flared_up)
+			flare_up()
+			flared_up = TRUE
 		affect_mob(affected)
 		// untrap dead mobs, we don't care about them
 		if(!QDELETED(affected) && (affected.stat >= DEAD))
@@ -97,7 +101,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 		return
 	var/picked_loot = pick_weight(loot)
 	for(var/i in 1 to loot_amount)
-		if(!picked_loot || (loot == NO_LOOT))
+		if(!picked_loot || (picked_loot == NO_LOOT))
 			return
 
 		var/obj/item/loot_spawn = new picked_loot(src.loc)
@@ -166,13 +170,13 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 /obj/effect/zona_anomaly/proc/prepare_affect_mob(mob/living/affected)
 	COOLDOWN_START(src, affect_cooldown, affect_cooldown_duration)
 	trap_mob(affected)
-	flare_up(affect_mob_delay)
-	addtimer(CALLBACK(src, PROC_REF(affect_mob)), affect_mob_delay)
+	flare_up()
+	addtimer(CALLBACK(src, PROC_REF(affect_mob), affected), affect_mob_delay)
 
-/obj/effect/zona_anomaly/proc/affect_mob(mob/living/affected)
-	fuck_mob_up(affected)
+/obj/effect/zona_anomaly/proc/affect_mob(mob/living/affected, first_affect = FALSE)
+	fuck_mob_up(affected, first_affect)
 
-/obj/effect/zona_anomaly/proc/fuck_mob_up(mob/living/affected)
+/obj/effect/zona_anomaly/proc/fuck_mob_up(mob/living/affected, first_affect = FALSE)
 	//mob managed to escape
 	if(!(affected in trapped))
 		return
@@ -201,10 +205,10 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 
 /obj/effect/zona_anomaly/proc/affect_item(obj/item/affected)
 	//ignore artifacts lol
-	if(istype(affected, /obj/item/stalker_artifact))
+	if(istype(affected, /obj/item/artifact))
 		return
-	flare_up(1 SECONDS)
-	addtimer(CALLBACK(src, PROC_REF(melt_item)), 1 SECONDS)
+	flare_up()
+	addtimer(CALLBACK(src, PROC_REF(melt_item), affected), 1 SECONDS)
 	COOLDOWN_START(src, affect_cooldown, affect_cooldown_duration)
 
 /obj/effect/zona_anomaly/proc/melt_item(obj/item/affected)
