@@ -13,6 +13,6 @@
 /datum/component/move_towards_unanchored/process(seconds_per_tick)
 	for(var/atom/movable/movable in oview(2, parent))
 		if(movable.anchored || (movable == parent))
-			return
+			continue
 		step_towards(parent, movable)
 		break
