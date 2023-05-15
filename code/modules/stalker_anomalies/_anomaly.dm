@@ -20,6 +20,8 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	var/active_light_power = 3
 	/// Light color when active
 	var/active_light_color = COLOR_WHITE
+	/// Idle sound, in case this anomaly has one
+	var/datum/looping_sound/idle_sound
 	/// Sound that plays when we flare up
 	var/activation_sound
 	/// Mobs currently trapped in this anomaly
@@ -58,12 +60,16 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 		COMSIG_ATOM_EXITED = PROC_REF(on_exited),
 	)
 	AddElement(/datum/element/connect_loc, loc_connections)
+	if(idle_sound)
+		idle_sound = new idle_sound(src)
 	if(constant_processing)
 		START_PROCESSING(SSzona_anomalies, src)
 
 /obj/effect/zona_anomaly/Destroy()
 	. = ..()
 	GLOB.zona_anomalies -= src
+	if(idle_sound)
+		QDEL_NULL(idle_sound)
 	STOP_PROCESSING(SSzona_anomalies, src)
 
 /obj/effect/zona_anomaly/process(seconds_per_tick)
@@ -110,7 +116,8 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 /obj/effect/zona_anomaly/proc/flare_up(flare_down_time = 1 SECONDS)
 	icon_state = active_icon_state
 	set_light(active_light_range, active_light_power, active_light_color)
-	playsound(src, activation_sound, volume = 50, vary = TRUE)
+	if(activation_sound)
+		playsound(src, pick(activation_sound), vol = 80, vary = TRUE)
 	if(flare_down_time)
 		addtimer(CALLBACK(src, PROC_REF(flare_down)), flare_down_time)
 

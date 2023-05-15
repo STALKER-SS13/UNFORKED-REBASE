@@ -6,7 +6,8 @@
 	active_light_range = 3
 	light_color = "#7ac8e2"
 	active_light_color = "#7ac8e2"
-	activation_sound = 'stalker/sound/anomalies/electra_blast1.ogg'
+	idle_sound = /datum/looping_sound/electro_anomaly
+	activation_sound = 'sound/stalker/anomalies/electra_blast1.ogg'
 	damage = 40
 	damage_type = BURN
 	armor_check = ENERGY
@@ -27,7 +28,7 @@
 	active_icon_state = "karusel1"
 	light_range = 0
 	active_light_range = 0
-	activation_sound = 'stalker/sound/anomalies/gravi_blowout1.ogg'
+	activation_sound = 'sound/stalker/anomalies/gravi_blast1.ogg'
 	damage = 30
 	damage_type = BRUTE
 	armor_check = BOMB
@@ -52,7 +53,7 @@
 	active_icon_state = "tramplin1"
 	light_range = 0
 	active_light_range = 0
-	activation_sound = 'stalker/sound/anomalies/gravi_blowout1.ogg'
+	activation_sound = 'sound/stalker/anomalies/gravi_blast1.ogg'
 	damage = 15
 	damage_type = BRUTE
 	armor_check = BOMB
@@ -79,7 +80,7 @@
 	name = "burner anomaly"
 	icon_state = "jarka0"
 	active_icon_state = "jarka1"
-	activation_sound = 'stalker/sound/anomalies/zharka1.ogg'
+	activation_sound = 'sound/stalker/anomalies/zharka1.ogg'
 	light_range = 3
 	active_light_range = 4
 	light_color = "#FFAA33"
@@ -123,7 +124,7 @@
 	activated_light_range = 4
 	light_color = "#70cc33"
 	activated_light_color = "#70cc33"
-	activation_sound = 'stalker/sound/anomalies/buzz_hit.ogg'
+	activation_sound = 'sound/stalker/anomalies/buzz_hit.ogg'
 	damage = 60
 	damage_type = BURN
 	armor_check = ACID
@@ -189,7 +190,7 @@
 	name = "burnt fuzz"
 	icon_state = "puh"
 	active_icon_state = "puh" //needs active icon
-	activation_sound = 'stalker/sound/anomalies/buzz_hit.ogg'
+	activation_sound = 'sound/stalker/anomalies/buzz_hit.ogg'
 	damage = 65
 	armor_check = BIO
 	affect_mob_delay = 0
@@ -227,17 +228,17 @@
 
 /obj/effect/radiation/rad_low
 	damage = 15
-	sound = 'stalker/sound/pda/geiger_1.ogg'
+	sound = 'sound/stalker/pda/geiger_1.ogg'
 	icon_state = "rad_low"
 
 /obj/effect/radiation/rad_medium
 	damage = 25
-	sound = 'stalker/sound/pda/geiger_4.ogg'
+	sound = 'sound/stalker/pda/geiger_4.ogg'
 	icon_state = "rad_medium"
 
 /obj/effect/radiation/rad_high
 	damage = 40
-	sound = 'stalker/sound/pda/geiger_6.ogg'
+	sound = 'sound/stalker/pda/geiger_6.ogg'
 	icon_state = "rad_high"
 
 /obj/effect/radiation/Initialize()
