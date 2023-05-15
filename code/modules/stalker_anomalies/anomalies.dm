@@ -137,26 +137,39 @@
 		/obj/item/stalker_artifact/firefly = 1.5,
 	)
 	constant_processing = TRUE
-	var/obj/effect/zona_anomaly/fruit_punch/splash/son
+	var/can_have_son = TRUE
+	var/obj/effect/zona_anomaly/son
 
 /obj/effect/zona_anomaly/fruit_punch/process()
 	. = ..()
+	if(!can_have_son)
+		return
 	if(son)
 		return
 	var/mob/living/my_enemy = locate(/mob/living) in oview(1, src)
 	if(my_enemy)
-		son = new /obj/effect/zona_anomaly/fruit_punch/splash(my_enemy.loc)
-		son.prepare_affect_mob(my_enemy)
+		create_son(my_enemy.loc)
 		do_attack_animation(son)
-		QDEL_IN(son, 2 SECONDS)
+		son.prepare_affect_mob(my_enemy)
 	else
 		for(var/obj/item/my_item in oview(1, src))
 			if(istype(my_item, /obj/item/stalker_artifact))
 				continue
-			son = new /obj/effect/zona_anomaly/fruit_punch/splash(my_item.loc)
-			son.affect_item(my_item)
+			create_son(my_item.loc)
 			do_attack_animation(son)
-			QDEL_IN(son, 2 SECONDS)
+			son.affect_item(my_item)
+			return
+
+/obj/effect/zona_anomaly/fruit_punch/proc/create_son(turf/creation_loc, qdel_time = 2 SECONDS)
+	son = new /obj/effect/zona_anomaly/fruit_punch/splash(creation_loc)
+	RegisterSignal(son, COMSIG_PARENT_QDELETING, PROC_REF(son_deleted))
+	if(qdel_time)
+		QDEL_IN(son, qdel_time)
+
+/obj/effect/zona_anomaly/fruit_punch/proc/son_deleted()
+	SIGNAL_HANDLER
+
+	son = null
 
 /obj/effect/zona_anomaly/fruit_punch/splash
 	icon_state = "holodec_splash"
@@ -165,10 +178,12 @@
 	active_light_range = 1
 	damage = 30
 	loot = null
+	can_have_son = FALSE
 
 /obj/effect/zona_anomaly/fruit_punch/splash/Initialize(mapload)
 	. = ..()
-	flick("holodec_splash_creation", src)
+	if(!mapload)
+		flick("holodec_splash_creation", src)
 
 /obj/effect/zona_anomaly/burnt_fuzz
 	name = "burnt fuzz"
@@ -185,7 +200,7 @@
 	icon_state = pick("puh","puh2")
 	active_icon_state = icon_state
 
-/** This is fucking retarded
+/** This is fucking retarded - WTF DO I DO WITH THIS?
 /obj/effect/radiation // Only does rad damage
 	name = "radiation"
 	icon = 'stalker/icons/anomalies.dmi'
