@@ -4,7 +4,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 
 /obj/effect/zona_anomaly
 	name = "Anomaly"
-	icon = 'stalker/icons/anomalies.dmi'
+	icon = 'icons/stalker/anomalies.dmi'
 	icon_state = null
 	plane = GAME_PLANE
 	layer = BELOW_MOB_LAYER
@@ -57,7 +57,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
 		COMSIG_ATOM_EXITED = PROC_REF(on_exited),
 	)
-	AddComponent(/datum/component/connect_loc, loc_connections)
+	AddElement(/datum/element/connect_loc, loc_connections)
 	if(constant_processing)
 		START_PROCESSING(SSzona_anomalies, src)
 
@@ -109,7 +109,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 
 /obj/effect/zona_anomaly/proc/flare_up(flare_down_time = 1 SECONDS)
 	icon_state = active_icon_state
-	set_light(activated_light_range, active_light_power, active_light_color)
+	set_light(active_light_range, active_light_power, active_light_color)
 	playsound(src, activation_sound, volume = 50, vary = TRUE)
 	if(flare_down_time)
 		addtimer(CALLBACK(src, PROC_REF(flare_down)), flare_down_time)
@@ -141,7 +141,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	if(affected in trapped)
 		return
 	RegisterSignal(affected, COMSIG_PARENT_QDELETING, PROC_REF(trapped_mob_deleted))
-	LAZYADD(trapped, affecteed)
+	LAZYADD(trapped, affected)
 	if(!constant_processing)
 		START_PROCESSING(SSzona_anomalies, src)
 
@@ -158,7 +158,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 
 /obj/effect/zona_anomaly/proc/prepare_affect_mob(mob/living/affected)
 	COOLDOWN_START(src, affect_cooldown, affect_cooldown_duration)
-	trap_mob(arrived)
+	trap_mob(affected)
 	flare_up(affect_mob_delay)
 	addtimer(CALLBACK(src, PROC_REF(affect_mob)), affect_mob_delay)
 

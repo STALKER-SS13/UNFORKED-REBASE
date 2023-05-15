@@ -6,7 +6,7 @@
 	active_light_range = 3
 	light_color = "#7ac8e2"
 	active_light_color = "#7ac8e2"
-	activate_sound = 'stalker/sound/anomalies/electra_blast1.ogg'
+	activation_sound = 'stalker/sound/anomalies/electra_blast1.ogg'
 	damage = 40
 	damage_type = BURN
 	armor_check = ENERGY
@@ -32,7 +32,7 @@
 	damage_type = BRUTE
 	armor_check = BOMB
 	gibbing = TRUE
-	delay = 1 SECONDS
+	affect_mob_delay = 1 SECONDS
 	affect_cooldown_duration = 4 SECONDS
 	loot = list(
 		NO_LOOT = 76,
@@ -80,10 +80,10 @@
 	icon_state = "jarka0"
 	active_icon_state = "jarka1"
 	activation_sound = 'stalker/sound/anomalies/zharka1.ogg'
-	idle_light_range = 3
-	activated_light_range = 4
+	light_range = 3
+	active_light_range = 4
 	light_color = "#FFAA33"
-	activated_light_color = "#FFAA33"
+	active_light_color = "#FFAA33"
 	damage = 20
 	damage_type = BURN
 	armor_check = FIRE
@@ -109,7 +109,7 @@
 		/obj/item/stalker_artifact/crystal = 10,
 		/obj/item/stalker_artifact/maminibusi = 5
 	)
-	loot_count = 2
+	loot_amount = 2
 
 /obj/effect/zona_anomaly/burner/comet/Initialize()
 	. = ..()
@@ -162,7 +162,7 @@
 	icon_state = "holodec_splash"
 	active_icon_state = "holodec_splash" //needs active icon
 	light_range = 0
-	activated_light_range = 1
+	active_light_range = 1
 	damage = 30
 	loot = null
 
