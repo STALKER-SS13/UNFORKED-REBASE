@@ -73,6 +73,13 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 		QDEL_NULL(idle_sound)
 	STOP_PROCESSING(SSzona_anomalies, src)
 
+/obj/effect/zona_anomaly/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change)
+	. = ..()
+	if(!isturf(loc))
+		return
+	for(var/atom/movable/movable_atom in loc)
+		on_entered(loc, movable_atom)
+
 /obj/effect/zona_anomaly/process(seconds_per_tick)
 	if(!COOLDOWN_FINISHED(src, affect_cooldown))
 		return
