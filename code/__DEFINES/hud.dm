@@ -112,7 +112,7 @@
 #define ui_head "WEST+1:8,SOUTH+3:11"
 
 //Humans
-#define ui_bolt "EAST-1,SOUTH+2"
+#define ui_bolt "EAST-2:-26,SOUTH+1:8"
 
 //Generic living
 #define ui_living_pull "EAST-1:28,CENTER-3:15"

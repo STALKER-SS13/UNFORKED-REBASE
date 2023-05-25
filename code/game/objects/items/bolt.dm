@@ -4,9 +4,17 @@
 	icon = 'icons/stalker/obj/bolt.dmi'
 	icon_state = "bolt"
 	w_class = WEIGHT_CLASS_TINY
+	force = 1
 	throwforce = 1
+	/// Whether or not we get deleted after dropping
+	var/delete_on_drop = TRUE
 
-/obj/item/bolt/Initialize(mapload, should_delete = FALSE)
+/obj/item/bolt/Initialize(mapload, delete_on_drop = FALSE)
 	. = ..()
-	if(should_delete)
-		QDEL_IN(src, 5 SECONDS)
+	src.delete_on_drop = delete_on_drop
+
+/obj/item/bolt/dropped(mob/user, silent)
+	. = ..()
+	if(delete_on_throw && !QDELING(src))
+		interaction_flags_item &= ~INTERACT_ITEM_ATTACK_HAND_PICKUP
+		QDEL_IN(src, 3 SECONDS)
