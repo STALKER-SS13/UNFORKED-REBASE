@@ -15,6 +15,6 @@
 
 /obj/item/bolt/dropped(mob/user, silent)
 	. = ..()
-	if(delete_on_throw && !QDELING(src))
+	if(delete_on_drop && !QDELING(src))
 		interaction_flags_item &= ~INTERACT_ITEM_ATTACK_HAND_PICKUP
 		QDEL_IN(src, 3 SECONDS)
