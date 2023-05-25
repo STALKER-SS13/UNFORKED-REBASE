@@ -221,6 +221,11 @@
 	override = TRUE
 	colour = list(0.8,0,0,0, 0,0,0,0, 0,0,1,0, 0,0,0,1, 0,0,0,0)
 
+/datum/client_colour/blowout
+	priority = PRIORITY_ABSOLUTE
+	override = TRUE
+	colour = list(1,0,0,0, 0,0.5,0,0, 0,0,0.5,0, 0,0,0,1, 0,0,0,0)
+
 #undef PRIORITY_ABSOLUTE
 #undef PRIORITY_HIGH
 #undef PRIORITY_NORMAL

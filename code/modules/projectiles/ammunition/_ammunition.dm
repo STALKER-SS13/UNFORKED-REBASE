@@ -41,6 +41,7 @@
 
 /obj/item/ammo_casing/Initialize(mapload)
 	. = ..()
+	RegisterSignal(SSblowouts, COMSIG_BLOWOUT_CLEAN, PROC_REF(on_blowout_clean))
 	if(projectile_type)
 		loaded_projectile = new projectile_type(src)
 	pixel_x = base_pixel_x + rand(-10, 10)
@@ -140,3 +141,9 @@
 		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), src, 'sound/items/welder.ogg', 20, 1), bounce_delay) //If the turf is made of water and the shell casing is still hot, make a sizzling sound when it's ejected.
 	else if(T?.bullet_bounce_sound)
 		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), src, T.bullet_bounce_sound, 20, 1), bounce_delay) //Soft / non-solid turfs that shouldn't make a sound when a shell casing is ejected over them.
+
+/obj/item/ammo_casing/proc/on_blowout_clean()
+	SIGNAL_HANDLER
+
+	if(!loaded_projectile && isturf(loc) && istype(get_area(src), /area/stalker/blowout))
+		qdel(src)

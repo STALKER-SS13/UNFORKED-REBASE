@@ -1,12 +1,12 @@
-GLOBAL_LIST_EMPTY(all_artifacts)
+GLOBAL_LIST_EMPTY(zona_artifacts)
 
 /obj/item/artifact
 	name = "artifact"
-	desc = "An artifact, must have been created by an anomaly."
+	desc = "An artifact, must have been created by the presence of an anomaly."
 	icon = 'icons/stalker/artifacts.dmi'
 	w_class = WEIGHT_CLASS_SMALL
 	invisibility = INVISIBILITY_ARTIFACT
-	/// Amounts of rads we apply to user on process
+	/// Amounts of rads we apply to user on handle_user()
 	var/rads_amount = 2
 	/// Artifact level, higher = better
 	var/artifact_level = 1
@@ -19,8 +19,8 @@ GLOBAL_LIST_EMPTY(all_artifacts)
 
 /obj/item/artifact/Initialize(mapload)
 	. = ..()
-	GLOB.all_artifacts += src
-	if(artifact_armor)
+	GLOB.zona_artifacts += src
+	if(ispath(artifact_armor))
 		artifact_armor = get_armor_by_type(artifact_armor)
 	detector_appearance = new(src)
 	detector_appearance.alpha = 100
@@ -31,7 +31,7 @@ GLOBAL_LIST_EMPTY(all_artifacts)
 
 /obj/item/artifact/Destroy(force)
 	. = ..()
-	GLOB.all_artifacts -= src
+	GLOB.zona_artifacts -= src
 	artifact_armor = null
 	detector_appearance = null
 

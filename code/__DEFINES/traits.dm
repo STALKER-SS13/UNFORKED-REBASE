@@ -670,6 +670,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_POSTERBOY "poster_boy"
 #define TRAIT_THROWINGARM "throwing_arm"
 
+#define TRAIT_BLOWOUT_SUSCEPTIBLE "blowout_susceptible"
+#define TRAIT_BLOWOUT_IMMUNE "blowout_immune"
+
 /// Gives you the Shifty Eyes quirk, rarely making people who examine you think you examined them back even when you didn't
 #define TRAIT_SHIFTY_EYES "shifty_eyes"
 
@@ -831,6 +834,10 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define SWORDPLAY_TRAIT "swordplay"
 /// Trait given by being recruited as a nuclear operative
 #define NUKE_OP_MINION_TRAIT "nuke-op-minion"
+/// Trait given by entering an area
+#define AREA_TRAIT "area"
+/// Trait given by a spawner
+#define SPAWNER_TRAIT "spawner"
 
 ///generic atom traits
 /// Trait from [/datum/element/rust]. Its rusty and should be applying a special overlay to denote this.

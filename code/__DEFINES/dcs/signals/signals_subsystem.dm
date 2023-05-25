@@ -23,3 +23,10 @@
 #define COMSIG_ADDED_POINT_OF_INTEREST "added_point_of_interest"
 /// Sent from base of /datum/controller/subsystem/points_of_interest/proc/on_poi_element_removed : (atom/old_poi)
 #define COMSIG_REMOVED_POINT_OF_INTEREST "removed_point_of_interest"
+
+/// blowout start signal, applies cool client colour to mobs
+#define COMSIG_BLOWOUT_START "blowout_start"
+/// blowout cleanup signal, to remove ammo casings basically
+#define COMSIG_BLOWOUT_CLEAN "blowout_clean"
+/// blowout end signal, removes client colour from mobs
+#define COMSIG_BLOWOUT_END "blowout_end"
