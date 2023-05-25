@@ -47,6 +47,10 @@
 	RegisterSignals(src, list(SIGNAL_ADDTRAIT(TRAIT_NEGATES_GRAVITY), SIGNAL_REMOVETRAIT(TRAIT_NEGATES_GRAVITY)), PROC_REF(on_negate_gravity))
 	RegisterSignals(src, list(SIGNAL_ADDTRAIT(TRAIT_IGNORING_GRAVITY), SIGNAL_REMOVETRAIT(TRAIT_IGNORING_GRAVITY)), PROC_REF(on_ignore_gravity))
 	RegisterSignals(src, list(SIGNAL_ADDTRAIT(TRAIT_FORCED_GRAVITY), SIGNAL_REMOVETRAIT(TRAIT_FORCED_GRAVITY)), PROC_REF(on_force_gravity))
+
+	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_BLOWOUT_SUSCEPTIBLE), PROC_REF(on_blowout_susceptible_trait_gain))
+	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_BLOWOUT_SUSCEPTIBLE), PROC_REF(on_blowout_susceptible_trait_loss))
+
 	// We hook for forced grav changes from our turf and ourselves
 	var/static/list/loc_connections = list(
 		SIGNAL_ADDTRAIT(TRAIT_FORCED_GRAVITY) = PROC_REF(on_loc_force_gravity),
@@ -245,3 +249,32 @@
 /mob/living/proc/on_loc_force_gravity(datum/source)
 	SIGNAL_HANDLER
 	refresh_gravity()
+
+/// Called when [TRAIT_BLOWOUT_SUSCEPTIBLE] is added to the mob.
+/mob/living/proc/on_blowout_susceptible_trait_gain(datum/source)
+	SIGNAL_HANDLER
+	SSblowouts.blowout_affected_mobs += src
+	if(SSblowouts.blowout_stage)
+		on_blowout_start()
+	RegisterSignal(src, COMSIG_BLOWOUT_START, PROC_REF(on_blowout_start))
+	RegisterSignal(src, COMSIG_BLOWOUT_END, PROC_REF(on_blowout_end))
+
+/// Called when [TRAIT_BLOWOUT_SUSCEPTIBLE] is removed from the mob.
+/mob/living/proc/on_blowout_susceptible_trait_loss(datum/source)
+	SIGNAL_HANDLER
+	SSblowouts.blowout_affected_mobs -= src
+	UnregisterSignal(src, COMSIG_BLOWOUT_START)
+	UnregisterSignal(src, COMSIG_BLOWOUT_END)
+	on_blowout_end()
+
+/// Adds the funny client colour
+/mob/living/proc/on_blowout_start()
+	SIGNAL_HANDLER
+
+	add_client_colour(/datum/client_colour/blowout)
+
+/// Removes the funny client colour
+/mob/living/proc/on_blowout_end()
+	SIGNAL_HANDLER
+
+	remove_client_colour(/datum/client_colour/blowout)

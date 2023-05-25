@@ -41,6 +41,8 @@
 		QDEL_LIST(imaginary_group)
 	QDEL_LAZYLIST(diseases)
 	QDEL_LIST(surgeries)
+	if(HAS_TRAIT(src, TRAIT_BLOWOUT_SUSCEPTIBLE))
+		SSblowouts.blowout_affected_mobs -= src
 	return ..()
 
 /mob/living/onZImpact(turf/T, levels, message = TRUE)

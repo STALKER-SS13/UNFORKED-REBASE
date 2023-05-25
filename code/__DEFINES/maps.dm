@@ -89,6 +89,9 @@ Always compile, always use that verb, and always make sure that it works for wha
 #define ZTRAIT_ASHSTORM "Weather_Ashstorm"
 #define ZTRAIT_VOIDSTORM "Weather_Voidstorm"
 
+/// This z level gets affected by blowouts, as simple as that
+#define ZTRAIT_BLOWOUTS "Blowouts"
+
 /// boolean - does this z prevent ghosts from observing it
 #define ZTRAIT_SECRET "Secret"
 
