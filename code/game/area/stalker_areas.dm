@@ -44,17 +44,17 @@
 
 /area/stalker/blowout/outdoors
 	name = "Outdoors"
-	icon = 'stalker/icons/area/areas_outdoor_blowout.dmi'
+	icon = 'stalker/icons/areas/areas_outdoor_blowout.dmi'
 	icon_state = "outdoor"
 
 /area/stalker/blowout/buildings
 	name = "Buildings"
-	icon = 'stalker/icons/area/areas_buildings_blowout.dmi'
+	icon = 'stalker/icons/areas/areas_buildings_blowout.dmi'
 	icon_state = "buildings"
 	requires_power = TRUE
 
 /area/stalker/buildings
 	name = "Buildings"
-	icon = 'stalker/icons/area/areas_buildings.dmi'
+	icon = 'stalker/icons/areas/areas_buildings.dmi'
 	icon_state = "buildings"
 	requires_power = TRUE
