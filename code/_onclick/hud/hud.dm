@@ -6,7 +6,7 @@
 
 // The default UI style is the first one in the list
 GLOBAL_LIST_INIT(available_ui_styles, list(
-	"Stalker" = 'icons/hud/screen_midnight.dmi',
+	"Stalker" = 'icons/stalker/hud/screen_stalker.dmi',
 ))
 
 /proc/ui_style2icon(ui_style)
