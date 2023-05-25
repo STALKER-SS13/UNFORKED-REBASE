@@ -49,7 +49,7 @@
 	RegisterSignals(src, list(SIGNAL_ADDTRAIT(TRAIT_FORCED_GRAVITY), SIGNAL_REMOVETRAIT(TRAIT_FORCED_GRAVITY)), PROC_REF(on_force_gravity))
 
 	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_BLOWOUT_SUSCEPTIBLE), PROC_REF(on_blowout_susceptible_trait_gain))
-	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_BLOWOUT_SUSCEPTIBLE), PROC_REF(on_blowout_susceptible_trait_loss))
+	RegisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_BLOWOUT_SUSCEPTIBLE), PROC_REF(on_blowout_susceptible_trait_loss))
 
 	// We hook for forced grav changes from our turf and ourselves
 	var/static/list/loc_connections = list(
