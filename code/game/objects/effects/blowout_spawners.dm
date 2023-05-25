@@ -2,7 +2,7 @@ GLOBAL_LIST_EMPTY(blowout_spawners)
 
 /obj/effect/abstract/blowout_spawner
 	name = "blowout spawner"
-	icon = 'icons/stalker/spawners.dmi'
+	icon = 'icons/stalker/effects/spawners.dmi'
 	icon_state = "blowout"
 	var/spawn_range = 3
 	var/mob_types = list(/mob/living/basic/carp)

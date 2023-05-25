@@ -3,7 +3,7 @@ GLOBAL_LIST_EMPTY(zona_artifacts)
 /obj/item/artifact
 	name = "artifact"
 	desc = "An artifact, must have been created by the presence of an anomaly."
-	icon = 'icons/stalker/artifacts.dmi'
+	icon = 'icons/stalker/obj/artifacts.dmi'
 	w_class = WEIGHT_CLASS_SMALL
 	invisibility = INVISIBILITY_ARTIFACT
 	/// Amounts of rads we apply to user on handle_user()
