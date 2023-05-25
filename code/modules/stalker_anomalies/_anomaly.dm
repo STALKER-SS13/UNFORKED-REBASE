@@ -5,7 +5,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 /obj/effect/zona_anomaly
 	name = "anomaly"
 	desc = "A dangerous anomaly."
-	icon = 'icons/stalker/anomalies.dmi'
+	icon = 'icons/stalker/obj/anomalies.dmi'
 	icon_state = null
 	plane = GAME_PLANE
 	layer = BELOW_MOB_LAYER
