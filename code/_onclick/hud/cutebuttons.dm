@@ -1,7 +1,7 @@
-/atom/movable/screen/cutedecors
+/atom/movable/screen/cutedecor
 	name = "cute decor"
 	icon = 'icons/stalker/hud/screen_stalker.dmi'
-	icon_state = "navigate"
+	icon_state = "cutedecor"
 	screen_loc = ui_cutedecor
 
 /atom/movable/screen/craft
@@ -39,7 +39,7 @@
 /atom/movable/screen/lookup
 	name = "look up"
 	icon = 'icons/stalker/hud/screen_stalker.dmi'
-	icon_state = "talk_wheel"
+	icon_state = "level"
 	screen_loc = ui_lookup
 
 /atom/movable/screen/lookup/Click(location, control, params)

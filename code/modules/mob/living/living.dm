@@ -1956,12 +1956,13 @@ GLOBAL_LIST_EMPTY(fire_appearances)
  */
 /mob/living/proc/look_up()
 	if(client.perspective != MOB_PERSPECTIVE) //We are already looking up.
-		stop_look_up()
+		end_look_up()
+		return
 	if(!can_look_up())
 		return
 	changeNext_move(CLICK_CD_LOOK_UP)
-	RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(stop_look_up)) //We stop looking up if we move.
-	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(start_look_up)) //We start looking again after we move.
+	RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(stop_look_up), override = TRUE) //We stop looking up if we move.
+	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(start_look_up), override = TRUE) //We start looking again after we move.
 	start_look_up()
 
 /mob/living/proc/start_look_up()
@@ -2005,12 +2006,13 @@ GLOBAL_LIST_EMPTY(fire_appearances)
  */
 /mob/living/proc/look_down()
 	if(client.perspective != MOB_PERSPECTIVE) //We are already looking down.
-		stop_look_down()
+		end_look_down()
+		return
 	if(!can_look_up()) //if we cant look up, we cant look down.
 		return
 	changeNext_move(CLICK_CD_LOOK_UP)
-	RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(stop_look_down)) //We stop looking down if we move.
-	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(start_look_down)) //We start looking again after we move.
+	RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(stop_look_down), override = TRUE) //We stop looking down if we move.
+	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(start_look_down), override = TRUE) //We start looking again after we move.
 	start_look_down()
 
 /mob/living/proc/start_look_down()
