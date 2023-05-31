@@ -35,14 +35,14 @@
 /obj/effect/abstract/radiation/proc/on_entered(turf/source, atom/movable/arrived, atom/old_loc, list/atom/old_locs)
 	SIGNAL_HANDLER
 
-	try_irradiate()
+	try_irradiate(source)
 
 /obj/effect/abstract/radiation/proc/on_exited(turf/source, atom/movable/gone, direction)
 	SIGNAL_HANDLER
 
-	try_stop_irradiate()
+	try_stop_irradiate(source)
 
-/obj/effect/abstract/radiation/proc/try_irradiate()
+/obj/effect/abstract/radiation/proc/try_irradiate(turf/source)
 	var/valid_target = FALSE
 	for(var/atom/movable/movable as anything in source)
 		if(CAN_IRRADIATE(movable))
@@ -56,7 +56,7 @@
 					chance = radiation_chance, \
 					minimum_exposure_time = radiation_minimum_exposure_time)
 
-/obj/effect/abstract/radiation/proc/try_stop_irradiate()
+/obj/effect/abstract/radiation/proc/try_stop_irradiate(turf/source)
 	var/valid_target = FALSE
 	for(var/atom/movable/movable as anything in source)
 		if(CAN_IRRADIATE(movable))
