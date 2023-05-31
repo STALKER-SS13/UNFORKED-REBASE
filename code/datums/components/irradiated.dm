@@ -1,9 +1,10 @@
-#define RADIATION_IMMEDIATE_TOX_DAMAGE 10
+#define RADIATION_IMMEDIATE_TOX_DAMAGE 0.5
 
-#define RADIATION_TOX_DAMAGE_PER_INTERVAL 2
+#define RADIATION_TOX_DAMAGE_PER_INTERVAL 0.1
 #define RADIATION_TOX_INTERVAL (25 SECONDS)
 
-#define RADIATION_BURN_SPLOTCH_DAMAGE 11
+#define RADIATION_BURN_SPLOTCH_RADS 25
+#define RADIATION_BURN_SPLOTCH_DAMAGE 0.2
 #define RADIATION_BURN_INTERVAL_MIN (30 SECONDS)
 #define RADIATION_BURN_INTERVAL_MAX (60 SECONDS)
 
@@ -13,7 +14,9 @@
 /// This atom is irradiated, and will glow green.
 /// Humans will take toxin damage until all their toxin damage is cleared.
 /datum/component/irradiated
-	dupe_mode = COMPONENT_DUPE_UNIQUE
+	dupe_mode = COMPONENT_DUPE_UNIQUE_PASSARGS
+
+	var/rads = 0
 
 	var/beginning_of_irradiation
 
@@ -22,7 +25,7 @@
 	COOLDOWN_DECLARE(clean_cooldown)
 	COOLDOWN_DECLARE(last_tox_damage)
 
-/datum/component/irradiated/Initialize()
+/datum/component/irradiated/Initialize(rads = DEFAULT_RADS_AMOUNT)
 	if (!CAN_IRRADIATE(parent))
 		return COMPONENT_INCOMPATIBLE
 
@@ -35,28 +38,34 @@
 
 	create_glow()
 
+	src.rads = min(RADS_MAXIMUM_EVER, rads)
+
 	beginning_of_irradiation = world.time
 
 	if (ishuman(parent))
 		var/mob/living/carbon/human/human_parent = parent
-		human_parent.apply_damage(RADIATION_IMMEDIATE_TOX_DAMAGE, TOX)
-		START_PROCESSING(SSobj, src)
-
+		human_parent.apply_damage(RADIATION_IMMEDIATE_TOX_DAMAGE * rads, TOX)
 		COOLDOWN_START(src, last_tox_damage, RADIATION_TOX_INTERVAL)
 
 		start_burn_splotch_timer()
 
 		human_parent.throw_alert(ALERT_IRRADIATED, /atom/movable/screen/alert/irradiated)
 
+		START_PROCESSING(SSobj, src)
+
 /datum/component/irradiated/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_COMPONENT_CLEAN_ACT, PROC_REF(on_clean))
 	RegisterSignal(parent, COMSIG_GEIGER_COUNTER_SCAN, PROC_REF(on_geiger_counter_scan))
+	if(isliving(parent))
+		RegisterSignal(parent, COMSIG_LIVING_POST_FULLY_HEAL, PROC_REF(on_fully_heal))
 
 /datum/component/irradiated/UnregisterFromParent()
 	UnregisterSignal(parent, list(
 		COMSIG_COMPONENT_CLEAN_ACT,
 		COMSIG_GEIGER_COUNTER_SCAN,
 	))
+	if(isliving(parent))
+		UnregisterSignal(parent, COMSIG_LIVING_POST_FULLY_HEAL)
 
 /datum/component/irradiated/Destroy(force, silent)
 	var/atom/movable/parent_movable = parent
@@ -74,24 +83,29 @@
 
 	return ..()
 
+/datum/component/irradiated/InheritComponent(datum/component/new_rads, i_am_original, rads)
+	if(!i_am_original)
+		return
+	src.rads = min(RADS_MAXIMUM_EVER, src.rads + rads)
+
 /datum/component/irradiated/process(seconds_per_tick)
 	if (!ishuman(parent))
+		return PROCESS_KILL
+
+	if (rads <= 0)
+		qdel(src)
 		return PROCESS_KILL
 
 	if (HAS_TRAIT(parent, TRAIT_RADIMMUNE))
 		qdel(src)
 		return PROCESS_KILL
 
-	var/mob/living/carbon/human/human_parent = parent
-	if (human_parent.getToxLoss() == 0)
-		qdel(src)
-		return PROCESS_KILL
-
 	if (should_halt_effects(parent))
 		return
 
+	var/mob/living/carbon/human/human_parent = parent
 	if (human_parent.stat > DEAD)
-		human_parent.dna?.species?.handle_radiation(human_parent, world.time - beginning_of_irradiation, seconds_per_tick)
+		human_parent.dna?.species?.handle_radiation(human_parent, rads, world.time - beginning_of_irradiation, seconds_per_tick)
 
 	process_tox_damage(human_parent, seconds_per_tick)
 
@@ -111,11 +125,11 @@
 	if (!COOLDOWN_FINISHED(src, last_tox_damage))
 		return
 
-	target.apply_damage(RADIATION_TOX_DAMAGE_PER_INTERVAL, TOX)
+	target.apply_damage(RADIATION_TOX_DAMAGE_PER_INTERVAL * rads, TOX)
 	COOLDOWN_START(src, last_tox_damage, RADIATION_TOX_INTERVAL)
 
 /datum/component/irradiated/proc/start_burn_splotch_timer()
-	addtimer(CALLBACK(src, PROC_REF(give_burn_splotches)), rand(RADIATION_BURN_INTERVAL_MIN, RADIATION_BURN_INTERVAL_MAX), TIMER_STOPPABLE)
+	burn_splotch_timer_id = addtimer(CALLBACK(src, PROC_REF(give_burn_splotches)), rand(RADIATION_BURN_INTERVAL_MIN, RADIATION_BURN_INTERVAL_MAX), TIMER_STOPPABLE)
 
 /datum/component/irradiated/proc/give_burn_splotches()
 	// This shouldn't be possible, but just in case.
@@ -123,6 +137,10 @@
 		return
 
 	start_burn_splotch_timer()
+
+	// Not enough rads
+	if(rads < RADIATION_BURN_SPLOTCH_RADS)
+		return
 
 	var/mob/living/carbon/human/human_parent = parent
 
@@ -138,7 +156,7 @@
 	if(human_parent.is_blind())
 		to_chat(human_parent, span_boldwarning("Your [affected_limb.plaintext_zone] feels like it's bubbling, then burns like hell!"))
 
-	human_parent.apply_damage(RADIATION_BURN_SPLOTCH_DAMAGE, BURN, affected_limb)
+	human_parent.apply_damage(RADIATION_BURN_SPLOTCH_DAMAGE * rads, BURN, affected_limb)
 	playsound(
 		human_parent,
 		pick('sound/effects/wounds/sizzle1.ogg', 'sound/effects/wounds/sizzle2.ogg'),
@@ -178,19 +196,25 @@
 	SIGNAL_HANDLER
 
 	if (isliving(source))
-		var/mob/living/living_source = source
-		to_chat(user, span_boldannounce("[icon2html(geiger_counter, user)] Subject is irradiated. Contamination traces back to roughly [DisplayTimeText(world.time - beginning_of_irradiation, 5)] ago. Current toxin levels: [living_source.getToxLoss()]."))
+		to_chat(user, span_boldannounce("[icon2html(geiger_counter, user)] Subject is irradiated. Contamination traces back to roughly [DisplayTimeText(world.time - beginning_of_irradiation, 5)] ago. Current amount of rads: [rads]."))
 	else
 		// In case the green wasn't obvious enough...
 		to_chat(user, span_boldannounce("[icon2html(geiger_counter, user)] Target is irradiated."))
 
 	return COMSIG_GEIGER_COUNTER_SCAN_SUCCESSFUL
 
+/datum/component/irradiated/proc/on_fully_heal(mob/living/source, heal_flags)
+	SIGNAL_HANDLER
+
+	if(heal_flags & HEAL_STATUS)
+		qdel(src)
+
 /atom/movable/screen/alert/irradiated
 	name = "Irradiated"
-	desc = "You're irradiated! Heal your toxins quick, and stand under a shower to halt the incoming damage."
+	desc = "You're irradiated! Stand under a shower to halt the incoming damage. Heal your rads ASAP."
 	icon_state = ALERT_IRRADIATED
 
+#undef RADIATION_BURN_SPLOTCH_RADS
 #undef RADIATION_BURN_SPLOTCH_DAMAGE
 #undef RADIATION_BURN_INTERVAL_MIN
 #undef RADIATION_BURN_INTERVAL_MAX

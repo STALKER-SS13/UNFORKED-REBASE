@@ -19,6 +19,12 @@
 	var/range = 1
 	/// How much radiation protection threshold is passed to the radiation pulse (see: [proc/radiation_pulse])
 	var/threshold = RAD_MEDIUM_INSULATION
+	/// How much chance is passed to the radiation pulse (see: [proc/radiation_pulse])
+	var/chance = 100
+	/// How much minimum exposure time is passed to the radiation pulse (see: [proc/radiation_pulse])
+	var/minimum_exposure_time = 0
+	/// How much rads is passed to the radiation pulse (see: [proc/radiation_pulse])
+	var/rads = DEFAULT_RADS_AMOUNT
 	/// Optional - What is shown on examine of the parent?
 	var/examine_text
 
@@ -26,6 +32,9 @@
 	cooldown_time = 5 SECONDS,
 	range = 1,
 	threshold = RAD_MEDIUM_INSULATION,
+	chance = 100,
+	minimum_exposure_time = 0,
+	rads = DEFAULT_RADS_AMOUNT,
 	examine_text,
 )
 
@@ -35,6 +44,9 @@
 	src.cooldown_time = max(cooldown_time, MIN_PULSE_COOLDOWN)
 	src.range = range
 	src.threshold = threshold
+	src.chance = chance
+	src.minimum_exposure_time = minimum_exposure_time
+	src.rads = rads
 	src.examine_text = examine_text
 
 	// We process on fastprocess even though we're on a cooldown based system.
@@ -67,6 +79,9 @@
 	src.cooldown_time = cooldown_time
 	src.range = range
 	src.threshold = threshold
+	src.chance = chance
+	src.minimum_exposure_time = minimum_exposure_time
+	src.rads = rads
 	// Don't touch examine text or whatever else.
 
 /datum/component/radioactive_emitter/process(seconds_per_tick)
@@ -74,7 +89,7 @@
 		return
 
 	COOLDOWN_START(src, rad_pulse_cooldown, cooldown_time)
-	radiation_pulse(parent, range, threshold)
+	radiation_pulse(parent, range, threshold, chance, minimum_exposure_time, rads)
 
 /datum/component/radioactive_emitter/proc/on_examine(datum/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
