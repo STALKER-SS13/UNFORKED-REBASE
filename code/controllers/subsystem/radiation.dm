@@ -91,7 +91,7 @@ SUBSYSTEM_DEF(radiation)
 			if (!prob(perceived_chance))
 				continue
 
-			if (irradiate_after_basic_checks(target))
+			if (irradiate_after_basic_checks(target, pulse_information.rads))
 				target.investigate_log("was irradiated by [source].", INVESTIGATE_RADIATION)
 
 		if(MC_TICK_CHECK)
@@ -107,13 +107,13 @@ SUBSYSTEM_DEF(radiation)
 	irradiate_after_basic_checks(target)
 	return TRUE
 
-/datum/controller/subsystem/radiation/proc/irradiate_after_basic_checks(atom/target)
+/datum/controller/subsystem/radiation/proc/irradiate_after_basic_checks(atom/target, rads_amount)
 	PRIVATE_PROC(TRUE)
 
 	if (ishuman(target) && wearing_rad_protected_clothing(target))
 		return FALSE
 
-	target.AddComponent(/datum/component/irradiated)
+	target.AddComponent(/datum/component/irradiated, rads_amount)
 	return TRUE
 
 /// Returns whether or not the target can be irradiated by any means.
