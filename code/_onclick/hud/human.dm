@@ -23,16 +23,6 @@
 
 	targetmob.hud_used.hidden_inventory_update(usr)
 
-/atom/movable/screen/human/equip
-	name = "equip"
-	icon_state = "act_equip"
-
-/atom/movable/screen/human/equip/Click()
-	if(ismecha(usr.loc)) // stops inventory actions in a mech
-		return TRUE
-	var/mob/living/carbon/human/H = usr
-	H.quick_equip()
-
 /atom/movable/screen/ling
 	icon = 'icons/hud/screen_changeling.dmi'
 
@@ -58,12 +48,17 @@
 	var/atom/movable/screen/using
 	var/atom/movable/screen/inventory/inv_box
 
+	using = new/atom/movable/screen/cutedecors
+	using.icon = ui_style
+	using.hud = src
+	static_inventory += using
+
 	using = new/atom/movable/screen/language_menu
 	using.icon = ui_style
 	using.hud = src
 	static_inventory += using
 
-	using = new/atom/movable/screen/navigate
+	using = new/atom/movable/screen/lookup
 	using.icon = ui_style
 	using.hud = src
 	static_inventory += using
@@ -98,7 +93,7 @@
 	inv_box.icon = ui_style
 	inv_box.slot_id = ITEM_SLOT_ICLOTHING
 	inv_box.icon_state = "uniform"
-	inv_box.icon_full = "template"
+	inv_box.icon_full = "uniform_full"
 	inv_box.screen_loc = ui_iclothing
 	inv_box.hud = src
 	toggleable_inventory += inv_box
@@ -108,7 +103,7 @@
 	inv_box.icon = ui_style
 	inv_box.slot_id = ITEM_SLOT_OCLOTHING
 	inv_box.icon_state = "suit"
-	inv_box.icon_full = "template"
+	inv_box.icon_full = "suit_full"
 	inv_box.screen_loc = ui_oclothing
 	inv_box.hud = src
 	toggleable_inventory += inv_box
@@ -133,7 +128,7 @@
 	inv_box.name = "id"
 	inv_box.icon = ui_style
 	inv_box.icon_state = "id"
-	inv_box.icon_full = "template_small"
+	inv_box.icon_full = "id_full"
 	inv_box.screen_loc = ui_id
 	inv_box.slot_id = ITEM_SLOT_ID
 	inv_box.hud = src
@@ -143,7 +138,7 @@
 	inv_box.name = "mask"
 	inv_box.icon = ui_style
 	inv_box.icon_state = "mask"
-	inv_box.icon_full = "template"
+	inv_box.icon_full = "mask_full"
 	inv_box.screen_loc = ui_mask
 	inv_box.slot_id = ITEM_SLOT_MASK
 	inv_box.hud = src
@@ -153,7 +148,7 @@
 	inv_box.name = "neck"
 	inv_box.icon = ui_style
 	inv_box.icon_state = "neck"
-	inv_box.icon_full = "template"
+	inv_box.icon_full = "neck_full"
 	inv_box.screen_loc = ui_neck
 	inv_box.slot_id = ITEM_SLOT_NECK
 	inv_box.hud = src
@@ -163,7 +158,7 @@
 	inv_box.name = "back"
 	inv_box.icon = ui_style
 	inv_box.icon_state = "back"
-	inv_box.icon_full = "template_small"
+	inv_box.icon_full = "back_full"
 	inv_box.screen_loc = ui_back
 	inv_box.slot_id = ITEM_SLOT_BACK
 	inv_box.hud = src
@@ -172,8 +167,8 @@
 	inv_box = new /atom/movable/screen/inventory()
 	inv_box.name = "left pocket"
 	inv_box.icon = ui_style
-	inv_box.icon_state = "pocket"
-	inv_box.icon_full = "template_small"
+	inv_box.icon_state = "pocket_l"
+	inv_box.icon_full = "pocket_l_full"
 	inv_box.screen_loc = ui_storage1
 	inv_box.slot_id = ITEM_SLOT_LPOCKET
 	inv_box.hud = src
@@ -182,8 +177,8 @@
 	inv_box = new /atom/movable/screen/inventory()
 	inv_box.name = "right pocket"
 	inv_box.icon = ui_style
-	inv_box.icon_state = "pocket"
-	inv_box.icon_full = "template_small"
+	inv_box.icon_state = "pocket_r"
+	inv_box.icon_full = "pocket_r_full"
 	inv_box.screen_loc = ui_storage2
 	inv_box.slot_id = ITEM_SLOT_RPOCKET
 	inv_box.hud = src
@@ -193,7 +188,7 @@
 	inv_box.name = "suit storage"
 	inv_box.icon = ui_style
 	inv_box.icon_state = "suit_storage"
-	inv_box.icon_full = "template"
+	inv_box.icon_full = "suit_storage_full"
 	inv_box.screen_loc = ui_sstore1
 	inv_box.slot_id = ITEM_SLOT_SUITSTORE
 	inv_box.hud = src
