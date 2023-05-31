@@ -105,7 +105,7 @@
 
 	var/mob/living/carbon/human/human_parent = parent
 	if (human_parent.stat > DEAD)
-		human_parent.dna?.species?.handle_radiation(human_parent, world.time - beginning_of_irradiation, seconds_per_tick)
+		human_parent.dna?.species?.handle_radiation(human_parent, rads, world.time - beginning_of_irradiation, seconds_per_tick)
 
 	process_tox_damage(human_parent, seconds_per_tick)
 
@@ -196,7 +196,6 @@
 	SIGNAL_HANDLER
 
 	if (isliving(source))
-		var/mob/living/living_source = source
 		to_chat(user, span_boldannounce("[icon2html(geiger_counter, user)] Subject is irradiated. Contamination traces back to roughly [DisplayTimeText(world.time - beginning_of_irradiation, 5)] ago. Current amount of rads: [rads]."))
 	else
 		// In case the green wasn't obvious enough...
