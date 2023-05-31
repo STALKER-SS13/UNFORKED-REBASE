@@ -45,23 +45,27 @@
 	if (ishuman(parent))
 		var/mob/living/carbon/human/human_parent = parent
 		human_parent.apply_damage(RADIATION_IMMEDIATE_TOX_DAMAGE * rads, TOX)
-		START_PROCESSING(SSobj, src)
-
 		COOLDOWN_START(src, last_tox_damage, RADIATION_TOX_INTERVAL)
 
 		start_burn_splotch_timer()
 
 		human_parent.throw_alert(ALERT_IRRADIATED, /atom/movable/screen/alert/irradiated)
 
+		START_PROCESSING(SSobj, src)
+
 /datum/component/irradiated/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_COMPONENT_CLEAN_ACT, PROC_REF(on_clean))
 	RegisterSignal(parent, COMSIG_GEIGER_COUNTER_SCAN, PROC_REF(on_geiger_counter_scan))
+	if(isliving(parent))
+		RegisterSignal(parent, COMSIG_LIVING_POST_FULLY_HEAL, PROC_REF(on_fully_heal))
 
 /datum/component/irradiated/UnregisterFromParent()
 	UnregisterSignal(parent, list(
 		COMSIG_COMPONENT_CLEAN_ACT,
 		COMSIG_GEIGER_COUNTER_SCAN,
 	))
+	if(isliving(parent))
+		UnregisterSignal(parent, COMSIG_LIVING_POST_FULLY_HEAL)
 
 /datum/component/irradiated/Destroy(force, silent)
 	var/atom/movable/parent_movable = parent
@@ -193,12 +197,18 @@
 
 	if (isliving(source))
 		var/mob/living/living_source = source
-		to_chat(user, span_boldannounce("[icon2html(geiger_counter, user)] Subject is irradiated. Contamination traces back to roughly [DisplayTimeText(world.time - beginning_of_irradiation, 5)] ago. Current toxin levels: [living_source.getToxLoss()]."))
+		to_chat(user, span_boldannounce("[icon2html(geiger_counter, user)] Subject is irradiated. Contamination traces back to roughly [DisplayTimeText(world.time - beginning_of_irradiation, 5)] ago. Current amount of rads: [rads]."))
 	else
 		// In case the green wasn't obvious enough...
 		to_chat(user, span_boldannounce("[icon2html(geiger_counter, user)] Target is irradiated."))
 
 	return COMSIG_GEIGER_COUNTER_SCAN_SUCCESSFUL
+
+/datum/component/irradiated/proc/on_fully_heal(mob/living/source, heal_flags)
+	SIGNAL_HANDLER
+
+	if(heal_flags & HEAL_STATUS)
+		qdel(src)
 
 /atom/movable/screen/alert/irradiated
 	name = "Irradiated"

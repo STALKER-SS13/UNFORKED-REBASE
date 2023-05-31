@@ -196,7 +196,12 @@
 				render_list += "<span class='info ml-1'>Subject Minor Disabilities: [carbontarget.get_quirk_string(FALSE, CAT_QUIRK_MINOR_DISABILITY)].</span>\n"
 
 	if (HAS_TRAIT(target, TRAIT_IRRADIATED))
-		render_list += "<span class='alert ml-1'>Subject is irradiated. Supply toxin healing.</span>\n"
+		if(advanced)
+			var/datum/component/irradiated/irradiated = target.GetComponent(/datum/component/irradiated)
+			var/rads = 0 || irradiated?.rads
+			render_list += "<span class='alert ml-1'>Subject is irradiated. Rads amount: [CEILING(rads, 1)].</span>\n"
+		else
+			render_list += "<span class='alert ml-1'>Subject is irradiated.</span>\n"
 
 	//Eyes and ears
 	if(advanced && iscarbon(target))

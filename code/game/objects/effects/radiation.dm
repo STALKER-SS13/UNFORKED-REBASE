@@ -73,5 +73,5 @@
 	icon_state = "rad_medium"
 
 /obj/effect/abstract/radiation/high
-	radiation_rads = 40
+	radiation_rads = 50
 	icon_state = "rad_high"
