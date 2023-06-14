@@ -3,6 +3,8 @@
 	icon = 'icons/stalker/hud/screen_stalker.dmi'
 	icon_state = "toggle_left"
 	screen_loc = ui_inventory
+	/// Used to make it look prettier when open
+	var/hollow = FALSE
 
 /atom/movable/screen/human/toggle/Click()
 	var/mob/targetmob = usr
@@ -19,18 +21,24 @@
 		usr.hud_used.inventory_shown = TRUE
 		usr.client.screen += targetmob.hud_used.toggleable_inventory
 		screen_loc = ui_inventory_autism
+	hollow = usr.hud_used.inventory_shown
 
 	targetmob.hud_used.hidden_inventory_update(usr)
+	update_appearance()
+
+/atom/movable/screen/human/toggle/update_icon_state()
+	. = ..()
+	icon_state = "[initial(icon_state)][hollow ? "_hollow" : ""]"
 
 /atom/movable/screen/human/toggle/update_overlays()
 	. = ..()
-	var/image/toggle_mid_one = image(icon, "toggle_mid")
+	var/image/toggle_mid_one = image(icon, "toggle_mid[hollow ? "_hollow" : ""]")
 	toggle_mid_one.pixel_x += 32
 	. += toggle_mid_one
-	var/image/toggle_mid_two = image(icon, "toggle_mid")
+	var/image/toggle_mid_two = image(icon, "toggle_mid[hollow ? "_hollow" : ""]")
 	toggle_mid_two.pixel_x += 64
 	. += toggle_mid_two
-	var/image/toggle_right = image(icon, "toggle_right")
+	var/image/toggle_right = image(icon, "toggle_right[hollow ? "_hollow" : ""]")
 	toggle_right.pixel_x += 96
 	. += toggle_right
 

@@ -17,3 +17,4 @@
 		qdel(bolt)
 	else
 		user.throw_mode_on()
+		to_chat(usr, span_notice("You grab a bolt."))

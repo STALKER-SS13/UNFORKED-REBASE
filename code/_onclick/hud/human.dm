@@ -51,12 +51,11 @@
 	using.hud = src
 	static_inventory += using
 
-	action_intent = new /atom/movable/screen/combattoggle/flashy()
+	action_intent = new /atom/movable/screen/combattoggle()
 	action_intent.hud = src
 	action_intent.icon = ui_style
 	action_intent.screen_loc = ui_combat_toggle
 	static_inventory += action_intent
-
 
 	using = new /atom/movable/screen/mov_intent
 	using.icon = ui_style
@@ -304,10 +303,6 @@
 	healths = new /atom/movable/screen/healths()
 	healths.hud = src
 	infodisplay += healths
-
-	healthdoll = new /atom/movable/screen/healthdoll()
-	healthdoll.hud = src
-	infodisplay += healthdoll
 
 	stamina = new /atom/movable/screen/stamina()
 	stamina.hud = src
