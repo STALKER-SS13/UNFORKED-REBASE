@@ -17,4 +17,4 @@
 	. = ..()
 	if(delete_on_drop && !QDELING(src))
 		interaction_flags_item &= ~INTERACT_ITEM_ATTACK_HAND_PICKUP
-		QDEL_IN(src, 3 SECONDS)
+		QDEL_IN(src, 5 SECONDS)

@@ -25,6 +25,7 @@
 	threshold,
 	chance = DEFAULT_RADIATION_CHANCE,
 	minimum_exposure_time = 0,
+	rads = DEFAULT_RADS_AMOUNT,
 )
 	if(!SSradiation.can_fire)
 		return
@@ -35,6 +36,7 @@
 	pulse_information.threshold = threshold
 	pulse_information.chance = chance
 	pulse_information.minimum_exposure_time = minimum_exposure_time
+	pulse_information.rads = rads
 	pulse_information.turfs_to_process = RANGE_TURFS(max_range, source)
 
 	SSradiation.processing += pulse_information
@@ -47,6 +49,7 @@
 	var/threshold
 	var/chance
 	var/minimum_exposure_time
+	var/rads
 	var/list/turfs_to_process
 
 #define MEDIUM_RADIATION_THRESHOLD_RANGE 0.5

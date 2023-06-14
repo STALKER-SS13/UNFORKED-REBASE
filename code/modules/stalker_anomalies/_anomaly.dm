@@ -6,12 +6,12 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 	name = "anomaly"
 	desc = "A dangerous anomaly."
 	icon = 'icons/stalker/obj/anomalies.dmi'
-	icon_state = null
 	plane = GAME_PLANE
 	layer = BELOW_MOB_LAYER
 	density = FALSE
 	anchored = TRUE
 	pass_flags = PASSTABLE | PASSMOB
+	pass_flags_self = PASSMOB
 	light_power = 1.5
 	/// Icon state when the anomaly gets activated
 	var/active_icon_state
