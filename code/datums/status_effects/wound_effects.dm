@@ -5,6 +5,11 @@
 	desc = "The serious wounds you've sustained have put your body into fight-or-flight mode! Now's the time to look for an exit!"
 	icon_state = "wounded"
 
+/atom/movable/screen/alert/status_effect/determined/Click(location, control, params)
+	. = ..()
+	// b-b-bad to the bone
+	usr.playsound_local(get_turf(usr), 'sound/stalker/autism/badtotheboneriff.ogg', 60, vary = FALSE)
+
 /datum/status_effect/determined
 	id = "determined"
 	alert_type = /atom/movable/screen/alert/status_effect/determined
