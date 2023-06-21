@@ -66,7 +66,7 @@
 
 	using = new /atom/movable/screen/drop()
 	using.icon = ui_style
-	using.screen_loc = ui_drop_throw
+	using.screen_loc = ui_above_bolt
 	using.hud = src
 	static_inventory += using
 
@@ -310,7 +310,7 @@
 
 	pull_icon = new /atom/movable/screen/pull()
 	pull_icon.icon = ui_style
-	pull_icon.screen_loc = ui_above_intent
+	pull_icon.screen_loc = ui_above_movement
 	pull_icon.hud = src
 	pull_icon.update_appearance()
 	static_inventory += pull_icon
