@@ -157,7 +157,7 @@
 #define COLOR_SAMPLE_GRAY "#5e5856"
 
 ///Main colors for UI themes
-#define COLOR_THEME_STALKER "#FFA214"
+#define COLOR_THEME_STALKER "#d4ccbf"
 #define COLOR_THEME_MIDNIGHT "#6086A0"
 #define COLOR_THEME_PLASMAFIRE "#FFB200"
 #define COLOR_THEME_RETRO "#24CA00"

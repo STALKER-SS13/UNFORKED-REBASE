@@ -233,7 +233,6 @@
 		return
 
 	mood_screen_object.cut_overlays()
-	mood_screen_object.color = initial(mood_screen_object.color)
 
 	// lets see if we have an special icons to show instead of the normal mood levels
 	var/list/conflicting_moodies = list()
@@ -249,28 +248,34 @@
 			var/absmood = abs(the_event.mood_change)
 			highest_absolute_mood = absmood > highest_absolute_mood ? absmood : highest_absolute_mood
 
+	var/mutable_appearance/mood_overlay = mutable_appearance(mood_screen_object.icon)
 	switch(sanity_level)
-		if (SANITY_LEVEL_GREAT)
-			mood_screen_object.color = "#2eeb9a"
-		if (SANITY_LEVEL_NEUTRAL)
-			mood_screen_object.color = "#86d656"
-		if (SANITY_LEVEL_DISTURBED)
-			mood_screen_object.color = "#4b96c4"
-		if (SANITY_LEVEL_UNSTABLE)
-			mood_screen_object.color = "#dfa65b"
-		if (SANITY_LEVEL_CRAZY)
-			mood_screen_object.color = "#f38943"
-		if (SANITY_LEVEL_INSANE)
-			mood_screen_object.color = "#f15d36"
+		if(SANITY_LEVEL_GREAT)
+			mood_overlay.icon_state = "mood_face7"
+		if(SANITY_LEVEL_NEUTRAL)
+			mood_overlay.icon_state = "mood_face6"
+		if(SANITY_LEVEL_DISTURBED)
+			mood_overlay.icon_state = "mood_face5"
+		if(SANITY_LEVEL_UNSTABLE)
+			mood_overlay.icon_state = "mood_face4"
+		if(SANITY_LEVEL_CRAZY)
+			mood_overlay.icon_state = "mood_face3"
+		if(SANITY_LEVEL_INSANE)
+			if(sanity == SANITY_INSANE)
+				mood_overlay.icon_state = "mood_face1"
+			else
+				mood_overlay.icon_state = "mood_face2"
 
-	if (!conflicting_moodies.len) // theres no special icons, use the normal icon states
-		mood_screen_object.icon_state = "mood[mood_level]"
+	if(!conflicting_moodies.len) // theres no special icons, use the normal icon states
+		mood_screen_object.add_overlay(mood_overlay)
 		return
 
-	for (var/datum/mood_event/conflicting_event as anything in conflicting_moodies)
-		if (abs(conflicting_event.mood_change) == highest_absolute_mood)
-			mood_screen_object.icon_state = "[conflicting_event.special_screen_obj]"
+	for(var/datum/mood_event/conflicting_event as anything in conflicting_moodies)
+		if(abs(conflicting_event.mood_change) == highest_absolute_mood)
+			mood_overlay.icon_state = "[conflicting_event.special_screen_obj]"
 			break
+
+	mood_screen_object.add_overlay(mood_overlay)
 
 /// Sets up the mood HUD object
 /datum/mood/proc/modify_hud(datum/source)
@@ -278,10 +283,10 @@
 
 	var/datum/hud/hud = mob_parent.hud_used
 	mood_screen_object = new
-	mood_screen_object.color = "#4b96c4"
 	hud.infodisplay += mood_screen_object
 	RegisterSignal(hud, COMSIG_PARENT_QDELETING, PROC_REF(unmodify_hud))
 	RegisterSignal(mood_screen_object, COMSIG_CLICK, PROC_REF(hud_click))
+	update_mood_icon()
 
 /// Removes the mood HUD object
 /datum/mood/proc/unmodify_hud(datum/source)

@@ -4,6 +4,17 @@
 	name = "Determined"
 	desc = "The serious wounds you've sustained have put your body into fight-or-flight mode! Now's the time to look for an exit!"
 	icon_state = "wounded"
+	COOLDOWN_DECLARE(badtothebone)
+
+/atom/movable/screen/alert/status_effect/determined/Click(location, control, params)
+	. = ..()
+	if(!COOLDOWN_FINISHED(src, badtothebone))
+		return
+	COOLDOWN_START(src, badtothebone, 2 SECONDS)
+	// b-b-bad to the bone
+	usr << browse_rsc('icons/stalker/stickshiftskull.png', "stickshiftskull.png")
+	to_chat(usr, span_danger("<img src='stickshiftskull.png' width=96 height=96>"))
+	usr.playsound_local(get_turf(usr), 'sound/stalker/autism/badtotheboneriff.ogg', 60, vary = FALSE)
 
 /datum/status_effect/determined
 	id = "determined"
