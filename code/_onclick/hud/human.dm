@@ -66,7 +66,7 @@
 
 	using = new /atom/movable/screen/drop()
 	using.icon = ui_style
-	using.screen_loc = ui_above_bolt
+	using.screen_loc = ui_above_intent
 	using.hud = src
 	static_inventory += using
 

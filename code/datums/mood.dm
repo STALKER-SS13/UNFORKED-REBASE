@@ -283,10 +283,10 @@
 
 	var/datum/hud/hud = mob_parent.hud_used
 	mood_screen_object = new
-	mood_screen_object.color = "#4b96c4"
 	hud.infodisplay += mood_screen_object
 	RegisterSignal(hud, COMSIG_PARENT_QDELETING, PROC_REF(unmodify_hud))
 	RegisterSignal(mood_screen_object, COMSIG_CLICK, PROC_REF(hud_click))
+	update_mood_icon()
 
 /// Removes the mood HUD object
 /datum/mood/proc/unmodify_hud(datum/source)
