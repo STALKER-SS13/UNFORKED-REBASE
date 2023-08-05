@@ -2312,6 +2312,7 @@
 #include "code\game\turfs\stalker\closed\ship_hull.dm"
 #include "code\game\turfs\stalker\closed\wall\beton.dm"
 #include "code\game\turfs\stalker\closed\wall\brick.dm"
+#include "code\game\turfs\stalker\open\stalkerturfs.dm"
 #include "code\game\turfs\stalker\open\floor\iron_floor.dm"
 #include "code\game\turfs\stalker\open\floor\wood_floor.dm"
 #include "code\modules\actionspeed\_actionspeed_modifier.dm"
