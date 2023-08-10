@@ -5318,4 +5318,8 @@
 #include "interface\menu.dm"
 #include "interface\stylesheet.dm"
 #include "interface\skin.dmf"
+#include "stalker\code\_DEFINES\stalker_defines.dm"
+#include "stalker\code\game\trading\_trading_defines.dm"
+#include "stalker\code\game\trading\sidormat.dm"
+#include "stalker\code\game\trading\stalker_equipment.dm"
 // END_INCLUDE
