@@ -26,7 +26,6 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 	bought_stuff_turf = get_step(src, EAST)
 
 /obj/machinery/stalker/sidormat/attack_hand(mob/user)
-	balance = 0
 	if(..())
 		return
 	if(!ishuman(user))
@@ -36,27 +35,7 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 	ui_interact(user)
 
 /obj/machinery/stalker/sidormat/ui_interact(mob/living/carbon/human/H)
-/*
-	if(!istype(H.wear_id, /obj/item/stalker_pda))
-		say("Put on your PDA.")
-		return
-
-	//find_record("sid", H.sid, data_core.stalkers)
-	var/obj/item/stalker_pda/pda = H.wear_id
-	var/datum/data/record/pda_record = pda.profile
-
-	if(!pda_record || !pda.owner)
-		say("Activate your PDA profile.")
-		return
-
-	if(pda.owner != H)
-		say("No access.")
-		return
-*/
 	H.set_machine(src)
-	//balance = 2000 //pda_record.fields["money"]
-	//rating = 10000 //pda_record.fields["rating"]
-
 	var/dat
 
 	dat +="<div class='statusDisplay'>"
@@ -86,28 +65,6 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 /obj/machinery/stalker/sidormat/Topic(href, href_list)
 	if(..())
 		return
-/*
-	var/mob/living/carbon/human/H = usr
-
-	if(!istype(H.wear_id, /obj/item/stalker_pda))
-		say("Put on your PDA.")
-		updateUsrDialog()
-		return
-
-	var/datum/data/record/sk = find_record("sid", H.sid, GLOB.data_core.stalkers)
-	var/obj/item/stalker_pda/pda = H.wear_id
-
-
-	if(!sk)
-		say("Activate your PDA profile.")
-		updateUsrDialog()
-		return
-
-	if(!pda.owner || (pda.owner != H))
-		say("No access.")
-		updateUsrDialog()
-		return
-*/
 
 	if(href_list["choice"])
 		if(href_list["choice"] == "take")
@@ -115,22 +72,18 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 
 	if(href_list["purchase"])
 		var/datum/data/stalker_equipment/prize = locate(href_list["purchase"])
-
-		if (!prize)
+		if(!prize)
+			updateUsrDialog()
+			return
+		if(prize.cost > balance)
+			say("You don't have  enough money to buy [prize.name].")
 			updateUsrDialog()
 			return
 
-		if(prize.cost > balance)//sk.fields["money"])
-			say("You don't have enough money to buy [prize.name].")
-			updateUsrDialog()
-			return
-
-		//sk.fields["money"] -= prize.cost
-		balance -= prize.cost // = sk.fields["money"]
-		//PoolOrNew(prize.equipment_path, bought_stuff_turf)
+		balance -= prize.cost
 		new prize.equipment_path(bought_stuff_turf)
 
-	//updateUsrDialog()
+	updateUsrDialog()
 	return
 
 
@@ -144,22 +97,6 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 	return GLOB.sidor_cache[P.equipment_path]
 
 /obj/machinery/stalker/sidormat/proc/SellItems()
-	var/mob/living/carbon/human/H = usr
-/*	if(!istype(H.wear_id, /obj/item/stalker_pda))
-		say("Put on your PDA.")
-		return
-
-	var/datum/data/record/sk = find_record("sid", H.sid, GLOB.data_core.stalkers)
-	var/obj/item/stalker_pda/KPK = H.wear_id
-
-	if(!sk)
-		say("Activate your profile in PDA.")
-		return
-
-	if(KPK.sid != H.sid)
-		say("No access.")
-		return
-*/
 	var/list/atom/movable/ontable = GetItemsOnTable()
 	var/total_cost = GetOnTableCost(ontable)
 
@@ -171,9 +108,7 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 		if(I.loc != items_to_sell_turf)
 			continue
 
-		balance += GetCost(I)//sk.fields["money"] += GetCost(I)
-		//balance = sk.fields["money"]
-
+		balance += GetCost(I)
 		say("[I] was sold for [GetCost(I)].")
 		qdel(I)
 
