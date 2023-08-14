@@ -28,23 +28,6 @@
 	if(person.gender == "female")
 		person_gender = "Female"
 
-	var/datum/record/locked/lockfile = new(
-		age = person.age,
-		blood_type = person.dna.blood_type,
-		character_appearance = character_appearance,
-		dna_string = person.dna.unique_enzymes,
-		fingerprint = md5(person.dna.unique_identity),
-		gender = person_gender,
-		initial_rank = assignment,
-		name = person.real_name,
-		rank = assignment,
-		species = person.dna.species.name,
-		trim = assignment,
-		// Locked specifics
-		dna_ref = person.dna,
-		mind_ref = person.mind,
-	)
-
 	new /datum/record/stalker(
 		age = person.age,
 		blood_type = person.dna.blood_type,
@@ -63,7 +46,7 @@
 		rank_score = rand(RANK_ROOKIE, RANK_ROOKIE + 200),
 		reputation = REP_NEUTRAL,
 		stalker_faction = FACTION_LONERS,
-		money = rand(50, 100)
+		money = rand(50, 100),
 		is_faction_leader = FALSE,
 		lastlogin = world.time,
 	)
@@ -118,11 +101,16 @@
 	GLOB.manifest.stalkers -= src
 	return ..()
 
-/proc/find_stalker_record(stalker_id)
+/proc/find_stalker_record_by_id(stalker_id)
 	for(var/datum/record/stalker/target in GLOB.manifest.stalkers)
 		if(target.stalker_id != stalker_id)
 			continue
 		return target
 	return
 
-
+/proc/find_stalker_record_by_pass(pass)
+	for(var/datum/record/stalker/target in GLOB.manifest.stalkers)
+		if(target.PDA_password != pass)
+			continue
+		return target
+	return
