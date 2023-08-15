@@ -29,11 +29,9 @@ GLOBAL_LIST_EMPTY(PDA_list)
 	inhand_icon_state = "kpk"
 	w_class = 1
 
-	var/mode
 	var/selected_window = PDA_WINDOW_PROFILE
 	var/show_title = 0
 	var/switches = FLAG_FEED_SOUND | FLAG_FEED_IMAGES | FLAG_RATING_IMAGES
-	var/navbarhtml = ""
 	var/ratinghtml = ""
 
 	// Profile
@@ -46,7 +44,6 @@ GLOBAL_LIST_EMPTY(PDA_list)
 	var/obj/item/photo/photo_owner_west = new()
 	var/obj/item/photo/photo_owner_back = new()
 	var/obj/item/photo/photo_owner_east = new()
-	var/password = null
 	var/hacked = 0
 	var/rep_color_s = "#ffe100"
 	var/rep_name_s = "Neutral"
@@ -112,6 +109,8 @@ GLOBAL_LIST_EMPTY(PDA_list)
 		return
 
 	if(profile)
+		user << browse_rsc(profile.front_photo, "PDA_front.png")
+		user << browse_rsc(profile.side_photo, "PDA_side.png")
 		profile.lastlogin = world.time
 
 	icon_state = "kpk_on"
@@ -158,26 +157,26 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				| <a style='color:#c10000;' href='byond://?src=[REF(src)];choice=password_input'>_______________</a> |<br>
 		<div align='center'></div></td></tr>"}
 	else
-		switch(mode)
+		switch(selected_window)
 			if(PDA_WINDOW_PROFILE)
-				navbarhtml ="| <a>Profile</a> | <a href='byond://?src=[REF(src)];choice=3'>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
+				navbar_data ="| <a>Profile</a> | <a href='byond://?src=[REF(src)];choice=3'>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
 
 				data += {"
 				<table border=0 height='314' width='455'><tr><td valign='top' align='left'>
 				<div align='right'><a style='color:#c10000;' align='center' href='byond://?src=[REF(src)];choice=load_cache'>\[LOAD CACHE\]</a><a style='color:#c10000;' align='center' href='byond://?src=[REF(src)];choice=exit'>\[EXIT\]</a><a href='byond://?src=[REF(src)];choice=title'>\[-\]</a> <a href='byond://?src=[REF(src)];choice=close'>\[X\]</a></div></td</tr>
 				<tr valign='top'><td><table><tr>
 				<td style='text-align: center;' valign='top' align='left' width=90 height=90>
-				<img style='margin-left: auto; margin-right: auto;' height=80 width=80 border=4 src=photo_[rotation]><br></td>"}
+				<img style='margin-left: auto; margin-right: auto;' height=80 width=80 border=4 style='-ms-interpolation-mode: nearest-neighbor' src=PDA_front.png><br></td>"}
 				data += {"<td>
 				<b>Name:</b> [profile.name]<br>
 				<b>Faction:</b> [profile.stalker_faction]<br>
-				<b>Rank:</b> [profile.rank_score] ([rating])<br>
-				<b>Reputation:</b> <font color='[rep_color_s]'>[eng_rep_name_s] ([reputation])</font><br>
-				<b>Balance:</b> [num2text(money, 8)] RU<br>
+				<b>Rank:</b> [get_rank_name(profile.rank_score)] ([profile.rank_score])<br>
+				<b>Reputation:</b> <font color='[get_rep_color(profile.reputation)]'>[get_rep_name(profile.reputation)] ([profile.reputation])</font><br>
+				<b>Balance:</b> [num2text(profile.money, 8)] RU<br>
 				</td></tr></table></td></tr>"}
 				// TODO: Add encyclopedia back here
 			if(PDA_WINDOW_RANKING)
-				navbarhtml ="| <a href='byond://?src=[REF(src)];choice=1'>Profile</a> | <a>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
+				navbar_data ="| <a href='byond://?src=[REF(src)];choice=1'>Profile</a> | <a>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
 
 				data += {"<table border=0 height='314' width='455'><tr><td valign='top' align='left'><div align='right'>
 				<a style='color:#c10000;' align='center' href='byond://?src=[REF(src)];choice=rating_images'>\[IMAGES\] </a>
@@ -186,7 +185,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				data += "<div align = 'center' > | <a href='byond://?src=[REF(src)];choice=refresh_rating'>Refresh stalker list</a> | </div></td>"
 				data += "</tr><tr valign='top'><td><div id= 'lenta'>[ratinghtml]</div></td></tr>"
 			if(PDA_WINDOW_STALKER_FEED)
-				navbarhtml ="| <a href='byond://?src=[REF(src)];choice=1'>Profile</a> | <a href='byond://?src=[REF(src)];choice=3'>Rating</a> | <a>Feed</a> |<br>"
+				navbar_data ="| <a href='byond://?src=[REF(src)];choice=1'>Profile</a> | <a href='byond://?src=[REF(src)];choice=3'>Rating</a> | <a>Feed</a> |<br>"
 
 				data += {"<table border=0 height='314' width='455'><tr><td valign='top' align='left'><div align='right'>
 				<a style='color:#c10000;' align='center' href='byond://?src=[REF(src)];choice=lenta_images'>\[IMAGES\] </a>
@@ -195,7 +194,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				data += "<div align = 'center' > | <a href='byond://?src=[REF(src)];choice=lenta_add'>Send feed message</a> | <a href='byond://?src=[REF(src)];choice=lenta_faction_add'>Send faction message</a> | <a href='byond://?src=[REF(src)];choice=lenta_sound'>Turn on/off sound</a> |</div></td>"
 				data += "</tr><tr style='border: 0px;' valign='top'><td style='border: 0px;'><div id='lenta'>[lentahtml]</div></td></tr>"
 				// TODO: Add map here
-		data += "<tr><td colspan='1' align='center' id='table-bottom1' height=30>[navbarhtml]</td></tr>"
+		data += "<tr><td colspan='1' align='center' id='table-bottom1' height=30>[navbar_data]</td></tr>"
 		// TODO: Map script goes here
 	data +="<table></body></html>"
 
@@ -204,156 +203,57 @@ GLOBAL_LIST_EMPTY(PDA_list)
 /obj/item/stalker_pda/Topic(href, href_list)
 	..()
 
-	var/mob/living/carbon/human/H = usr
-	if(!usr.canUseTopic(src))
+	var/mob/living/carbon/human/user = usr
+	if(user.incapacitated() || loc != user)
 		hacked = 0
-		H.unset_machine()
-		H << browse(null, "window=mainhtml")
+		user.unset_machine()
+		user << browse(null, "window=mainhtml")
 		return
-	//add_fingerprint(H)
-	//get_asset_datum(/datum/asset/simple/basics).send(H)
+	user.set_machine(src)
+	//add_fingerprint(user)
+	//get_asset_datum(/datum/asset/simple/basics).send(user)
 
 	switch(href_list["choice"])
 		if("title")
 			show_title = !show_title
 
 		if("close")
-			icon_state = "kpk_off"
-			H.unset_machine()
-			hacked = 0
-			H << browse(null, "window=mainhtml")
+			turn_off(user)
 			return
 
 		if("password_input")
-			var/pass = tgui_input_text(H, title = "Enter Password", 10)
-
-			if(!pass)
-				to_chat(H, "<span class='warning'>You've entered no password.</span>")
+			if(!user.stalker_id) // Not registered in network
+				var/reg_pass = tgui_input_text(user, "Register into network", "Enter Password", max_length = 10)
+				if(!reg_pass)
+					to_chat(user, "<span class='warning'>You've entered no password.</span>")
+					return
+				register_stalker(user, reg_pass)
+				updateUsrDialog()
 				return
 
-			var/datum/record/stalker/stalker_record = find_stalker_record(H.stalker_id)
+			var/pass = tgui_input_text(user, title = "Enter Password", max_length = 10)
+			if(!pass)
+				to_chat(user, "<span class='warning'>You've entered no password.</span>")
+				return
 
-			if(!stalker_record) //если человек не зарегистрирован в сети сталкеров
-				password = pass
+			var/datum/record/stalker/stalker_record = find_stalker_record_by_pass(pass)
 
-				GLOB.manifest.inject(H)
+			if(!stalker_record)
+				to_chat(user, "<span class='warning'>Wrong password.</span>")
+				return
 
-				registered_name = H.real_name
-				owner_ref = WEAKREF(H)
-				sid = H.stalker_id
-				//lentahtml = GLOB.global_lentahtml
-
-				//var/image = GLOB.data_core.fields["photo_front"]
-				//var/obj/item/photo/owner_photo_front = new()
-
-				//owner_photo_front.picture.picture_image = icon(image, dir = SOUTH)
-
-				to_chat(H, "<B>KPK password</B>: <span class='danger'>\"[pass]\"</span>")
-				H.mind.store_memory("<b>KPK password</b>: \"[pass]\"")
-
-				profile = find_record("sid", H.stalker_id, GLOB.data_core.stalkers)
-
-				profile.fields["pass"] = pass
-/*
-				if(H.job == "Old Stalker" || H.job == "Duty Soldier" || H.job == "Monolith Soldier" || H.job == "Freedom Soldier")
-					profile.fields["rating"] = 3000
-				else if(H.job == "Duty Lieutenant" || H.job == "Monolith Hegumen" || H.job == "Freedom Lieutenant")
-					profile.fields["rating"] = 5000
-*/
-				set_owner_info(profile)
-			else //Если человек зарегистрирован в сети сталкеров
-				if(stalker_record && stalker_record.fields["pass"] != t)
-					to_chat(H, "<span class='warning'>Wrong password.</span>")
-					return
-
-				password = t
-				//var/datum/job/J = SSjob.GetJob(H.job)
-				//access = J.get_access()
-
-				registered_name = H.real_name
-				eng_faction_s = stalker_record.fields["faction"]
-				rating = stalker_record.fields["rating"]
-				owner = H
-				sid = H.stalker_id
-				if(!lentahtml)
-					lentahtml = GLOB.global_lentahtml
-
-				//var/image = GLOB.data_core.get_id_photo(H)
-
-				//var/obj/item/photo/owner_photo_front = new()
-
-				//owner_photo_front.picture.picture_image = icon(image, dir = SOUTH)
-
-				GLOB.KPKs += src
-
-				profile = stalker_record
-				set_owner_info(profile)
-
-				for(var/obj/item/stalker_pda/KPK in GLOB.KPKs)
-					if((KPK != src) && (KPK.owner == src.owner))
-						KPK.registered_name = null
-						KPK.eng_faction_s = null
-						KPK.rus_faction_s = null
-						KPK.rating = null
-						KPK.owner = null
-						KPK.money = 0
-						KPK.photo_owner_front = null
-						KPK.photo_owner_west = null
-						KPK.photo_owner_east = null
-						KPK.photo_owner_back = null
-						KPK.hacked = 0
-						KPK.password = null
-						KPK.profile = null
-
-						GLOB.KPKs -= KPK
-
+			profile = stalker_record
 		if("load_cache")
 			//get_asset_datum(/datum/asset/simple/basics).send(H)
 
 		if("exit")
-			registered_name = null
-			eng_faction_s = null
-			rus_faction_s = null
-			rating = null
-			owner = null
-			money = 0
-			photo_owner_front = null
-			photo_owner_west = null
-			photo_owner_east = null
-			photo_owner_back = null
-			hacked = 0
-			password = null
 			profile = null
-
-			GLOB.KPKs -= src
-
-		if("password_check")
-			var/t = tgui_input_text(H, "password", 10)
-			if(t == password)
-				//hacked = 1
-				hacked = 0
-				to_chat(H, "<span class='warning'>You are not the PDA owner.</span>")
-			else
-				to_chat(H, "<span class='warning'>Wrong password.</span>")
-
-		if("rotate")
-			switch(rotation)
-				if("front")
-					rotation = "west"
-				if("west")
-					rotation = "back"
-				if("back")
-					rotation = "east"
-				if("east")
-					rotation = "front"
-
-		if("make_avatar")
-			make_avatar(H)
-			set_owner_photo()
-
+			turn_off()
+			return
+		/*
 		if("lenta_add")
-			var/t = tgui_input_text(H, "message", 250)
-			if(!t)
+			var/text = tgui_input_text(H, title = "Enter Message", max_length = 250)
+			if(!text)
 				to_chat(H, "<span class='warning'>Type a message!</span>")
 			else
 				if( !(last_lenta && world.time < last_lenta + LENTA_MESSAGE_COOLDOWN) )
@@ -365,7 +265,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 					to_chat(H, "<span class='warning'>You can't send messages in next [round((LENTA_MESSAGE_COOLDOWN + last_lenta - world.time)/10)] sec.</span>")
 
 		if("lenta_faction_add")
-			var/t = tgui_input_text(H, "message", 500)
+			var/t = tgui_input_text(H, title = "Enter Message", max_length = 500)
 			if(!t)
 				to_chat(H, "<span class='warning'>Type a message!</span>")
 			else
@@ -407,16 +307,15 @@ GLOBAL_LIST_EMPTY(PDA_list)
 
 		if("zoom")
 			return
+		*/
 
-		if("[PDA_WINDOW_PROFILE]")
-			set_owner_info(profile)
-			set_owner_photo()
-			mode = 1
-
+		if(PDA_WINDOW_PROFILE)
+			selected_window = PDA_WINDOW_PROFILE
+/*
 		if("[PDA_WINDOW_RANKING]")
 			if(GLOB.data_core.stalkers.len)
 				refresh_rating(H)
-			mode = 3
+			selected_window = PDA_WINDOW_RANKING
 
 		if("[PDA_WINDOW_STALKER_FEED]")
 			if(switches & FEED_IMAGES)
@@ -426,12 +325,12 @@ GLOBAL_LIST_EMPTY(PDA_list)
 					var/sid_p = R.fields["sid"]
 					var/obj/item/photo/P1 = R.fields["photo_front"]
 					H << browse_rsc(P1.picture.picture_image, "photo_[sid_p]")
-			mode = 4
-
+			selected_window = PDA_WINDOW_STALKER_FEED
+*/
 		/*if("5")			//КАРТА
 			SSminimap.sendMinimaps(H)
 			mode = 5*/
-
+/*
 	if(href_list["invite"])
 
 		var/sid_ = text2num(href_list["invite"])
@@ -489,6 +388,20 @@ GLOBAL_LIST_EMPTY(PDA_list)
 
 			profile.fields["faction_s"] = J.faction_s
 			set_owner_info(profile)
-
+*/
 	updateSelfDialog()
 	return
+
+
+/obj/item/stalker_pda/proc/register_stalker(mob/living/carbon/human/stalker, password)
+	var/datum/record/stalker/existing_record = find_stalker_record_by_id(stalker.stalker_id)
+	if(!existing_record)
+		profile = GLOB.manifest.inject(stalker)
+		profile.PDA_password = password
+		to_chat(stalker, "<B>PDA password</B>: <span class='danger'>\"[password]\"</span>")
+
+/obj/item/stalker_pda/proc/turn_off(mob/user)
+	icon_state = "kpk_off"
+	user.unset_machine()
+	hacked = 0
+	user << browse(null, "window=mainhtml")

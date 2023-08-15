@@ -38,43 +38,6 @@
 #define REP_VERYGOOD 2500
 #define REP_AMAZING 3000
 
-/proc/get_rep_name(rep)
-	switch(rep)
-		if(REP_AMAZING to INFINITY)
-			return
-		if(REP_VERYGOOD to REP_AMAZING)
-			return
-		if(REP_GOOD to REP_VERYGOOD)
-			return
-		if(REP_BAD to REP_GOOD)
-			return
-		if(REP_VERYBAD to REP_BAD)
-			return
-		if(REP_DISGUSTING to REP_VERYBAD)
-			return
-		if(-INFINITY to REP_DISGUSTING)
-			return
-	return "#ffffff"
-
-/proc/get_rep_color(rep)
-	switch(rep)
-		if(REP_AMAZING to INFINITY)
-			return REP_COLOR_AMAZING
-		if(REP_VERYGOOD to REP_AMAZING)
-			return REP_COLOR_VERYGOOD
-		if(REP_GOOD to REP_VERYGOOD)
-			return REP_COLOR_GOOD
-		if(REP_BAD to REP_GOOD)
-			return REP_COLOR_NEUTRAL
-		if(REP_VERYBAD to REP_BAD)
-			return REP_COLOR_YBAD
-		if(REP_DISGUSTING to REP_VERYBAD)
-			return REP_COLOR_VERYBAD
-		if(-INFINITY to REP_DISGUSTING)
-			return REP_COLOR_DISGUSTING
-	return "#ffffff"
-
-
 
 
 

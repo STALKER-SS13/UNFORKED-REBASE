@@ -28,7 +28,7 @@
 	if(person.gender == "female")
 		person_gender = "Female"
 
-	new /datum/record/stalker(
+	var/datum/record/stalker/record = new /datum/record/stalker(
 		age = person.age,
 		blood_type = person.dna.blood_type,
 		character_appearance = character_appearance,
@@ -51,7 +51,7 @@
 		lastlogin = world.time,
 	)
 
-	return
+	return record
 
 /datum/record/stalker
 	var/stalker_id = 0
@@ -62,6 +62,8 @@
 	var/money = 0
 	var/is_faction_leader = FALSE
 	var/lastlogin = 0
+	var/icon/front_photo
+	var/icon/side_photo
 
 /datum/record/stalker/New(
 	age = 18,
@@ -94,12 +96,19 @@
 	src.money = money
 	src.is_faction_leader = is_faction_leader
 	src.lastlogin = lastlogin
+	set_photos(character_appearance)
 
 	GLOB.manifest.stalkers += src
 
-/datum/record/crew/Destroy()
+/datum/record/stalker/Destroy()
 	GLOB.manifest.stalkers -= src
 	return ..()
+
+/datum/record/stalker/proc/set_photos(mob/M)
+	front_photo = getFlatIcon(M, SOUTH)
+	front_photo.Crop(9, 18, 23, 32)
+	side_photo = getFlatIcon(M, WEST)
+	side_photo.Crop(9, 18, 23, 32)
 
 /proc/find_stalker_record_by_id(stalker_id)
 	for(var/datum/record/stalker/target in GLOB.manifest.stalkers)
