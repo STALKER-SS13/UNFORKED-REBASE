@@ -228,7 +228,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 					to_chat(user, "<span class='warning'>You've entered no password.</span>")
 					return
 				register_stalker(user, reg_pass)
-				updateUsrDialog()
+				updateSelfDialog()
 				return
 
 			var/pass = tgui_input_text(user, title = "Enter Password", max_length = 10)
@@ -248,7 +248,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 
 		if("exit")
 			profile = null
-			turn_off()
+			turn_off(user)
 			return
 		/*
 		if("lenta_add")

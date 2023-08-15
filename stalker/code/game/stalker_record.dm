@@ -12,6 +12,9 @@
 	. = ..()
 	stalker_id_counter = rand(1000, 5000)
 
+/datum/manifest/build()
+	return
+
 /datum/manifest/inject(mob/living/carbon/human/person)
 	set waitfor = FALSE
 	if(!(person.mind?.assigned_role.job_flags & JOB_CREW_MANIFEST))
