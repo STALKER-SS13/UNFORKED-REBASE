@@ -38,7 +38,8 @@
 #define REP_VERYGOOD 2500
 #define REP_AMAZING 3000
 
-
+/// From /proc/add_stalker_feed_message()
+#define COMSIG_STALKER_FEED_NEW_MESSAGE "new_stalker_feed_message"
 
 
 

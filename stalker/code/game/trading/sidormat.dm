@@ -14,8 +14,6 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 	var/turf/items_to_sell_turf
 	/// Turf that it places items you bought on
 	var/turf/bought_stuff_turf
-	var/balance = 10000
-	var/rating = 10000
 	var/switches = BUY_STUFF
 	var/real_assorment = list()
 	var/list/special_factions = list(FACTION_LONERS, FACTION_BANDITS, FACTION_DUTY, FACTION_FREEDOM, FACTION_MERC, FACTION_MONOLITH, FACTION_CLEARSKY, FACTION_ECOLOGIST, FACTION_RENEGATE, FACTION_MILITARY)
@@ -35,11 +33,19 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 	ui_interact(user)
 
 /obj/machinery/stalker/sidormat/ui_interact(mob/living/carbon/human/H)
+	if(!istype(H.wear_id, /obj/item/stalker_pda))
+		say("Put on your PDA.")
+		return
+	var/obj/item/stalker_pda/pda = H.wear_id
+	if(!pda.profile)
+		say("Activate your PDA profile.")
+		return
+
 	H.set_machine(src)
 	var/dat
 
 	dat +="<div class='statusDisplay'>"
-	dat += "Balance: [num2text(balance, 8)] RU<br>"
+	dat += "Balance: [num2text(pda.profile.money, 8)] RU<br>"
 	dat += "<br><br>INSTRUCTION: Put loot for sale on the <b>left</b> table.<br>"
 	if(switches & BUY_STUFF)
 		dat +="<A href='?src=[REF(src)];choice=take'><b>Sell loot</b></A><br>"
@@ -65,22 +71,32 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 /obj/machinery/stalker/sidormat/Topic(href, href_list)
 	if(..())
 		return
+	var/mob/living/carbon/human/user = usr
+	if(!istype(user))
+		return
+	var/obj/item/stalker_pda/pda = user.wear_id
+	if(!istype(pda))
+		say("Put on your PDA.")
+		return
+	if(!pda.profile)
+		say("Activate your PDA profile.")
+		return
 
 	if(href_list["choice"])
 		if(href_list["choice"] == "take")
-			SellItems()
+			SellItems(pda)
 
 	if(href_list["purchase"])
 		var/datum/data/stalker_equipment/prize = locate(href_list["purchase"])
 		if(!prize)
 			updateUsrDialog()
 			return
-		if(prize.cost > balance)
+		if(prize.cost > pda.profile.money)
 			say("You don't have  enough money to buy [prize.name].")
 			updateUsrDialog()
 			return
 
-		balance -= prize.cost
+		pda.profile.money -= prize.cost
 		new prize.equipment_path(bought_stuff_turf)
 
 	updateUsrDialog()
@@ -96,9 +112,14 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 	qdel(product)
 	return GLOB.sidor_cache[P.equipment_path]
 
-/obj/machinery/stalker/sidormat/proc/SellItems()
+/obj/machinery/stalker/sidormat/proc/SellItems(obj/item/stalker_pda/pda)
 	var/list/atom/movable/ontable = GetItemsOnTable()
 	var/total_cost = GetOnTableCost(ontable)
+
+	if(!istype(pda))
+		return
+	if(!pda.profile)
+		return
 
 	if(total_cost < 100)
 		say("What is this shit?")
@@ -108,14 +129,14 @@ GLOBAL_LIST_EMPTY(sidor_cache)
 		if(I.loc != items_to_sell_turf)
 			continue
 
-		balance += GetCost(I)
+		pda.profile.money += GetCost(I)
 		say("[I] was sold for [GetCost(I)].")
 		qdel(I)
 
 		CHECK_TICK
 
 	if(total_cost)
-		say("<b>Habar was successfully sold for [total_cost].</b>")
+		say("Habar was successfully sold for [total_cost].")
 
 	updateUsrDialog()
 	return

@@ -107,10 +107,12 @@
 	GLOB.manifest.stalkers -= src
 	return ..()
 
-/datum/record/stalker/proc/set_photos(mob/M)
-	front_photo = getFlatIcon(M, SOUTH)
+/datum/record/stalker/proc/set_photos(mutable_appearance/appearance)
+	appearance.setDir(SOUTH)
+	front_photo = getFlatIcon(appearance)
 	front_photo.Crop(9, 18, 23, 32)
-	side_photo = getFlatIcon(M, WEST)
+	appearance.setDir(WEST)
+	side_photo = getFlatIcon(appearance)
 	side_photo.Crop(9, 18, 23, 32)
 
 /proc/find_stalker_record_by_id(stalker_id)

@@ -5320,6 +5320,7 @@
 #include "interface\skin.dmf"
 #include "stalker\code\_DEFINES\stalker_defines.dm"
 #include "stalker\code\_helpers\stalker_helpers.dm"
+#include "stalker\code\game\stalker_feed.dm"
 #include "stalker\code\game\stalker_pda.dm"
 #include "stalker\code\game\stalker_record.dm"
 #include "stalker\code\game\trading\_trading_defines.dm"

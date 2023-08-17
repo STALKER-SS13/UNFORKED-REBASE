@@ -1,12 +1,12 @@
 #define FLAG_FEED_SOUND (1<<0)
 #define FLAG_FEED_IMAGES (1<<1)
-#define FLAG_RATING_IMAGES (1<<2)
+#define FLAG_RANKING_IMAGES (1<<2)
 
-#define PDA_WINDOW_PROFILE 1
-#define PDA_WINDOW_ENCYCLOPEDIA 2
-#define PDA_WINDOW_RANKING 3
-#define PDA_WINDOW_STALKER_FEED 4
-#define PDA_WINDOW_MAP 5
+#define PDA_WINDOW_PROFILE "1"
+#define PDA_WINDOW_ENCYCLOPEDIA "2"
+#define PDA_WINDOW_RANKING "3"
+#define PDA_WINDOW_STALKER_FEED "4"
+#define PDA_WINDOW_MAP "5"
 
 #define FEED_MESSAGE_COOLDOWN 45 SECONDS
 #define FEED_FACTION_MESSAGE_COOLDOWN 10 SECONDS
@@ -14,11 +14,10 @@
 
 #define RATING_REMOVE_TIMER 30 MINUTES
 
+#define LENTA_MESSAGE_COOLDOWN 10 SECONDS
+#define LENTA_FACTION_MESSAGE_COOLDOWN 5 SECONDS
+
 GLOBAL_LIST_EMPTY(PDA_list)
-
-
-
-
 
 
 /obj/item/stalker_pda
@@ -31,30 +30,21 @@ GLOBAL_LIST_EMPTY(PDA_list)
 
 	var/selected_window = PDA_WINDOW_PROFILE
 	var/show_title = 0
-	var/switches = FLAG_FEED_SOUND | FLAG_FEED_IMAGES | FLAG_RATING_IMAGES
-	var/ratinghtml = ""
+	var/switches = FLAG_FEED_SOUND | FLAG_FEED_IMAGES | FLAG_RANKING_IMAGES
 
 	// Profile
-	var/datum/weakref/owner_ref
 	var/datum/record/stalker/profile = null
 
 	var/rotation = "front"
 
-	var/obj/item/photo/photo_owner_front = new()
-	var/obj/item/photo/photo_owner_west = new()
-	var/obj/item/photo/photo_owner_back = new()
-	var/obj/item/photo/photo_owner_east = new()
 	var/hacked = 0
 	var/rep_color_s = "#ffe100"
 	var/rep_name_s = "Neutral"
 
 	// Feed
-	var/lentahtml = ""
 	var/last_lenta = 0
-	var/lenta_id = 0
 
 	var/last_faction_lenta = 0
-	var/lenta_faction_id = 0
 
 	var/msg_name = "message"
 	var/max_length = 10
@@ -77,10 +67,11 @@ GLOBAL_LIST_EMPTY(PDA_list)
 
 /datum/asset/simple/basics
 	assets = list(
-		"kpk_background.png"	= 'stalker/icons/images/kpk.png',
+		"kpk_background.png"	= 'stalker/icons/images/KPK_blackbg.png',
 		"nodata.png"			= 'stalker/icons/images/nodata.png',
 		"photo_0"				= 'stalker/icons/images/sidor.png'
 	)
+	keep_local_name = TRUE
 
 /datum/asset/simple/cursors
 	assets = list(
@@ -89,10 +80,12 @@ GLOBAL_LIST_EMPTY(PDA_list)
 		"cursor_green.ani"		= 'stalker/html/cursors/appstarting.ani',
 		"cursor_busy.ani"		= 'stalker/html/cursors/busy.ani'
 	)
+	keep_local_name = TRUE
 
 /obj/item/stalker_pda/Initialize()
 	. = ..()
 	GLOB.PDA_list += src
+	RegisterSignal(SSdcs, COMSIG_STALKER_FEED_NEW_MESSAGE, PROC_REF(on_new_feed_message))
 
 /obj/item/stalker_pda/Destroy()
 	GLOB.PDA_list -= src
@@ -107,6 +100,11 @@ GLOBAL_LIST_EMPTY(PDA_list)
 /obj/item/stalker_pda/attack_self(mob/living/carbon/human/user)
 	if(!istype(user))
 		return
+	if(user.client)
+		var/datum/asset/asset = get_asset_datum(/datum/asset/simple/basics)
+		asset.send(user.client)
+		asset = get_asset_datum(/datum/asset/simple/cursors)
+		asset.send(user.client)
 
 	if(profile)
 		user << browse_rsc(profile.front_photo, "PDA_front.png")
@@ -124,7 +122,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 	a:hover {background-color: #9E9E9E;cursor: url('cursor_green.ani');}
 	a {text-decoration: none;}
 	html {cursor: url('cursor_normal.ani');}
-	body {background-image: url('kpk_background.png');padding-top: 18px;padding-left: 35px;}
+	body {background-image: url('kpk_background.png');padding-top: 18px;padding-left: 35px; background-color: transparent; background-size: cover; border-radius: 50%;}
 	table {background: #131416;padding: 15px;margin-bottom: 10px;color: #afb2a1;}
 	#table-bottom1 {background: #2e2e38;padding-top: 5px;padding-bottom: 5px;}
 	#table-center1 {position: relative;background: #2e2e38;padding-top: 5px;padding-bottom: 5px;bottom: 100px;}
@@ -150,7 +148,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 	</style><body>"}
 
 	if(!profile)
-		data +={"<table border=0 height='314' width='455'><tr><td valign='top' align='center'>
+		data += {"<table border=0 height='314' width='455'><tr><td valign='top' align='center'>
 		<div align='right'><a href='byond://?src=[REF(src)];choice=title'>\[-\]</a> <a href='byond://?src=[REF(src)];choice=close'>\[X\]</a></div><br>
 		<div class='relative' align='center'>ENTER THE PASSWORD</div></td></tr>
 		<tr><td colspan='2' align='center' id='table-center1' height=60>
@@ -179,11 +177,11 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				navbar_data ="| <a href='byond://?src=[REF(src)];choice=1'>Profile</a> | <a>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
 
 				data += {"<table border=0 height='314' width='455'><tr><td valign='top' align='left'><div align='right'>
-				<a style='color:#c10000;' align='center' href='byond://?src=[REF(src)];choice=rating_images'>\[IMAGES\] </a>
+				<a style='color:#c10000;' align='center' href='byond://?src=[REF(src)];choice=RANKING_IMAGES'>\[IMAGES\] </a>
 				<a href='byond://?src=[REF(src)];choice=title'>\[-\] </a>
 				<a href='byond://?src=[REF(src)];choice=close'>\[X\] </a></div>"}
 				data += "<div align = 'center' > | <a href='byond://?src=[REF(src)];choice=refresh_rating'>Refresh stalker list</a> | </div></td>"
-				data += "</tr><tr valign='top'><td><div id= 'lenta'>[ratinghtml]</div></td></tr>"
+				data += "</tr><tr valign='top'><td><div id= 'lenta'>[generate_ranking_html(user)]</div></td></tr>"
 			if(PDA_WINDOW_STALKER_FEED)
 				navbar_data ="| <a href='byond://?src=[REF(src)];choice=1'>Profile</a> | <a href='byond://?src=[REF(src)];choice=3'>Rating</a> | <a>Feed</a> |<br>"
 
@@ -192,11 +190,11 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				<a href='byond://?src=[REF(src)];choice=title'>\[-\] </a>
 				<a href='byond://?src=[REF(src)];choice=close'>\[X\] </a></div>"}
 				data += "<div align = 'center' > | <a href='byond://?src=[REF(src)];choice=lenta_add'>Send feed message</a> | <a href='byond://?src=[REF(src)];choice=lenta_faction_add'>Send faction message</a> | <a href='byond://?src=[REF(src)];choice=lenta_sound'>Turn on/off sound</a> |</div></td>"
-				data += "</tr><tr style='border: 0px;' valign='top'><td style='border: 0px;'><div id='lenta'>[lentahtml]</div></td></tr>"
+				data += "</tr><tr style='border: 0px;' valign='top'><td style='border: 0px;'><div id='lenta'>[generate_feed_html()]</div></td></tr>"
 				// TODO: Add map here
 		data += "<tr><td colspan='1' align='center' id='table-bottom1' height=30>[navbar_data]</td></tr>"
 		// TODO: Map script goes here
-	data +="<table></body></html>"
+	data += "<table></body></html>"
 
 	user << browse(data, "window=mainhtml;size=568x388;border=0;can_resize=0;can_close=0;can_minimize=0;titlebar=[show_title]")
 
@@ -225,7 +223,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 			if(!user.stalker_id) // Not registered in network
 				var/reg_pass = tgui_input_text(user, "Register into network", "Enter Password", max_length = 10)
 				if(!reg_pass)
-					to_chat(user, "<span class='warning'>You've entered no password.</span>")
+					to_chat(user, span_warning("You've entered no password."))
 					return
 				register_stalker(user, reg_pass)
 				updateSelfDialog()
@@ -233,102 +231,93 @@ GLOBAL_LIST_EMPTY(PDA_list)
 
 			var/pass = tgui_input_text(user, title = "Enter Password", max_length = 10)
 			if(!pass)
-				to_chat(user, "<span class='warning'>You've entered no password.</span>")
+				to_chat(user, span_warning("You've entered no password."))
 				return
 
 			var/datum/record/stalker/stalker_record = find_stalker_record_by_pass(pass)
 
 			if(!stalker_record)
-				to_chat(user, "<span class='warning'>Wrong password.</span>")
+				to_chat(user, span_warning("Wrong password."))
 				return
 
 			profile = stalker_record
 		if("load_cache")
-			//get_asset_datum(/datum/asset/simple/basics).send(H)
+			//get_asset_datum(/datum/asset/simple/basics).send(user)
 
 		if("exit")
 			profile = null
 			turn_off(user)
 			return
-		/*
+
 		if("lenta_add")
-			var/text = tgui_input_text(H, title = "Enter Message", max_length = 250)
+			var/text = tgui_input_text(user, title = "Enter Message", max_length = 250)
 			if(!text)
-				to_chat(H, "<span class='warning'>Type a message!</span>")
+				to_chat(user, span_warning("Type a message!"))
 			else
-				if( !(last_lenta && world.time < last_lenta + LENTA_MESSAGE_COOLDOWN) )
+				if(!(last_lenta && world.time < last_lenta + LENTA_MESSAGE_COOLDOWN))
 					last_lenta = world.time
-
-					add_lenta_message(src, sid, owner.real_name, eng_faction_s, t)
-
+					add_stalker_feed_message(profile, text, FALSE)
 				else
-					to_chat(H, "<span class='warning'>You can't send messages in next [round((LENTA_MESSAGE_COOLDOWN + last_lenta - world.time)/10)] sec.</span>")
+					to_chat(user, span_warning("You can't send messages in next [round((LENTA_MESSAGE_COOLDOWN + last_lenta - world.time)/10)] sec."))
 
 		if("lenta_faction_add")
-			var/t = tgui_input_text(H, title = "Enter Message", max_length = 500)
-			if(!t)
-				to_chat(H, "<span class='warning'>Type a message!</span>")
+			var/text = tgui_input_text(user, title = "Enter Message", max_length = 500)
+			if(!text)
+				to_chat(user, span_warning("Type a message!"))
 			else
-				if( !(last_faction_lenta && world.time < last_faction_lenta + LENTA_FACTION_MESSAGE_COOLDOWN) )
+				if( !(last_faction_lenta && world.time < last_faction_lenta + LENTA_FACTION_MESSAGE_COOLDOWN))
 					last_faction_lenta = world.time
-					add_faction_lenta_message(src, sid, owner.real_name, eng_faction_s, t)
-
+					add_stalker_feed_message(profile, text, TRUE)
 				else
-					to_chat(H, "<span class='warning'>You can't send messages in next [round((LENTA_FACTION_MESSAGE_COOLDOWN + last_faction_lenta - world.time)/10)] sec.</span>")
+					to_chat(user, span_warning("You can't send messages in next [round((LENTA_FACTION_MESSAGE_COOLDOWN + last_faction_lenta - world.time)/10)] sec."))
 
 		if("lenta_sound")
-			if(switches & FEED_SOUND)
-				switches &= ~FEED_SOUND
-				to_chat(H, "<span class='notice'>Feed sound turned off.</span>")
+			if(switches & FLAG_FEED_SOUND)
+				switches &= ~FLAG_FEED_SOUND
+				to_chat(user, span_notice("Feed sound turned off."))
 			else
-				switches |= FEED_SOUND
-				to_chat(H, "<span class='notice'>Feed sound turned on.</span>")
+				switches |= FLAG_FEED_SOUND
+				to_chat(user, span_notice("Feed sound turned on."))
 
 		if("lenta_images")
-			if(switches & FEED_IMAGES)
-				switches &= ~FEED_IMAGES
-				to_chat(H, "<span class='notice'>Stalker avatars in the feed now will not be downloaded.</span>")
+			if(switches & FLAG_FEED_IMAGES)
+				switches &= ~FLAG_FEED_IMAGES
+				to_chat(user, span_notice("Stalker avatars in the feed now will not be downloaded."))
 			else
-				switches |= FEED_IMAGES
-				to_chat(H, "<span class='notice'>Stalker avatars in the feed now will be downloaded.</span>")
+				switches |= FLAG_FEED_IMAGES
+				to_chat(user, span_notice("Stalker avatars in the feed now will be downloaded."))
 
-		if("rating_images")
-			if(switches & RATING_IMAGES)
-				switches &= ~RATING_IMAGES
-				to_chat(H, "<span class='notice'>Stalker avatars in the rating now will not be downloaded.</span>")
+		if("RANKING_IMAGES")
+			if(switches & FLAG_RANKING_IMAGES)
+				switches &= ~FLAG_RANKING_IMAGES
+				to_chat(user, span_notice("Stalker avatars in the rating now will not be downloaded."))
 			else
-				switches |= RATING_IMAGES
-				to_chat(H, "<span class='notice'>Stalker avatars in the rating now will be downloaded.</span>")
+				switches |= FLAG_RANKING_IMAGES
+				to_chat(user, span_notice("Stalker avatars in the rating now will be downloaded."))
 
 		if("refresh_rating")
-			ratinghtml = ""
-			if(GLOB.data_core.stalkers.len)
-				refresh_rating(H)
+			updateSelfDialog()
 
 		if("zoom")
 			return
-		*/
 
 		if(PDA_WINDOW_PROFILE)
 			selected_window = PDA_WINDOW_PROFILE
-/*
-		if("[PDA_WINDOW_RANKING]")
-			if(GLOB.data_core.stalkers.len)
-				refresh_rating(H)
+
+		if(PDA_WINDOW_RANKING)
+			if(switches & FLAG_RANKING_IMAGES)
+				for(var/datum/record/stalker/record in GLOB.manifest.stalkers)
+					user << browse_rsc(record.front_photo, "photo_[record.stalker_id].png")
 			selected_window = PDA_WINDOW_RANKING
 
-		if("[PDA_WINDOW_STALKER_FEED]")
-			if(switches & FEED_IMAGES)
-				for(var/datum/data/record/R in GLOB.data_core.stalkers)
-					if(R.fields["lastlogin"] + RATING_REMOVE_TIMER > world.time)
-						continue
-					var/sid_p = R.fields["sid"]
-					var/obj/item/photo/P1 = R.fields["photo_front"]
-					H << browse_rsc(P1.picture.picture_image, "photo_[sid_p]")
+		if(PDA_WINDOW_STALKER_FEED)
+			if(switches & FLAG_FEED_IMAGES)
+				for(var/datum/record/stalker/record in GLOB.manifest.stalkers)
+					user << browse_rsc(record.front_photo, "photo_[record.stalker_id].png")
 			selected_window = PDA_WINDOW_STALKER_FEED
-*/
+
 		/*if("5")			//КАРТА
-			SSminimap.sendMinimaps(H)
+			SSminimap.sendMinimaps(user)
 			mode = 5*/
 /*
 	if(href_list["invite"])
@@ -349,7 +338,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 		for(var/obj/item/stalker_pda/KPK_invited in GLOB.KPKs)
 			if(KPK_invited.stalker_id == sid_)
 				show_lenta_message(src, KPK_invited, sid, owner.real_name, eng_faction_s, "You have been invited to [eng_faction_s] faction. Check feed for more info.")
-				add_local_lenta_message(src, KPK_invited, sid, owner.real_name, eng_faction_s,"You have been invited to [eng_faction_s] faction. <a style=\"color:#c10000;\" href='byond://?src=[REF(KPK_invited)];changefaction=[J.title]'>\[Accept invitation\]</a>")
+				add_local_lenta_message(src, KPK_invited, sid, owner.real_name, eng_faction_s,"You have been invited to [eng_faction_s] faction. <a style='color:#c10000;' href='byond://?src=[REF(KPK_invited)];changefaction=[J.title]'>\[Accept invitation\]</a>")
 
 	if(href_list["remove"])
 
@@ -374,7 +363,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 	if(href_list["changefaction"])
 
 		var/new_eng_faction_s =  SSjob.GetJob(href_list["changefaction"]).faction_s
-		var/confirm = alert(H, "Do you want to change your faction from [eng_faction_s] to [new_eng_faction_s]?", "PDA", "Yes", "No")
+		var/confirm = alert(user, "Do you want to change your faction from [eng_faction_s] to [new_eng_faction_s]?", "PDA", "Yes", "No")
 		if(confirm == "Yes")
 			var/datum/job/J =  SSjob.GetJob(href_list["changefaction"])
 
@@ -398,10 +387,79 @@ GLOBAL_LIST_EMPTY(PDA_list)
 	if(!existing_record)
 		profile = GLOB.manifest.inject(stalker)
 		profile.PDA_password = password
-		to_chat(stalker, "<B>PDA password</B>: <span class='danger'>\"[password]\"</span>")
+		to_chat(stalker, "<B>PDA password</B>: <span class='danger'>'[password]'</span>")
 
 /obj/item/stalker_pda/proc/turn_off(mob/user)
 	icon_state = "kpk_off"
 	user.unset_machine()
 	hacked = 0
 	user << browse(null, "window=mainhtml")
+
+/obj/item/stalker_pda/proc/generate_feed_html(mob/user)
+	var/data = ""
+	for(var/datum/data/stalker_feed_message/message in GLOB.stalker_feed)
+		if(message.is_faction_restricted && message.sender.stalker_faction != profile.stalker_faction)
+			continue
+		data = format_stalker_feed_message(message) + data
+	return data
+
+/obj/item/stalker_pda/proc/generate_ranking_html(mob/user)
+	var/count = 0
+	var/data = ""
+
+	for(var/datum/record/stalker/R in sort_records_by_rank(GLOB.manifest.stalkers))
+		count++
+		data += {"<table style='margin-top: 0px; margin-bottom: 5px;'>
+				<tr style='border: 1px solid black;'>
+				<td width=64 height=64 align='top'>
+				<img id='ratingbox' height=64 width=64 style='-ms-interpolation-mode: nearest-neighbor' src=photo_[R.stalker_id].png>
+				</td>
+				<td height=64 width=354 align='top' style='text-align:left;vertical-align: top;'>
+				<b>\[[count]\]</b> [R.name] ([R.stalker_faction])"}
+		//Faction menu
+		// if(degree >= 1)
+		// 	if(!R.fields["degree"])
+		// 		if(eng_faction_s == eng_f)
+		// 			ratinghtml += "<a style='color:#c10000;' href='byond://?src=[REF(src)];remove=[sid_p]'>\[kick out\]</a>"
+		// 		else
+		// 			ratinghtml += "<a style='color:#7ac100;' href='byond://?src=[REF(src)];invite=[sid_p]'>\[invite\]</a>"
+		// 	else
+		// 		ratinghtml += "<b>\[LEADER\]</b>"
+		//////////////
+		data += {"<br><b>Rating</b> [get_rank_name(R.rank_score)] ([R.rank_score])<br>
+				<b>Reputation:</b> <font color='[get_rep_color(R.reputation)]'>[get_rep_name(R.reputation)]</font><br>
+				</td>
+				</tr>
+				</table>"}
+
+	return data
+
+/obj/item/stalker_pda/proc/sort_records_by_rank(list/record_list)
+	return sortTim(record_list, GLOBAL_PROC_REF(cmp_stalker_rank_asc))
+
+/proc/cmp_stalker_rank_asc(datum/record/stalker/a, datum/record/stalker/b)
+	return cmp_numeric_asc(a.rank_score, b.rank_score)
+
+/obj/item/stalker_pda/proc/on_new_feed_message(SSdcs, datum/data/stalker_feed_message/message)
+	if(!profile)
+		return
+	if(message.is_faction_restricted && profile.stalker_faction != message.sender.stalker_faction)
+		return
+	if(switches & FLAG_FEED_SOUND)
+		playsound(src, 'stalker/sound/pda/sms.ogg', 30)
+	if(!ismob(loc))
+		return
+	show_pda_message_to_owner(message)
+
+/obj/item/stalker_pda/proc/show_pda_message_to_owner(datum/data/stalker_feed_message/message)
+	var/mob/living/carbon/human/owner = loc
+	if(!istype(owner))
+		return
+	if(message.sender == profile)
+		return
+	if(owner.stat)
+		return
+	if(message.is_faction_restricted && profile.stalker_faction != message.sender.stalker_faction)
+		return
+
+	to_chat(owner, "[icon2base64html(src)] STALKER FEED: <font color='[get_faction_color(message.sender.stalker_faction)]'>[message.sender.name]\[[message.sender.stalker_faction]\][message.is_faction_restricted ? "(faction chat)" : ""]:</font>[message.message]")

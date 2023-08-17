@@ -49,3 +49,26 @@
 			return REP_COLOR_DISGUSTING
 	return "#ffffff"
 
+/proc/get_faction_color(faction_name)
+	switch(faction_name)
+		if(FACTION_BANDITS)
+			return "#8c8c8c"
+		if(FACTION_LONERS)
+			return "#ff7733"
+		if(FACTION_MERC)
+			return "#3399ff"
+		if(FACTION_DUTY)
+			return "#ff4d4d"
+		if(FACTION_FREEDOM)
+			return "#6cba3f"
+		if(FACTION_MONOLITH)
+			return "#7c26d3"
+		if(FACTION_RENEGATE)
+			return "#bbae6a"
+		if(FACTION_CLEARSKY)
+			return "#64B2F7"
+		if(FACTION_ECOLOGIST)
+			return "#601919"
+		if(FACTION_MILITARY)
+			return "#2E8B57"
+	return "#ffffff"
