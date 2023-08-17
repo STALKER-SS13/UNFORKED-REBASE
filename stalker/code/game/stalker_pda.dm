@@ -142,7 +142,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 	else
 		switch(selected_window)
 			if(PDA_WINDOW_PROFILE)
-				navbar_data = "| <a>Profile</a> | <a href='byond://?src=[REF(src)];choice=3'>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
+				navbar_data = "| <a>Profile</a> | <a href='byond://?src=[REF(src)];choice=[PDA_WINDOW_RANKING]'>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
 
 				data += {"
 				<table border=0 height='314' width='455'><tr><td valign='top' align='left'>
@@ -159,7 +159,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				</td></tr></table></td></tr>"} // TODO: Add encyclopedia back here
 
 			if(PDA_WINDOW_RANKING)
-				navbar_data = "| <a href='byond://?src=[REF(src)];choice=1'>Profile</a> | <a>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
+				navbar_data = "| <a href='byond://?src=[REF(src)];choice=[PDA_WINDOW_PROFILE]'>Profile</a> | <a>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
 
 				data += {"<table border=0 height='314' width='455'><tr><td valign='top' align='left'><div align='right'>
 				<a style='color:#c10000;' align='center' href='byond://?src=[REF(src)];choice=RANKING_IMAGES'>\[IMAGES\] </a>
@@ -169,7 +169,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				data += "</tr><tr valign='top'><td><div id= 'lenta'>[generate_ranking_html(user)]</div></td></tr>"
 
 			if(PDA_WINDOW_STALKER_FEED)
-				navbar_data = "| <a href='byond://?src=[REF(src)];choice=1'>Profile</a> | <a href='byond://?src=[REF(src)];choice=3'>Rating</a> | <a>Feed</a> |<br>"
+				navbar_data = "| <a href='byond://?src=[REF(src)];choice=[PDA_WINDOW_PROFILE]'>Profile</a> | <a href='byond://?src=[REF(src)];choice=[PDA_WINDOW_RANKING]'>Rating</a> | <a>Feed</a> |<br>"
 
 				data += {"<table border=0 height='314' width='455'><tr><td valign='top' align='left'><div align='right'>
 				<a style='color:#c10000;' align='center' href='byond://?src=[REF(src)];choice=lenta_images'>\[IMAGES\] </a>
@@ -207,7 +207,9 @@ GLOBAL_LIST_EMPTY(PDA_list)
 			if(!user.stalker_id) // Not registered in network
 				var/reg_pass = tgui_input_text(user, "Register into network", "Enter Password", max_length = 10)
 				if(!reg_pass)
-					to_chat(user, span_warning("You've entered no password."))
+					return
+				if(length(req_pass) < 6)
+					to_chat(user, span_warning("Password needs to be at least 6 symbols long."))
 					return
 				register_stalker(user, reg_pass)
 				updateSelfDialog()
@@ -215,8 +217,11 @@ GLOBAL_LIST_EMPTY(PDA_list)
 
 			var/pass = tgui_input_text(user, title = "Enter Password", max_length = 10)
 			if(!pass)
-				to_chat(user, span_warning("You've entered no password."))
-				return
+				if(!pass)
+					return
+				if(length(pass) < 6)
+					to_chat(user, span_warning("Password needs to be at least 6 symbols long."))
+					return
 
 			var/datum/record/stalker/stalker_record = find_stalker_record_by_pass(pass)
 			if(!stalker_record)
@@ -345,7 +350,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 		existing_record = GLOB.manifest.inject(stalker)
 		profile = existing_record.connect_PDA(src)
 		existing_record.PDA_password = password
-		to_chat(stalker, "<B>PDA password</B>: <span class='danger'>'[password]'</span>")
+		to_chat(stalker, "<B>PDA password</B>: [span_danger("[password]")]")
 
 /obj/item/stalker_pda/proc/turn_off(mob/user)
 	icon_state = "kpk_off"
