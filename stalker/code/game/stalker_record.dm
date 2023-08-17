@@ -67,6 +67,8 @@
 	var/lastlogin = 0
 	var/icon/front_photo
 	var/icon/side_photo
+	var/datum/weakref/connected_pda_ref = null
+	var/invited_to_faction = null
 
 /datum/record/stalker/New(
 	age = 18,
@@ -114,6 +116,23 @@
 	appearance.setDir(WEST)
 	side_photo = getFlatIcon(appearance)
 	side_photo.Crop(9, 18, 23, 32)
+
+/datum/record/stalker/proc/connect_PDA(obj/item/stalker_pda/pda)
+	if(connected_pda_ref)
+		var/obj/item/stalker_pda/connected_pda = connected_pda_ref.resolve()
+		if(ismob(connected_pda.loc))
+			to_chat(connected_pda.loc, "[icon2base64html(src)] STALKER NETWORK: Another login attempt into your account was made!")
+		return
+	connected_pda_ref = WEAKREF(pda)
+	return src
+
+/datum/record/stalker/proc/disconnect_PDA()
+	if(!connected_pda_ref)
+		return
+	var/obj/item/stalker_pda/connected_pda = connected_pda_ref.resolve()
+	connected_pda.profile = null
+	return
+
 
 /proc/find_stalker_record_by_id(stalker_id)
 	for(var/datum/record/stalker/target in GLOB.manifest.stalkers)
