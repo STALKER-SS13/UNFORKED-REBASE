@@ -122,8 +122,6 @@ GLOBAL_LIST_EMPTY(PDA_list)
 	.main {}
 	.main img {height: auto;}
 	.button {width: 300px;height: 60px;}
-	.color-change {width: 100px;height: 100px;background-color: red;animation: colorAnimation 0.5s infinite;}
-	@keyframes colorAnimation {0% {background-color: red;}50% {background-color: orange;}}
 	#encyclopedia_table {background: #131416;padding: 0px;margin-bottom: 0px;color: #afb2a1;margin-left: 0px;}
 	#encyclopedia_list {background: #2e2e38;color: #afb2a1;padding: 5px;width: 160px;height: 228px;overflow: auto;border: 1px solid #ccc;word-wrap: break-word;margin-left: 3px;}
 	#encyclopedia_list li{list-style-type: none;height: 0em;margin-left : 0px;}
@@ -142,7 +140,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 	else
 		switch(selected_window)
 			if(PDA_WINDOW_PROFILE)
-				navbar_data = "| <a>Profile</a> | <a href='byond://?src=[REF(src)];choice=[PDA_WINDOW_RANKING]'>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
+				navbar_data = "| <a>Profile</a> | <a href='byond://?src=[REF(src)];choice=[PDA_WINDOW_RANKING]'>Rating</a> | <a href='byond://?src=[REF(src)];choice=[PDA_WINDOW_STALKER_FEED]'>Feed</a> |<br>"
 
 				data += {"
 				<table border=0 height='314' width='455'><tr><td valign='top' align='left'>
@@ -151,15 +149,15 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				<td style='text-align: center;' valign='top' align='left' width=90 height=90>
 				<img style='margin-left: auto; margin-right: auto;' height=80 width=80 border=4 style='-ms-interpolation-mode: nearest-neighbor' src=PDA_front.png><br></td>"}
 				data += {"<td>
-				<b>Name:</b> [profile.name][profile.invited_to_faction ? "<div class='color-change' href='byond://?src=[REF(src)];changefaction=[profile.invited_to_faction]><CHANGE FACTION></div>" : ""]<br>
-				<b>Faction:</b> [profile.stalker_faction]<br>
+				<b>Name:</b> [profile.name]<br>
+				<b>Faction:</b> [profile.stalker_faction][profile.invited_to_faction ? "<a href='byond://?src=[REF(src)];changefaction=[profile.invited_to_faction]> (CHANGE FACTION)</a>" : ""]<br>
 				<b>Rank:</b> [get_rank_name(profile.rank_score)] ([profile.rank_score])<br>
 				<b>Reputation:</b> <font color='[get_rep_color(profile.reputation)]'>[get_rep_name(profile.reputation)] ([profile.reputation])</font><br>
 				<b>Balance:</b> [num2text(profile.money, 8)] RU<br>
 				</td></tr></table></td></tr>"} // TODO: Add encyclopedia back here
 
 			if(PDA_WINDOW_RANKING)
-				navbar_data = "| <a href='byond://?src=[REF(src)];choice=[PDA_WINDOW_PROFILE]'>Profile</a> | <a>Rating</a> | <a href='byond://?src=[REF(src)];choice=4'>Feed</a> |<br>"
+				navbar_data = "| <a href='byond://?src=[REF(src)];choice=[PDA_WINDOW_PROFILE]'>Profile</a> | <a>Rating</a> | <a href='byond://?src=[REF(src)];choice=[PDA_WINDOW_STALKER_FEED]'>Feed</a> |<br>"
 
 				data += {"<table border=0 height='314' width='455'><tr><td valign='top' align='left'><div align='right'>
 				<a style='color:#c10000;' align='center' href='byond://?src=[REF(src)];choice=RANKING_IMAGES'>\[IMAGES\] </a>
@@ -208,7 +206,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				var/reg_pass = tgui_input_text(user, "Register into network", "Enter Password", max_length = 10)
 				if(!reg_pass)
 					return
-				if(length(req_pass) < 6)
+				if(length(reg_pass) < 6)
 					to_chat(user, span_warning("Password needs to be at least 6 symbols long."))
 					return
 				register_stalker(user, reg_pass)
@@ -360,7 +358,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 /obj/item/stalker_pda/proc/generate_feed_html(mob/user)
 	var/data = ""
 	for(var/datum/data/stalker_feed_message/message in GLOB.stalker_feed)
-		if(message.is_faction_restricted && message.sender.stalker_faction != profile.stalker_faction)
+		if(message.faction_chat != profile.stalker_faction)
 			continue
 		data = format_stalker_feed_message(message) + data
 	return data
@@ -377,7 +375,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 		<img id='ratingbox' height=64 width=64 style='-ms-interpolation-mode: nearest-neighbor' src=photo_[R.stalker_id].png>
 		</td>
 		<td height=64 width=354 align='top' style='text-align:left;vertical-align: top;'>
-		<b>\[[count]\]</b> [R.name] ([R.stalker_faction])[R.is_faction_leader ?  "<b>\[LEADER\]</b>" : ""]"}
+		<b>\[[count]\]</b> [R.name] <font color='[get_faction_color(R.stalker_faction)]'>([R.stalker_faction])[R.is_faction_leader ?  "<b>\[LEADER\]</b>" : ""]</font>"} //TODO add "transfer money" button here
 
 		if(profile.is_faction_leader)
 			if(!R.is_faction_leader)
@@ -407,7 +405,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 /obj/item/stalker_pda/proc/on_new_feed_message(SSdcs, datum/data/stalker_feed_message/message)
 	if(!profile)
 		return
-	if(message.is_faction_restricted && profile.stalker_faction != message.sender.stalker_faction)
+	if(message.faction_chat != message.sender.stalker_faction)
 		return
 	play_feed_sound()
 	if(!ismob(loc))
@@ -422,7 +420,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 		return
 	if(owner.stat)
 		return
-	if(message.is_faction_restricted && profile.stalker_faction != message.sender.stalker_faction)
+	if(message.faction_chat != message.sender.stalker_faction)
 		return
 
-	to_chat(owner, "[icon2base64html(src)] STALKER FEED: <font color='[get_faction_color(message.sender.stalker_faction)]'>[message.sender.name]\[[message.sender.stalker_faction]\][message.is_faction_restricted ? "(faction chat)" : ""]:</font>[message.message]")
+	to_chat(owner, "[icon2base64html(src)] STALKER FEED: <font color='[get_faction_color(message.sender.stalker_faction)]'>[message.sender.name]\[[message.sender.stalker_faction]\][message.faction_chat ? "(faction chat)" : ""]:</font>[message.message]")
