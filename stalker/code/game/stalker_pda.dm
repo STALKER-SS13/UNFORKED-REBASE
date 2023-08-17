@@ -358,7 +358,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 /obj/item/stalker_pda/proc/generate_feed_html(mob/user)
 	var/data = ""
 	for(var/datum/data/stalker_feed_message/message in GLOB.stalker_feed)
-		if(message.faction_chat != profile.stalker_faction)
+		if(message.faction_chat && message.faction_chat != profile.stalker_faction)
 			continue
 		data = format_stalker_feed_message(message) + data
 	return data
@@ -405,7 +405,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 /obj/item/stalker_pda/proc/on_new_feed_message(SSdcs, datum/data/stalker_feed_message/message)
 	if(!profile)
 		return
-	if(message.faction_chat != message.sender.stalker_faction)
+	if(message.faction_chat && message.faction_chat != message.sender.stalker_faction)
 		return
 	play_feed_sound()
 	if(!ismob(loc))
@@ -420,7 +420,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 		return
 	if(owner.stat)
 		return
-	if(message.faction_chat != message.sender.stalker_faction)
+	if(message.faction_chat && message.faction_chat != message.sender.stalker_faction)
 		return
 
 	to_chat(owner, "[icon2base64html(src)] STALKER FEED: <font color='[get_faction_color(message.sender.stalker_faction)]'>[message.sender.name]\[[message.sender.stalker_faction]\][message.faction_chat ? "(faction chat)" : ""]:</font>[message.message]")
