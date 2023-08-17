@@ -150,7 +150,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				<img style='margin-left: auto; margin-right: auto;' height=80 width=80 border=4 style='-ms-interpolation-mode: nearest-neighbor' src=PDA_front.png><br></td>"}
 				data += {"<td>
 				<b>Name:</b> [profile.name]<br>
-				<b>Faction:</b> [profile.stalker_faction][profile.invited_to_faction ? "<a href='byond://?src=[REF(src)];changefaction=[profile.invited_to_faction]> (CHANGE FACTION)</a>" : ""]<br>
+				<b>Faction:</b> [profile.stalker_faction][profile.invited_to_faction ? "<a href='byond://?src=[REF(src)];changefaction=[profile.invited_to_faction]'> (CHANGE FACTION)</a>" : ""]<br>
 				<b>Rank:</b> [get_rank_name(profile.rank_score)] ([profile.rank_score])<br>
 				<b>Reputation:</b> <font color='[get_rep_color(profile.reputation)]'>[get_rep_name(profile.reputation)] ([profile.reputation])</font><br>
 				<b>Balance:</b> [num2text(profile.money, 8)] RU<br>
@@ -245,7 +245,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 			else
 				if(!(last_sent_message && world.time < last_sent_message + FEED_MESSAGE_COOLDOWN))
 					last_sent_message = world.time
-					add_stalker_feed_message(profile, text, FALSE)
+					add_stalker_feed_message(profile, text)
 				else
 					to_chat(user, span_warning("You can't send messages in next [round((FEED_MESSAGE_COOLDOWN + last_sent_message - world.time)/10)] sec."))
 
@@ -256,7 +256,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 			else
 				if( !(last_sent_faction_message && world.time < last_sent_faction_message + FEED_FACTION_MESSAGE_COOLDOWN))
 					last_sent_faction_message = world.time
-					add_stalker_feed_message(profile, text, TRUE)
+					add_stalker_feed_message(profile, text, profile.stalker_faction)
 				else
 					to_chat(user, span_warning("You can't send messages in next [round((FEED_FACTION_MESSAGE_COOLDOWN + last_sent_faction_message - world.time)/10)] sec."))
 
