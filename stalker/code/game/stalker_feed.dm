@@ -34,4 +34,3 @@ GLOBAL_LIST_EMPTY_TYPED(stalker_feed, /datum/data/stalker_feed_message)
 /proc/show_dead_lenta_message(datum/data/stalker_feed_message/message)
 	for(var/mob/dead/observer/M in GLOB.player_list)
 		to_chat(M, "STALKER FEED: <font color='[get_faction_color(message.sender.stalker_faction)]'>[message.sender.name]\[[message.sender.stalker_faction]\][message.faction_chat ? "(faction chat)" : ""]:</font>[message.message]")
-

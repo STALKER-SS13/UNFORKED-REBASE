@@ -338,6 +338,23 @@ GLOBAL_LIST_EMPTY(PDA_list)
 			profile.stalker_faction = profile.invited_to_faction
 			profile.invited_to_faction = null
 
+	if(href_list["transfer_money"])
+		var/stalker_id = text2num(href_list["transfer_money"])
+		var/datum/record/stalker/stalker_record = find_stalker_record_by_id(stalker_id)
+		if(!stalker_record)
+			return
+		var/trans_amount = tgui_input_number(user, "Enter the amount of money to transfer", "Transfer money", 0, profile.money, 0)
+		trans_amount = clamp(trans_amount, 0, profile.money)
+		if(!trans_amount)
+			return
+		profile.money -= trans_amount
+		stalker_record.money += trans_amount
+		var/obj/item/stalker_pda/receiever_pda = stalker_record.connected_pda_ref?.resolve()
+		if(receiever_pda && ismob(receiever_pda.loc))
+			receiever_pda.play_feed_sound()
+			to_chat(receiever_pda.loc, "[profile.name] has transfered [trans_amount] RUB to your account! New balance: [stalker_record.money].")
+
+
 	updateSelfDialog()
 	return
 
@@ -375,7 +392,10 @@ GLOBAL_LIST_EMPTY(PDA_list)
 		<img id='ratingbox' height=64 width=64 style='-ms-interpolation-mode: nearest-neighbor' src=photo_[R.stalker_id].png>
 		</td>
 		<td height=64 width=354 align='top' style='text-align:left;vertical-align: top;'>
-		<b>\[[count]\]</b> [R.name] <font color='[get_faction_color(R.stalker_faction)]'>([R.stalker_faction])[R.is_faction_leader ?  "<b>\[LEADER\]</b>" : ""]</font>"} //TODO add "transfer money" button here
+		<b>\[[count]\]</b> [R.name] <font color='[get_faction_color(R.stalker_faction)]'>([R.stalker_faction])[R.is_faction_leader ?  "<b>\[LEADER\]</b>" : ""]</font>"}
+
+		if(profile.money > 0 && R != profile)
+			data += " <a href='byond://?src=[REF(src)];transfer_money=[R.stalker_id]'>\[send money\]</a>"
 
 		if(profile.is_faction_leader)
 			if(!R.is_faction_leader)
