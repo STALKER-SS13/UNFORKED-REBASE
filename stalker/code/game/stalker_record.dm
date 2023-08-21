@@ -120,16 +120,18 @@
 /datum/record/stalker/proc/connect_PDA(obj/item/stalker_pda/pda)
 	if(connected_pda_ref)
 		var/obj/item/stalker_pda/connected_pda = connected_pda_ref.resolve()
-		if(ismob(connected_pda.loc))
+		if(ismob(connected_pda.loc) && connected_pda.profile == src)
 			to_chat(connected_pda.loc, "[icon2base64html(src)] STALKER NETWORK: Another login attempt into your account was made!")
 		return
 	connected_pda_ref = WEAKREF(pda)
+	pda.connected_profile = src
 	return src
 
 /datum/record/stalker/proc/disconnect_PDA()
 	if(!connected_pda_ref)
 		return
 	var/obj/item/stalker_pda/connected_pda = connected_pda_ref.resolve()
+	connected_pda.connected_profile = null
 	connected_pda.profile = null
 	return
 

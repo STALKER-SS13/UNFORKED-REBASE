@@ -31,6 +31,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 
 	// Profile
 	var/datum/record/stalker/profile = null
+	var/datum/record/stalker/connected_profile = null
 
 	// Feed
 	var/last_sent_message = 0
@@ -202,7 +203,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 			return
 
 		if("password_input")
-			if(!user.stalker_id) // Not registered in network
+			if(!user.stalker_id && !connected_profile) // Not registered in network and empty PDA
 				var/reg_pass = tgui_input_text(user, "Register into network", "Enter Password", max_length = 10)
 				if(!reg_pass)
 					return
@@ -213,16 +214,19 @@ GLOBAL_LIST_EMPTY(PDA_list)
 				updateSelfDialog()
 				return
 
+			if(!user.stalker_id)
+				to_chat(user, span_warning("This PDA is already owned by someone else. You need to find a blank one to register into network."))
+				return
+
 			var/pass = tgui_input_text(user, title = "Enter Password", max_length = 10)
 			if(!pass)
-				if(!pass)
-					return
-				if(length(pass) < 6)
-					to_chat(user, span_warning("Password needs to be at least 6 symbols long."))
-					return
+				return
 
-			var/datum/record/stalker/stalker_record = find_stalker_record_by_pass(pass)
+			var/datum/record/stalker/stalker_record = connected_profile
 			if(!stalker_record)
+				stalker_record = find_stalker_record_by_id(user.stalker_id)
+
+			if(pass != stalker_record.PDA_password)
 				to_chat(user, span_warning("Wrong password."))
 				return
 			profile = stalker_record.connect_PDA(src)
@@ -234,7 +238,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 			asset.send(user.client)
 
 		if("exit")
-			profile.disconnect_PDA(src)
+			profile = null
 			turn_off(user)
 			return
 
@@ -314,7 +318,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 		var/datum/record/stalker/stalker_record = find_stalker_record_by_id(stalker_id)
 		if(stalker_record)
 			var/obj/item/stalker_pda/invitee_pda = stalker_record.connected_pda_ref?.resolve()
-			if(invitee_pda && ismob(invitee_pda.loc))
+			if(invitee_pda && ismob(invitee_pda.loc) && invitee_pda.profile == stalker_record)
 				invitee_pda.play_feed_sound()
 				to_chat(invitee_pda.loc, "You have been invited to [profile.stalker_faction] faction. Check PDA profile for more info.")
 			stalker_record.invited_to_faction = profile.stalker_faction
@@ -325,7 +329,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 
 		if(stalker_record && stalker_record.stalker_faction != FACTION_LONERS)
 			var/obj/item/stalker_pda/kickee_pda = stalker_record.connected_pda_ref?.resolve()
-			if(kickee_pda && ismob(kickee_pda.loc))
+			if(kickee_pda && ismob(kickee_pda.loc) && kickee_pda.profile == stalker_record)
 				kickee_pda.play_feed_sound()
 				to_chat(kickee_pda.loc, "You have been kicked out of [stalker_record.stalker_faction] faction. Check PDA profile for more info.")
 			stalker_record.stalker_faction = FACTION_LONERS
@@ -350,7 +354,7 @@ GLOBAL_LIST_EMPTY(PDA_list)
 		profile.money -= trans_amount
 		stalker_record.money += trans_amount
 		var/obj/item/stalker_pda/receiever_pda = stalker_record.connected_pda_ref?.resolve()
-		if(receiever_pda && ismob(receiever_pda.loc))
+		if(receiever_pda && ismob(receiever_pda.loc) && receiever_pda.profile == stalker_record)
 			receiever_pda.play_feed_sound()
 			to_chat(receiever_pda.loc, "[profile.name] has transfered [trans_amount] RUB to your account! New balance: [stalker_record.money].")
 
