@@ -422,3 +422,10 @@
 	caliber = "7.62x54mm"
 	max_ammo = 10
 	multiple_sprites = 2
+
+/obj/item/ammo_box/magazine/smg57
+	name = "SMG magazine (5.7x28mm)"
+	icon_state = "5728m"//temp
+	ammo_type = /obj/item/ammo_casing/c57x28
+	caliber = "5.7×28mm"
+	max_ammo = 50

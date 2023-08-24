@@ -1,6 +1,6 @@
 /atom/movable/screen/zone_sel
 	name = "damage zone"
-	icon = 'icons/stalker/hud/screen_stalker_zone_sel.dmi'
+	icon = 'stalker/icons/hud/screen_stalker_zone_sel.dmi'
 	icon_state = "zone_sel"
 	screen_loc = ui_zonesel
 	/// Whether or not we also behave as a health doll
@@ -8,7 +8,7 @@
 	/// Stored healthdoll overlays
 	var/list/healthdoll_overlays
 	/// Icon that the hover overlay should use
-	var/overlay_icon = 'icons/stalker/hud/screen_stalker_zone_sel.dmi'
+	var/overlay_icon = 'stalker/icons/hud/screen_stalker_zone_sel.dmi'
 	/// Cache of hover overlay objects
 	var/static/list/hover_overlays_cache = list()
 	/// Zone we are currently hovering over

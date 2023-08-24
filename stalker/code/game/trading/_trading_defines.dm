@@ -233,7 +233,7 @@ GLOBAL_LIST_INIT(global_sidormat_list, list(
 
 
 	"Medicine" = list(
-		///////////////////////////////	Медикаменты	/////////////////////////////////////////
+		/////////////////////////////// Medicine /////////////////////////////////////////
 		new /datum/data/stalker_equipment("Medkit", /obj/item/storage/firstaid/stalker/civillian, 1500, RANK_ROOKIE, sale_price = 50),
 		new /datum/data/stalker_equipment("Army medkit", /obj/item/storage/firstaid/stalker/military, 3500, RANK_EXPERIENCED, sale_price = 125),
 		new /datum/data/stalker_equipment("Scientific medkit", /obj/item/storage/firstaid/stalker/scientific, 6000, RANK_VETERAN, sale_price = 250),
@@ -246,7 +246,7 @@ GLOBAL_LIST_INIT(global_sidormat_list, list(
 
 
 	"Food" = list(
-		/////////////////////////////////	Еда	///////////////////////////////////////////
+		///////////////////////////////// Food ///////////////////////////////////////////
 		new /datum/data/stalker_equipment("Canned stew", /obj/item/reagent_containers/food/snacks/stalker/konserva, 550, RANK_ROOKIE),
 		new /datum/data/stalker_equipment("Canned fish", /obj/item/reagent_containers/food/snacks/stalker/konserva/shproti, 750, RANK_ROOKIE),
 		new /datum/data/stalker_equipment("Vodka \"Kazaki\"", /obj/item/reagent_containers/food/drinks/bottle/vodka/kazaki, 1500, RANK_ROOKIE),

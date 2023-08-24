@@ -1,7 +1,7 @@
 /obj/item/bolt
 	name = "bolt"
 	desc = "Old soviet bolt affected by corrosion."
-	icon = 'icons/stalker/obj/bolt.dmi'
+	icon = 'stalker/icons/obj/bolt.dmi'
 	icon_state = "bolt"
 	w_class = WEIGHT_CLASS_TINY
 	force = 1

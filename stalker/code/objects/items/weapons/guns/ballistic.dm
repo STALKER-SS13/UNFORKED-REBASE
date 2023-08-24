@@ -4,9 +4,14 @@
 	var/is_unique = FALSE
 	var/can_scope = FALSE
 	var/draw_sound
+	var/list/modifications = list()
+	var/automatic = FALSE
+	var/zoom_amt
+	var/zoom_out_amt
+	var/zoomable
 
 /obj/item/gun/ballistic/automatic/stalker
-	icon = 
+	icon = 'stalker/icons/obj/projectile.dmi'
 
 /obj/item/gun/update_overlays()
 	. = ..()
@@ -50,11 +55,11 @@
 	durability -= 0.075
 
 
-///////////////////////////// Pistols //////////////////////////////////////////
+///////////////////////////// Pistols ////////////////////////////////////////
 /obj/item/gun/ballistic/automatic/stalker/pistol
 	modifications = list("barrel_pistol" = 0, "frame_pistol" = 0, "grip_pistol" = 0)
 
-/obj/item/gun/ballistic/automatic/stalker/pistol/pm   // Макаров
+/obj/item/gun/ballistic/automatic/stalker/pistol/pm
 	name = "PMm"
 	desc = "This Soviet legacy is the most common pistol in the Zone and is one of the best compact self-defense handguns available. It is small, highly reliable, easy to use and maintain in working order. It also suffers from several drawbacks, including its short range, low firing accuracy and poor stopping power, while also losing out to modern pistols in its class in terms of weight and magazine size."
 	icon_state = "pm"
@@ -71,7 +76,7 @@
 	load_sound = 'stalker/sound/weapons/load/pm_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/pm_open.ogg'
 
-/obj/item/gun/ballistic/automatic/stalker/pistol/tt   // ТТ
+/obj/item/gun/ballistic/automatic/stalker/pistol/tt
 	name = "TT-33"
 	desc = "An old soviet pistol made for similiarly old soviet ammo. Extremely widespread because of large numbers of those pistols left in USSR army stashes around Pripyat. Isn't very powerful, but bullets penetrate armor well enough."
 	icon_state = "tt"
@@ -141,7 +146,7 @@
 	load_sound = 'stalker/sound/weapons/load/pm_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/pm_open.ogg'
 
-/obj/item/gun/ballistic/automatic/stalker/pistol/fort12  // Фора12
+/obj/item/gun/ballistic/automatic/stalker/pistol/fort12  // 12
 	name = "Fort-12"
 	desc = "An Ukranian-made pistol predominantly used by law enforcement organizations. Provides higher accuracy, better ergonomics and has a larger magazine than the PM. These pistols make it into the Zone in large numbers thanks to the sale of defective weapons, which suffer from technical miscalculations in early design models. Despite this, the pistol is in demand among stalkers thanks to its good combat characteristics."
 	icon_state = "fort12"
@@ -158,12 +163,12 @@
 	load_sound = 'stalker/sound/weapons/load/pm_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/pm_open.ogg'
 
-/obj/item/gun/ballistic/automatic/stalker/pistol/fort12/unique  // Фора12 - расширенный магазин
+/obj/item/gun/ballistic/automatic/stalker/pistol/fort12/unique  // 12 -
 	desc = "Experimental prototype of the Fort pistol. A single copy."
 	is_unique = 1
 	mag_type = /obj/item/ammo_box/magazine/stalker/m9x18fort_u
 
-/obj/item/gun/ballistic/automatic/stalker/pistol/pb1s  //ПБ1С
+/obj/item/gun/ballistic/automatic/stalker/pistol/pb1s  //1
 	name = "PB1s"
 	desc = "This pistol was developed in the second half of the 20th century on the basis of the PM for use by special forces and scouting units. The front of the pistol's barrel is covered with an integrated silencer, while the bolt mechanism is short, which prevents a back-moving spring from being located inside it, and it is therefore situated in the weapon's handle. Morally obsolete, the weapon is still effective in the right hands."
 	icon_state = "pb1s"
@@ -459,7 +464,7 @@
 	eject_sound = 'stalker/sound/weapons/unload/pm_open.ogg'
 
 
-///////////////////////////// ARs,SMGs //////////////////////////////////////////
+///////////////////////////// ARs,SMGs ////////////////////////////////////////
 
 /obj/item/gun/ballistic
 	var/image/mag_overlay 			= null
@@ -860,7 +865,7 @@
 	inhand_icon_state = "ak74_furnitureless"
 
 
-/obj/item/gun/ballistic/automatic/stalker/aksu74  // АКС74У
+/obj/item/gun/ballistic/automatic/stalker/aksu74  // 74
 	name = "AK 74S"
 	desc = "Despite being similar to submachineguns in size, weight and tactical purpose, this weapon is classified as an assault rifle due to the fact that its internal mechanism is identical to that of the AK-74. The weapon is notable for its mobility in close quarters and high armor-penetration capacity, while its drawbacks are its short effective range, despite the relatively long bullet range, a tendency to overheat and high ricochet propensity."
 	icon_state = "aksu74"
@@ -883,7 +888,7 @@
 	weapon_weight = WEAPON_MEDIUM
 	draw_sound = 'stalker/sound/weapons/draw/ak74u_draw.ogg'
 
-/obj/item/gun/ballistic/automatic/stalker/strelok_ak  // АКС74У
+/obj/item/gun/ballistic/automatic/stalker/strelok_ak  // 74
 	name = "Fast-Firing AK 74S"
 	desc = "Looks like this has seen incredible modifications. It has reduced recoil, a faster firing rate and better durability."
 	icon = 'stalker/icons/weapons.dmi'
@@ -1223,7 +1228,7 @@
 	eject_sound = 'stalker/sound/weapons/unload/mp5_open.ogg'
 
 
-/obj/item/gun/ballistic/automatic/stalker/kiparis  // Кипарис
+/obj/item/gun/ballistic/automatic/stalker/kiparis
 	name = "Kiparis"
 	desc = "A small, light submachine gun firing a low-powered bullet, was designed by USSR Defense Ministry in the year 1972. Wasn't adopted by army, but found use and popularity amongst different modern russian government military forces and police."
 	icon_state = "kiparis"
@@ -1244,7 +1249,7 @@
 	load_sound = 'stalker/sound/weapons/load/mp5_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/mp5_open.ogg'
 
-/obj/item/gun/ballistic/automatic/stalker/ppsh  // ППШ
+/obj/item/gun/ballistic/automatic/stalker/ppsh
 	name = "PPSh"
 	desc = "The PPSh saw extensive combat use during World War II and the Korean War. It was one of the major infantry weapons of the Soviet Armed Forces during World War II. Around six million PPSh-41s were manufactured. In the form of the Chinese Type 50 (licensed copy), it was still being used by the Viet Cong as late as 1970. According to the 2002 edition of the Encyclopedia of Weapons of World War II the PPSh was still in use with irregular militaries."
 	icon_state = "ppsh"
@@ -1266,7 +1271,7 @@
 	load_sound = 'stalker/sound/weapons/load/mp5_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/mp5_open.ogg'
 
-/obj/item/gun/ballistic/automatic/stalker/berettam38  // Моделло 38
+/obj/item/gun/ballistic/automatic/stalker/berettam38
 	name = "Beretta M38"
 	desc = "Modello 38, or Model 38 and its variants were a series of official submachine guns of the Royal Italian Army introduced in 1938 and used during World War II."
 	icon_state = "berettam38"
@@ -1312,7 +1317,7 @@
 	. = ..()
 	update_icon()*/
 
-/obj/item/gun/ballistic/automatic/stalker/tpc301  // Эмка
+/obj/item/gun/ballistic/automatic/stalker/tpc301
 	name = "LR-300"
 	desc = "A new step in the development of this famous weapon family. The changes were made to the upper half of the steel construction comprising the barrel, gas tube and bolt assembly, reducing the weapon's weight, improving ergonomics and its gas system. The weapon is highly accurate, although its propensity to catch dirt makes it a poor choice for the Zone's difficult conditions."
 	icon_state = "tpc301"
@@ -1336,7 +1341,7 @@
 	load_sound = 'stalker/sound/weapons/load/tpc301_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/tpc301_open.ogg'
 
-/obj/item/gun/ballistic/automatic/stalker/abakan  // Абакан
+/obj/item/gun/ballistic/automatic/stalker/abakan
 	name = "AN-94"
 	desc = "A modern assault rifle developed as a replacement for the ageing AK-74. The main difference is its high speed 2-round burst firing mode, which allows two bullets to be fired at exactly the same spot on a target up to 100 meters away. This significantly increases the likelihood of hitting the target in comparison to the 1 round firing mode, which considerably improves kill potential, stopping power and armor piercing capability."
 	icon_state = "abakan"
@@ -1361,7 +1366,7 @@
 	load_sound = 'stalker/sound/weapons/load/abakan_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/abakan_open.ogg'
 
-/obj/item/gun/ballistic/automatic/stalker/il86  // ИЛ86
+/obj/item/gun/ballistic/automatic/stalker/il86
 	name = "L85"
 	desc = "This rifle's considerable number of drawbacks caused most of these weapons to be modernized, with the retired stock making its way to the Zone via the black market. The rifle's main advantages are its built-in 4x scope, high single-shot accuracy and reliable upgrade technology. When the weapon is fired in bursts, its accuracy decreases significantly and the rifle's basic internal mechanisms become somewhat unreliable."
 	icon_state = "il86"
@@ -1494,9 +1499,10 @@
 	eject_sound = 'stalker/sound/weapons/unload/fnf2000_open.ogg'
 
 
-/obj/item/gun/ballistic/automatic/stalker/l6_saw/pkm
+/obj/item/gun/ballistic/automatic/l6_saw/pkm
 	name = "PKM"
 	desc = "This belt-fed machine gun is a portable modification with a complex two-stage feeding system. Despite its weight and low precision, this LMG has found admirers in the Zone. Used primarily to fight off outnumbering enemy forces during faction conflicts and clear out mutant lairs"
+	icon = 'stalker/icons/obj/projectile.dmi'
 	icon_state = "PKMclosed200"
 	inhand_icon_state = "l6closedmag"
 	w_class = 5
@@ -1515,16 +1521,17 @@
 	pin = /obj/item/firing_pin
 	durability = 500
 
-/obj/item/gun/ballistic/automatic/stalker/l6_saw/pkm/update_icon()
+/obj/item/gun/ballistic/automatic/l6_saw/pkm/update_icon_state()
+	. = ..()
 	icon_state = "PKM[cover_open ? "open" : "closed"][magazine ? 200 : "-empty"]"
 
-/obj/item/gun/ballistic/automatic/stalker/l6_saw/pkm/shottie
+/obj/item/gun/ballistic/automatic/l6_saw/pkm/shottie
    name = "PTV M-777"
    desc = "Petrovich's personal weapon. Huyarit is like a zalupa."
    mag_type = /obj/item/ammo_box/magazine/stalker/pkm/shottie
 
-///////////////////////////// Sniper Rifles //////////////////////////////////////////
-/obj/item/gun/ballistic/automatic/stalker/val  // Вал
+///////////////////////////// Sniper Rifles ////////////////////////////////////////
+/obj/item/gun/ballistic/automatic/stalker/val
 	name = "AS Val"
 	desc = "A modified version of the silent Vintorez sniper rifle, the assault rifle was designed as a special forces weapon. The rifle's primary purpose is effective fire against enemies employing modern personal protection equipment without disclosing the shooter's location. Thanks to its integrated silencer and 9x39mm caliber round with a heavy subsonic bullet, the weapon's noise and muzzle flash have been reduced to a minimum."
 	icon_state = "val"
@@ -1551,7 +1558,7 @@
 	load_sound = 'stalker/sound/weapons/load/val_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/val_open.ogg'
 
-/obj/item/gun/ballistic/automatic/stalker/vintorez  // ВСС Винторез
+/obj/item/gun/ballistic/automatic/stalker/vintorez
 	name = "VSS Vintorez"
 	desc = "A special military sniper rifle purpose-built for silent, flashless sniping during special operations where early detection of the shooter may be critical. The Vintorez provides high armor-piercing capability and stopping power, as well as being equipped with an integrated sniper and optical scope. Highly rated by many stalkers despite its small magazine."
 	icon_state = "vintorez"
@@ -1608,7 +1615,7 @@
 	load_sound = 'stalker/sound/weapons/load/val_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/val_open.ogg'
 
-/obj/item/gun/ballistic/automatic/stalker/groza  // ОЦ-14 Гроза
+/obj/item/gun/ballistic/automatic/stalker/groza  // -14
 	name = "Groza OTs-14"
 	desc = "This assault rifle combined with a grenade launcher, which is similar to the AKM series, was specifically developed for rapid response units. The main differences are its 9x39mm caliber ammunition, bullpup layout and extensive configuration options. This weapon is highly valued by military stalkers due to its ability to kill enemies wearing body armor behind improvised cover at a distance during urban combat."
 	icon_state = "groza"
@@ -1636,7 +1643,7 @@
 	load_sound = 'stalker/sound/weapons/load/groza_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/groza_open.ogg'
 
-///////////////////////////// ETC //////////////////////////////////////////
+///////////////////////////// ETC ////////////////////////////////////////
 
 /obj/item/gun/ballistic/semiauto/gaussrifle  // Gauss Rifle
 	name = "gauss rifle"
@@ -1658,7 +1665,7 @@
 	spread = 0
 	recoil = 0
 	randomspread = 0
-	distro = 15
+	//distro = 15
 	zoomable = TRUE
 	zoom_amt = 8
 	zoom_out_amt = 10
