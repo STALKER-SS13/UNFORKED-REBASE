@@ -6,17 +6,34 @@
 	var/draw_sound
 	var/list/modifications = list()
 	var/automatic = FALSE
+	var/autofire_delay = 0.2 SECONDS
+	/// Distance in turfs to move the user's screen forward (the "zoom" effect)
 	var/zoom_amt
 	var/zoom_out_amt
-	var/zoomable
+	var/has_integrated_scope = FALSE
 
 /obj/item/gun/ballistic/automatic/stalker
 	icon = 'stalker/icons/obj/projectile.dmi'
+	burst_size = 1
 
 /obj/item/gun/update_overlays()
 	. = ..()
 	if(is_unique)
 		overlays += image('stalker/icons/projectile_overlays32x32.dmi', "unique", layer = FLOAT_LAYER)
+
+/obj/item/gun/Initialize(mapload)
+	. = ..()
+	if(automatic)
+		AddComponent(/datum/component/automatic_fire, autofire_delay)
+	RegisterSignal(src, COMSIG_ITEM_PICKUP, PROC_REF(on_pickup))
+
+
+/obj/item/gun/Destroy()
+	UnregisterSignal(src, COMSIG_ITEM_PICKUP)
+	return ..()
+
+/obj/item/gun/proc/on_pickup()
+	playsound(src, draw_sound, 30, 1)
 
 
 /obj/item/gun/proc/durability_check(mob/user)   //Gun durability
@@ -304,12 +321,12 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m9x18aps
 	force = 10
 	automatic = 1
-	burst_size = 5
+	//burst_size = 5
 	fire_delay = 1.7
 	can_suppress = 1
 	can_unsuppress = 1
 	spread = 12
-	recoil = 5
+	recoil = 1.25
 	durability = 75
 	draw_sound = 'stalker/sound/weapons/draw/pm_draw.ogg'
 	load_sound = 'stalker/sound/weapons/load/pm_load.ogg'
@@ -325,7 +342,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m9x18aps
 	force = 10
 	automatic = 1
-	burst_size = 5
+	//burst_size = 5
 	fire_delay = 1.5
 	can_suppress = 1
 	can_unsuppress = 1
@@ -348,7 +365,7 @@
 	vary_fire_sound = 1
 	can_suppress = 1
 	can_unsuppress = 1
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1
 	spread = 10
 	recoil = 3
@@ -505,7 +522,7 @@
 	fire_sound = 'stalker/sound/weapons/mac10_shoot.ogg'
 	mag_type = /obj/item/ammo_box/magazine/stalker/sten
 	can_suppress = 1
-	burst_size = 4
+	//burst_size = 4
 	fire_delay = 1.8
 	slot_flags = ITEM_SLOT_BACK
 	durability = 80
@@ -527,7 +544,7 @@
 	fire_sound = 'stalker/sound/weapons/mac10_shoot.ogg'
 	mag_type = /obj/item/ammo_box/magazine/stalker/sterling
 	can_suppress = 1
-	burst_size = 4
+	//burst_size = 4
 	fire_delay = 1.8
 	slot_flags = ITEM_SLOT_BACK
 	durability = 80
@@ -550,7 +567,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m3a1
 	fire_sound = 'stalker/sound/weapons/abakan_shoot.ogg'
 	can_suppress = 0
-	burst_size = 5
+	//burst_size = 5
 	fire_delay = 2.5
 	pin = /obj/item/firing_pin
 	durability = 200
@@ -574,7 +591,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/reising
 	fire_sound = 'stalker/sound/weapons/abakan_shoot.ogg'
 	can_suppress = 0
-	burst_size = 5
+	//burst_size = 5
 	fire_delay = 2.5
 	pin = /obj/item/firing_pin
 	durability = 200
@@ -598,7 +615,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m9x19m76
 	fire_sound = 'stalker/sound/weapons/abakan_shoot.ogg'
 	can_suppress = 0
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 2
 	pin = /obj/item/firing_pin
 	durability = 200
@@ -622,7 +639,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/mp40
 	fire_sound = 'stalker/sound/weapons/tpc301_shoot.ogg'
 	can_suppress = 1
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.4
 	pin = /obj/item/firing_pin
 	durability = 80
@@ -646,7 +663,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/mp40
 	fire_sound = 'stalker/sound/weapons/tpc301_shoot.ogg'
 	can_suppress = 1
-	burst_size = 4
+	//burst_size = 4
 	fire_delay = 2
 	pin = /obj/item/firing_pin
 	durability = 80
@@ -669,7 +686,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/pps43
 	can_suppress = 0
 	slowdown = 0.15
-	burst_size = 5
+	//burst_size = 5
 	fire_delay = 1.5
 	slot_flags = ITEM_SLOT_BACK
 	durability = 50
@@ -692,7 +709,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m9x18bizon
 	can_suppress = 0
 	slowdown = 0.15
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 0.8
 	slot_flags = ITEM_SLOT_BACK
 	durability = 50
@@ -714,7 +731,7 @@
 	fire_sound = 'stalker/sound/weapons/fort_shot.ogg'
 	mag_type = /obj/item/ammo_box/magazine/stalker/m9x19skorpion
 	can_suppress = 0
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1
 	slot_flags = ITEM_SLOT_BELT
 	durability = 80
@@ -737,7 +754,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m9x19mat49
 	fire_sound = 'stalker/sound/weapons/abakan_shoot.ogg'
 	can_suppress = 0
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1
 	pin = /obj/item/firing_pin
 	durability = 200
@@ -759,7 +776,7 @@
 	fire_sound = 'stalker/sound/weapons/mac10_shoot.ogg'
 	mag_type = /obj/item/ammo_box/magazine/stalker/mac10
 	can_suppress = 1
-	burst_size = 4
+	//burst_size = 4
 	fire_delay = 0.8
 	slot_flags = ITEM_SLOT_BELT
 	durability = 80
@@ -788,7 +805,7 @@
 	force = 15
 	recoil = 0.5
 	w_class = 4
-	burst_size = 1
+	//burst_size = 1
 	randomspread = 0
 	spread = 2
 	can_scope = 1
@@ -797,7 +814,7 @@
 
 /obj/item/gun/ballistic/automatic/stalker/ak74  // AK-74
 	name = "AK 74"
-	desc = "This weapon, designed in 1974, signaled the adoption of small caliber and low impulse rounds by Warsaw Pact countries. A descendant of the most popular assault rifle in the world, the AK-74 has an even bigger muzzle brake, resulting in a reduction of what was already manageable recoil. This facilitates better accuracy and groupings, especially when fired in fast single shots or bursts. As before, the rifle is very simple and reliable."
+	desc = "This weapon, designed in 1974, signaled the adoption of small caliber and low impulse rounds by Warsaw Pact countries. A descendant of the most popular assault rifle in the world, the AK-74 has an even bigger muzzle brake, resulting in a reduction of what was already manageable recoil. This facilitates better accuracy and groupings, especially when fired in fast single shots or //bursts. As before, the rifle is very simple and reliable."
 	icon_state = "ak74"
 	inhand_icon_state = "ak74"
 	colored = 0//"normal"
@@ -808,7 +825,7 @@
 	can_suppress = 1
 	can_unsuppress = 1
 	slowdown = 0.15
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.6
 	pin = /obj/item/firing_pin
 	durability = 120
@@ -838,14 +855,14 @@
 
 /obj/item/gun/ballistic/automatic/stalker/ak74/camo
 	name = "AK 74"
-	desc = "This weapon, designed in 1974, signaled the adoption of small caliber and low impulse rounds by Warsaw Pact countries. A descendant of the most popular assault rifle in the world, the AK-74 has an even bigger muzzle brake, resulting in a reduction of what was already manageable recoil. This facilitates better accuracy and groupings, especially when fired in fast single shots or bursts. As before, the rifle is very simple and reliable. This one has camo paint."
+	desc = "This weapon, designed in 1974, signaled the adoption of small caliber and low impulse rounds by Warsaw Pact countries. A descendant of the most popular assault rifle in the world, the AK-74 has an even bigger muzzle brake, resulting in a reduction of what was already manageable recoil. This facilitates better accuracy and groupings, especially when fired in fast single shots or //bursts. As before, the rifle is very simple and reliable. This one has camo paint."
 	icon_state = "ak74_camo"
 	inhand_icon_state = "ak74_camo"
 
 
 /obj/item/gun/ballistic/automatic/stalker/ak74/black
 	name = "AK 74"
-	desc = "This weapon, designed in 1974, signaled the adoption of small caliber and low impulse rounds by Warsaw Pact countries. A descendant of the most popular assault rifle in the world, the AK-74 has an even bigger muzzle brake, resulting in a reduction of what was already manageable recoil. This facilitates better accuracy and groupings, especially when fired in fast single shots or bursts. As before, the rifle is very simple and reliable. The metal parts are black."
+	desc = "This weapon, designed in 1974, signaled the adoption of small caliber and low impulse rounds by Warsaw Pact countries. A descendant of the most popular assault rifle in the world, the AK-74 has an even bigger muzzle brake, resulting in a reduction of what was already manageable recoil. This facilitates better accuracy and groupings, especially when fired in fast single shots or //bursts. As before, the rifle is very simple and reliable. The metal parts are black."
 	icon_state = "ak74_black"
 	inhand_icon_state = "ak74_black"
 
@@ -853,14 +870,14 @@
 
 /obj/item/gun/ballistic/automatic/stalker/ak74/blackout
 	name = "AK 74"
-	desc = "This weapon, designed in 1974, signaled the adoption of small caliber and low impulse rounds by Warsaw Pact countries. A descendant of the most popular assault rifle in the world, the AK-74 has an even bigger muzzle brake, resulting in a reduction of what was already manageable recoil. This facilitates better accuracy and groupings, especially when fired in fast single shots or bursts. As before, the rifle is very simple and reliable. The entire gun is black."
+	desc = "This weapon, designed in 1974, signaled the adoption of small caliber and low impulse rounds by Warsaw Pact countries. A descendant of the most popular assault rifle in the world, the AK-74 has an even bigger muzzle brake, resulting in a reduction of what was already manageable recoil. This facilitates better accuracy and groupings, especially when fired in fast single shots or //bursts. As before, the rifle is very simple and reliable. The entire gun is black."
 	icon_state = "ak74_blackout"
 	inhand_icon_state = "ak74_blackout"
 
 
 /obj/item/gun/ballistic/automatic/stalker/ak74/unfurnished
 	name = "AK 74"
-	desc = "This weapon, designed in 1974, signaled the adoption of small caliber and low impulse rounds by Warsaw Pact countries. A descendant of the most popular assault rifle in the world, the AK-74 has an even bigger muzzle brake, resulting in a reduction of what was already manageable recoil. This facilitates better accuracy and groupings, especially when fired in fast single shots or bursts. As before, the rifle is very simple and reliable. This one is stripped of its wooden furniture."
+	desc = "This weapon, designed in 1974, signaled the adoption of small caliber and low impulse rounds by Warsaw Pact countries. A descendant of the most popular assault rifle in the world, the AK-74 has an even bigger muzzle brake, resulting in a reduction of what was already manageable recoil. This facilitates better accuracy and groupings, especially when fired in fast single shots or //bursts. As before, the rifle is very simple and reliable. This one is stripped of its wooden furniture."
 	icon_state = "ak74_furnitureless"
 	inhand_icon_state = "ak74_furnitureless"
 
@@ -876,7 +893,7 @@
 	fire_sound = 'stalker/sound/weapons/ak74u_shot.ogg'
 	can_suppress = 1
 	slowdown = 0.15
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.5
 	pin = /obj/item/firing_pin
 	durability = 100
@@ -900,7 +917,7 @@
 	fire_sound = 'stalker/sound/weapons/ak74u_shot.ogg'
 	can_suppress = 1
 	slowdown = 0.15
-	burst_size = 5
+	//burst_size = 5
 	fire_delay = 1
 	pin = /obj/item/firing_pin
 	durability = 200
@@ -926,7 +943,7 @@
 	can_suppress = 1
 	can_unsuppress = 1
 	slowdown = 0.15
-	burst_size = 2
+	//burst_size = 2
 	fire_delay = 1.6
 	pin = /obj/item/firing_pin
 	durability = 120
@@ -951,7 +968,7 @@
 	can_suppress = 1
 	can_unsuppress = 1
 	slowdown = 0.15
-	burst_size = 5
+	//burst_size = 5
 	fire_delay = 1.6
 	pin = /obj/item/firing_pin
 	durability = 120
@@ -974,7 +991,7 @@
 	fire_sound = 'stalker/sound/weapons/il86_shoot.ogg'
 	can_suppress = 1
 	slowdown = 0.15
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.8
 	pin = /obj/item/firing_pin
 	durability = 75
@@ -999,12 +1016,12 @@
 	can_suppress = 0
 	slowdown = 0.15
 	durability = 125
-	burst_size = 4
+	//burst_size = 4
 	fire_delay = 1.3
 	w_class = 4
 	spread = 3
 	recoil = 0.3
-	zoomable = TRUE
+	has_integrated_scope = TRUE
 	zoom_amt = 5
 	zoom_out_amt = 5
 	can_scope = 0
@@ -1024,7 +1041,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/akm
 	fire_sound = 'stalker/sound/weapons/akm_shot.ogg'
 	can_suppress = 0
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.7
 	durability = 150
 	w_class = 4
@@ -1044,7 +1061,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/vz58
 	fire_sound = 'stalker/sound/weapons/vz58_shot.ogg'
 	can_suppress = 0
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.5
 	durability = 150
 	w_class = 4
@@ -1064,7 +1081,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m556x45
 	fire_sound = 'stalker/sound/weapons/tpc301_shoot.ogg'
 	can_suppress = 1
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.7
 	durability = 70
 	slowdown = 0.15
@@ -1086,7 +1103,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m556x45
 	fire_sound = 'stalker/sound/weapons/tpc301_shoot.ogg'
 	can_suppress = 1
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.7
 	durability = 70
 	slowdown = 0.15
@@ -1149,7 +1166,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m556x45
 	fire_sound = 'stalker/sound/weapons/tpc301_shoot.ogg'
 	can_suppress = 0
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.7
 	durability = 70
 	slowdown = 0.15
@@ -1174,7 +1191,7 @@
 	slowdown = 0.15
 	force = 15
 	can_suppress = 1
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 2.2
 	durability = 70
 	slowdown = 0.15
@@ -1194,7 +1211,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m545
 	fire_sound = 'stalker/sound/weapons/ak74_shot.ogg'
 	slowdown = 0.15
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.8
 	pin = /obj/item/firing_pin
 	durability = 40
@@ -1214,7 +1231,7 @@
 	fire_sound = 'stalker/sound/weapons/mp5_shot.ogg'
 	mag_type = /obj/item/ammo_box/magazine/stalker/m9x19mp5
 	can_suppress = 1
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.25
 	slot_flags = ITEM_SLOT_BELT
 	durability = 100
@@ -1236,7 +1253,7 @@
 	fire_sound = 'stalker/sound/weapons/fort_shot.ogg'
 	mag_type = /obj/item/ammo_box/magazine/stalker/kiparis
 	can_suppress = 1
-	burst_size = 2
+	//burst_size = 2
 	fire_delay = 1
 	slot_flags = ITEM_SLOT_BELT
 	durability = 80
@@ -1257,7 +1274,7 @@
 	fire_sound = 'stalker/sound/weapons/ppsh_shot.ogg'
 	mag_type = /obj/item/ammo_box/magazine/stalker/ppsh
 	can_suppress = 0
-	burst_size = 5
+	//burst_size = 5
 	fire_delay = 1.2
 	slot_flags = ITEM_SLOT_BELT
 	durability = 50
@@ -1279,7 +1296,7 @@
 	fire_sound = 'stalker/sound/weapons/berettam38_shot.ogg'
 	mag_type = /obj/item/ammo_box/magazine/stalker/berettam38
 	can_suppress = 0
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.7
 	slot_flags = ITEM_SLOT_BELT
 	durability = 75
@@ -1301,7 +1318,7 @@
 	mag_type = /obj/item/ammo_box/magazine/smg57
 	fire_delay = 0.8
 	can_suppress = 1
-	burst_size = 3
+	//burst_size = 3
 	automatic = 1
 	can_scope = 1
 	tac_reloads = TRUE//tacticool
@@ -1327,7 +1344,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/m556x45
 	fire_sound = 'stalker/sound/weapons/tpc301_shoot.ogg'
 	can_suppress = 1
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.4
 	pin = /obj/item/firing_pin
 	durability = 80
@@ -1343,7 +1360,7 @@
 
 /obj/item/gun/ballistic/automatic/stalker/abakan
 	name = "AN-94"
-	desc = "A modern assault rifle developed as a replacement for the ageing AK-74. The main difference is its high speed 2-round burst firing mode, which allows two bullets to be fired at exactly the same spot on a target up to 100 meters away. This significantly increases the likelihood of hitting the target in comparison to the 1 round firing mode, which considerably improves kill potential, stopping power and armor piercing capability."
+	desc = "A modern assault rifle developed as a replacement for the ageing AK-74. The main difference is its high speed 2-round //burst firing mode, which allows two bullets to be fired at exactly the same spot on a target up to 100 meters away. This significantly increases the likelihood of hitting the target in comparison to the 1 round firing mode, which considerably improves kill potential, stopping power and armor piercing capability."
 	icon_state = "abakan"
 	inhand_icon_state = "abakan"
 	slot_flags = ITEM_SLOT_BACK
@@ -1352,7 +1369,7 @@
 	fire_sound = 'stalker/sound/weapons/abakan_shoot.ogg'
 	can_suppress = 1
 	slowdown = 0.15
-	burst_size = 2
+	//burst_size = 2
 	fire_delay = 1.5
 	pin = /obj/item/firing_pin
 	durability = 200
@@ -1368,7 +1385,7 @@
 
 /obj/item/gun/ballistic/automatic/stalker/il86
 	name = "L85"
-	desc = "This rifle's considerable number of drawbacks caused most of these weapons to be modernized, with the retired stock making its way to the Zone via the black market. The rifle's main advantages are its built-in 4x scope, high single-shot accuracy and reliable upgrade technology. When the weapon is fired in bursts, its accuracy decreases significantly and the rifle's basic internal mechanisms become somewhat unreliable."
+	desc = "This rifle's considerable number of drawbacks caused most of these weapons to be modernized, with the retired stock making its way to the Zone via the black market. The rifle's main advantages are its built-in 4x scope, high single-shot accuracy and reliable upgrade technology. When the weapon is fired in //bursts, its accuracy decreases significantly and the rifle's basic internal mechanisms become somewhat unreliable."
 	icon_state = "il86"
 	inhand_icon_state = "il86"
 	slot_flags = ITEM_SLOT_BACK
@@ -1377,10 +1394,10 @@
 	fire_sound = 'stalker/sound/weapons/il86_shoot.ogg'
 	can_suppress = 1
 	slowdown = 0.15
-	zoomable = TRUE
+	has_integrated_scope = TRUE
 	zoom_amt = 9
 	zoom_out_amt = 12
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.8
 	pin = /obj/item/firing_pin
 	durability = 75
@@ -1405,7 +1422,7 @@
 	can_suppress = 0
 	slowdown = 0.15
 	durability = 125
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.3
 	w_class = 4
 	spread = 3
@@ -1428,10 +1445,10 @@
 	fire_sound = 'stalker/sound/weapons/il86_shoot.ogg'
 	can_suppress = 1
 	slowdown = 0.15
-	zoomable = TRUE
+	has_integrated_scope = TRUE
 	zoom_amt = 10
 	zoom_out_amt = 13
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.25
 	pin = /obj/item/firing_pin
 	durability = 150
@@ -1456,7 +1473,7 @@
 	fire_sound = 'stalker/sound/weapons/fnf2000_shoot.ogg'
 	can_suppress = 0
 	slowdown = 0.15
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.4
 	pin = /obj/item/firing_pin
 	durability = 250
@@ -1481,9 +1498,9 @@
 	fire_sound = 'stalker/sound/weapons/fnf2000_shoot.ogg'
 	can_suppress = 0
 	slowdown = 0.15
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.4
-	zoomable = TRUE
+	has_integrated_scope = TRUE
 	zoom_amt = 12
 	zoom_out_amt = 15
 	pin = /obj/item/firing_pin
@@ -1514,7 +1531,7 @@
 	slowdown = 0.40
 	can_scope = 0
 	automatic = 1
-	burst_size = 5
+	//burst_size = 5
 	fire_delay = 1.8
 	spread = 6
 	recoil = 1
@@ -1545,7 +1562,7 @@
 	durability = 150
 	slot_flags = ITEM_SLOT_BACK
 	force = 15
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.2
 	pin = /obj/item/firing_pin
 	w_class = 4
@@ -1569,10 +1586,10 @@
 	can_suppress = 0
 	can_unsuppress = 0
 	slowdown = 0.15
-	zoomable = TRUE
+	has_integrated_scope = TRUE
 	zoom_amt = 7
 	zoom_out_amt = 10
-	burst_size = 3
+	//burst_size = 3
 	fire_delay = 1.2
 	durability = 150
 	slot_flags = ITEM_SLOT_BACK
@@ -1590,7 +1607,7 @@
 
 /obj/item/gun/ballistic/semiauto/svd  // SVD
 	name = "SVD"
-	desc = "Snaiperskaya Vintovka Dragunova, abbreviated as the SVD is a high-caiber, anti-personell sniper rifle developed and deployed originally in 1963. Comes with a high-grade inbuilt scope for long-range scopeouts, and unlike its smaller-caliber cousin (the VSS), is incapable of burst fire due to the aforementioned higher caliber."
+	desc = "Snaiperskaya Vintovka Dragunova, abbreviated as the SVD is a high-caiber, anti-personell sniper rifle developed and deployed originally in 1963. Comes with a high-grade inbuilt scope for long-range scopeouts, and unlike its smaller-caliber cousin (the VSS), is incapable of //burst fire due to the aforementioned higher caliber."
 	icon_state = "svd"
 	inhand_icon_state = "svd"
 	fire_sound = 'stalker/sound/weapons/abakan_shoot.ogg'
@@ -1598,7 +1615,7 @@
 	can_suppress = 0
 	can_unsuppress = 0
 	slowdown = 0.15
-	zoomable = TRUE
+	has_integrated_scope = TRUE
 	zoom_amt = 9
 	zoom_out_amt = 11
 	fire_delay = 35
@@ -1628,14 +1645,14 @@
 	slot_flags = ITEM_SLOT_BACK
 	fire_delay = 1
 	force = 15
-	burst_size = 3
+	//burst_size = 3
 	pin = /obj/item/firing_pin
 	w_class = 4
 	spread = 5
 	recoil = 0.4
 	can_scope = 0
 	automatic = 1
-	zoomable = TRUE
+	has_integrated_scope = TRUE
 	zoom_amt = 4
 	zoom_out_amt = 4
 	weapon_weight = WEAPON_MEDIUM
@@ -1666,7 +1683,7 @@
 	recoil = 0
 	randomspread = 0
 	//distro = 15
-	zoomable = TRUE
+	has_integrated_scope = TRUE
 	zoom_amt = 8
 	zoom_out_amt = 10
 	weapon_weight = WEAPON_MEDIUM
