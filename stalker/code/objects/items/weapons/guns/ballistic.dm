@@ -16,16 +16,16 @@
 /datum/action/toggle_scope_zoom
 	name = "Toggle Scope"
 	check_flags = AB_CHECK_CONSCIOUS|AB_CHECK_INCAPACITATED|AB_CHECK_LYING|AB_CHECK_HANDS_BLOCKED
-	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "sniper_zoom"
 	var/datum/weakref/gun_ref = null
 
-/datum/action/toggle_scope_zoom/Trigger()
+/datum/action/toggle_scope_zoom/Trigger(trigger_flags)
 	var/obj/item/gun/gun = gun_ref.resolve()
 	if(istype(gun))
 		gun.zoom(owner)
 
-/datum/action/toggle_scope_zoom/IsAvailable()
+/datum/action/toggle_scope_zoom/IsAvailable(feedback)
 	. = ..()
 	var/obj/item/gun/gun = gun_ref.resolve()
 	if(!. && istype(gun))
