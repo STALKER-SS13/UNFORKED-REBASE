@@ -8,9 +8,66 @@
 	var/automatic = FALSE
 	var/autofire_delay = 0.2 SECONDS
 	/// Distance in turfs to move the user's screen forward (the "zoom" effect)
-	var/zoom_amt
-	var/zoom_out_amt
+	var/zoomed = FALSE
+	var/zoom_amt = 0
+	var/zoom_out_amt = 0
 	var/has_integrated_scope = FALSE
+
+/datum/action/toggle_scope_zoom
+	name = "Toggle Scope"
+	check_flags = AB_CHECK_CONSCIOUS|AB_CHECK_INCAPACITATED|AB_CHECK_LYING|AB_CHECK_HANDS_BLOCKED
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "sniper_zoom"
+	var/datum/weakref/gun_ref = null
+
+/datum/action/toggle_scope_zoom/Trigger()
+	var/obj/item/gun/gun = gun_ref.resolve()
+	if(istype(gun))
+		gun.zoom(owner)
+
+/datum/action/toggle_scope_zoom/IsAvailable()
+	. = ..()
+	var/obj/item/gun/gun = gun_ref.resolve()
+	if(!. && istype(gun))
+		gun.zoom(owner, FALSE)
+
+/datum/action/toggle_scope_zoom/Remove(mob/living/L)
+	var/obj/item/gun/gun = gun_ref.resolve()
+	if(istype(gun))
+		gun.zoom(L, FALSE)
+	..()
+
+/obj/item/gun/proc/zoom(mob/living/user, forced_zoom = -1)
+	if(!user || !user.client)
+		return
+	if(forced_zoom != -1)
+		zoomed = forced_zoom
+	else
+		zoomed = !zoomed
+
+	if(zoomed)
+		RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(on_zoom_walk))
+		RegisterSignal(user, COMSIG_ATOM_DIR_CHANGE, PROC_REF(zoom_rotate))
+		user.visible_message(span_notice("[user] looks into [src]'s scope."), span_notice("You look into [src]'s scope."))
+		user.client.view_size.zoomOut(zoom_out_amt, zoom_amt, user.dir)
+	else
+		UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+		UnregisterSignal(user, COMSIG_ATOM_DIR_CHANGE)
+		user.visible_message(span_notice("[user] lowers [src]."), span_notice("You lower [src]."))
+		user.client.view_size.zoomIn()
+
+/obj/item/gun/proc/on_zoom_walk(atom/movable/source)
+	SIGNAL_HANDLER
+
+	if(ismob(source))
+		zoom(source, FALSE)
+
+/obj/item/gun/proc/zoom_rotate(atom/movable/source, old_dir, new_dir)
+	SIGNAL_HANDLER
+
+	if(ismob(source))
+		var/mob/mob = source
+		mob.client.view_size.zoomOut(zoom_out_amt, zoom_amt, new_dir)
 
 /obj/item/gun/ballistic/automatic/stalker
 	icon = 'stalker/icons/obj/projectile.dmi'
@@ -365,7 +422,7 @@
 	vary_fire_sound = 1
 	can_suppress = 1
 	can_unsuppress = 1
-	//burst_size = 3
+	burst_size = 3
 	fire_delay = 1
 	spread = 10
 	recoil = 3
@@ -522,6 +579,7 @@
 	fire_sound = 'stalker/sound/weapons/mac10_shoot.ogg'
 	mag_type = /obj/item/ammo_box/magazine/stalker/sten
 	can_suppress = 1
+	automatic = 1
 	//burst_size = 4
 	fire_delay = 1.8
 	slot_flags = ITEM_SLOT_BACK
@@ -530,7 +588,6 @@
 	spread = 10
 	recoil = 1.4
 	can_scope = 0
-	automatic = 1
 	draw_sound = 'stalker/sound/weapons/draw/mp5_draw.ogg'
 	load_sound = 'stalker/sound/weapons/load/mp5_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/mp5_open.ogg'
@@ -1041,6 +1098,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/akm
 	fire_sound = 'stalker/sound/weapons/akm_shot.ogg'
 	can_suppress = 0
+	automatic = 1
 	//burst_size = 3
 	fire_delay = 1.7
 	durability = 150
@@ -1061,6 +1119,7 @@
 	mag_type = /obj/item/ammo_box/magazine/stalker/vz58
 	fire_sound = 'stalker/sound/weapons/vz58_shot.ogg'
 	can_suppress = 0
+	automatic = 1
 	//burst_size = 3
 	fire_delay = 1.5
 	durability = 150
@@ -1082,6 +1141,7 @@
 	fire_sound = 'stalker/sound/weapons/tpc301_shoot.ogg'
 	can_suppress = 1
 	//burst_size = 3
+	automatic = 1
 	fire_delay = 1.7
 	durability = 70
 	slowdown = 0.15
@@ -1104,6 +1164,7 @@
 	fire_sound = 'stalker/sound/weapons/tpc301_shoot.ogg'
 	can_suppress = 1
 	//burst_size = 3
+	automatic = 1
 	fire_delay = 1.7
 	durability = 70
 	slowdown = 0.15
@@ -1167,6 +1228,7 @@
 	fire_sound = 'stalker/sound/weapons/tpc301_shoot.ogg'
 	can_suppress = 0
 	//burst_size = 3
+	automatic = 1
 	fire_delay = 1.7
 	durability = 70
 	slowdown = 0.15
@@ -1192,6 +1254,7 @@
 	force = 15
 	can_suppress = 1
 	//burst_size = 3
+	automatic = 1
 	fire_delay = 2.2
 	durability = 70
 	slowdown = 0.15
@@ -1531,6 +1594,7 @@
 	slowdown = 0.40
 	can_scope = 0
 	automatic = 1
+	autofire_delay = 0.1 SECONDS
 	//burst_size = 5
 	fire_delay = 1.8
 	spread = 6
@@ -1589,7 +1653,7 @@
 	has_integrated_scope = TRUE
 	zoom_amt = 7
 	zoom_out_amt = 10
-	//burst_size = 3
+	burst_size = 3
 	fire_delay = 1.2
 	durability = 150
 	slot_flags = ITEM_SLOT_BACK
