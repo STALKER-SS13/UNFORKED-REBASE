@@ -5327,7 +5327,9 @@
 #include "stalker\code\game\trading\sidormat.dm"
 #include "stalker\code\game\trading\stalker_equipment.dm"
 #include "stalker\code\objects\items\weapons\ammo\ammo_casings.dm"
+#include "stalker\code\objects\items\weapons\ammo\boxes.dm"
 #include "stalker\code\objects\items\weapons\ammo\bullets.dm"
 #include "stalker\code\objects\items\weapons\ammo\magazines.dm"
+#include "stalker\code\objects\items\weapons\guns\attachments.dm"
 #include "stalker\code\objects\items\weapons\guns\ballistic.dm"
 // END_INCLUDE

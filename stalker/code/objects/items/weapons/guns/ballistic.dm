@@ -1,17 +1,22 @@
 /obj/item/gun
-	var/is_jammed = FALSE
-	var/durability = 100
+	var/is_jammed = FALSE // TODO
+	var/durability = 100 // TODO
 	var/is_unique = FALSE
-	var/can_scope = FALSE
+	var/can_scope = FALSE // TODO
 	var/draw_sound
-	var/list/modifications = list()
+	var/list/modifications = list() // TODO
 	var/automatic = FALSE
 	var/autofire_delay = 0.2 SECONDS
 	/// Distance in turfs to move the user's screen forward (the "zoom" effect)
 	var/zoomed = FALSE
 	var/zoom_amt = 0
 	var/zoom_out_amt = 0
-	var/has_integrated_scope = FALSE
+	var/scoped = FALSE // TODO
+
+	var/list/obj/item/attachment/addons = list() // TODO
+
+	var/distro = 0 // TODO
+	var/damagelose = 0 //TODO
 
 /datum/action/toggle_scope_zoom
 	name = "Toggle Scope"
@@ -129,7 +134,7 @@
 	durability -= 0.075
 
 
-///////////////////////////// Pistols ////////////////////////////////////////
+///////////////////////////// Pistols //////////////////////////////////////
 /obj/item/gun/ballistic/automatic/stalker/pistol
 	modifications = list("barrel_pistol" = 0, "frame_pistol" = 0, "grip_pistol" = 0)
 
@@ -294,7 +299,7 @@
 	load_sound = 'stalker/sound/weapons/load/pm_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/pm_open.ogg'
 
-/obj/item/gun/ballistic/revolver/anaconda // Colt Anaconda .44
+/obj/item/gun/ballistic/revolver/stalker/anaconda // Colt Anaconda .44
 	name = "Colt Anaconda .44"
 	desc = "You feeling lucky today, gopnik?"
 	icon_state = "anaconda"
@@ -313,7 +318,7 @@
 	load_sound = 'stalker/sound/weapons/load/obrez_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/obrez_open.ogg'
 
-/obj/item/gun/ballistic/revolver/c500revolver // .500 Bull
+/obj/item/gun/ballistic/revolver/stalker/c500revolver // .500 Bull
 	name = ".500 Bull"
 	desc = "Three bullets and enough recoil to move train tracks stapled to the ground, compacted snugly enough to fit on your belt. Will fetch a heavy price when sold."
 	icon_state = "c500revolver"
@@ -538,7 +543,7 @@
 	eject_sound = 'stalker/sound/weapons/unload/pm_open.ogg'
 
 
-///////////////////////////// ARs,SMGs ////////////////////////////////////////
+///////////////////////////// ARs,SMGs //////////////////////////////////////
 
 /obj/item/gun/ballistic
 	var/image/mag_overlay 			= null
@@ -846,7 +851,7 @@
 	load_sound = 'stalker/sound/weapons/load/mp5_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/mp5_open.ogg'
 
-/obj/item/gun/ballistic/rifle/semiautobolt/sks // SKS
+/obj/item/gun/ballistic/rifle/semiautobolt/stalker/sks // SKS
 	name = "SKS"
 	desc = "The SKS is a Soviet semi-automatic carbine chambered for the 7.62x39mm round, designed in 1943 by Sergei Gavrilovich Simonov. The SKS-45 was manufactured at Tula Arsenal from 1949 to 1958 and at Izhevsk Arsenal in just 1953 and 1954, resulting in a total Soviet production of about 2.7 million carbines. In the early 1950s, the Soviets took the SKS carbine out of front-line service and replaced it with the AK-47; however, the SKS remained in second-line service for decades."
 	icon_state = "sks"
@@ -1078,7 +1083,7 @@
 	w_class = 4
 	spread = 3
 	recoil = 0.3
-	has_integrated_scope = TRUE
+	scoped = TRUE
 	zoom_amt = 5
 	zoom_out_amt = 5
 	can_scope = 0
@@ -1457,7 +1462,7 @@
 	fire_sound = 'stalker/sound/weapons/il86_shoot.ogg'
 	can_suppress = 1
 	slowdown = 0.15
-	has_integrated_scope = TRUE
+	scoped = TRUE
 	zoom_amt = 9
 	zoom_out_amt = 12
 	//burst_size = 3
@@ -1508,7 +1513,7 @@
 	fire_sound = 'stalker/sound/weapons/il86_shoot.ogg'
 	can_suppress = 1
 	slowdown = 0.15
-	has_integrated_scope = TRUE
+	scoped = TRUE
 	zoom_amt = 10
 	zoom_out_amt = 13
 	//burst_size = 3
@@ -1563,7 +1568,7 @@
 	slowdown = 0.15
 	//burst_size = 3
 	fire_delay = 1.4
-	has_integrated_scope = TRUE
+	scoped = TRUE
 	zoom_amt = 12
 	zoom_out_amt = 15
 	pin = /obj/item/firing_pin
@@ -1608,10 +1613,10 @@
 
 /obj/item/gun/ballistic/automatic/l6_saw/pkm/shottie
    name = "PTV M-777"
-   desc = "Petrovich's personal weapon. Huyarit is like a zalupa."
+   desc = "Petrovich's personal weapon. Huyarit like zalupa."
    mag_type = /obj/item/ammo_box/magazine/stalker/pkm/shottie
 
-///////////////////////////// Sniper Rifles ////////////////////////////////////////
+///////////////////////////// Sniper Rifles //////////////////////////////////////
 /obj/item/gun/ballistic/automatic/stalker/val
 	name = "AS Val"
 	desc = "A modified version of the silent Vintorez sniper rifle, the assault rifle was designed as a special forces weapon. The rifle's primary purpose is effective fire against enemies employing modern personal protection equipment without disclosing the shooter's location. Thanks to its integrated silencer and 9x39mm caliber round with a heavy subsonic bullet, the weapon's noise and muzzle flash have been reduced to a minimum."
@@ -1650,7 +1655,7 @@
 	can_suppress = 0
 	can_unsuppress = 0
 	slowdown = 0.15
-	has_integrated_scope = TRUE
+	scoped = TRUE
 	zoom_amt = 7
 	zoom_out_amt = 10
 	burst_size = 3
@@ -1669,9 +1674,10 @@
 	load_sound = 'stalker/sound/weapons/load/val_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/val_open.ogg'
 
-/obj/item/gun/ballistic/semiauto/svd  // SVD
+/obj/item/gun/ballistic/semiauto/stalker/svd  // SVD
 	name = "SVD"
 	desc = "Snaiperskaya Vintovka Dragunova, abbreviated as the SVD is a high-caiber, anti-personell sniper rifle developed and deployed originally in 1963. Comes with a high-grade inbuilt scope for long-range scopeouts, and unlike its smaller-caliber cousin (the VSS), is incapable of //burst fire due to the aforementioned higher caliber."
+	icon = 'stalker/icons/obj/projectile.dmi'
 	icon_state = "svd"
 	inhand_icon_state = "svd"
 	fire_sound = 'stalker/sound/weapons/abakan_shoot.ogg'
@@ -1679,7 +1685,7 @@
 	can_suppress = 0
 	can_unsuppress = 0
 	slowdown = 0.15
-	has_integrated_scope = TRUE
+	scoped = TRUE
 	zoom_amt = 9
 	zoom_out_amt = 11
 	fire_delay = 35
@@ -1716,7 +1722,7 @@
 	recoil = 0.4
 	can_scope = 0
 	automatic = 1
-	has_integrated_scope = TRUE
+	scoped = TRUE
 	zoom_amt = 4
 	zoom_out_amt = 4
 	weapon_weight = WEAPON_MEDIUM
@@ -1724,11 +1730,12 @@
 	load_sound = 'stalker/sound/weapons/load/groza_load.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/groza_open.ogg'
 
-///////////////////////////// ETC ////////////////////////////////////////
+///////////////////////////// ETC //////////////////////////////////////
 
-/obj/item/gun/ballistic/semiauto/gaussrifle  // Gauss Rifle
+/obj/item/gun/ballistic/semiauto/stalker/gaussrifle  // Gauss Rifle
 	name = "gauss rifle"
 	desc = "Item no. 62, better known as the Gauss Rifle, is an experimental, highly powerful hybrid energy weapon initially designed by members of the infamous Group that operated in the Zone prior to it's creation. Now manufactured by an unknown force, the weapon is made operational by pieces of a Flash artefact, and is by far the most deadly weapon at the disposal of the Monolith's servants."
+	icon = 'stalker/icons/obj/projectile.dmi'
 	icon_state = "gaussrifle"
 	inhand_icon_state = "gaussrifle"
 	colored = 0//"normal"
@@ -1747,7 +1754,7 @@
 	recoil = 0
 	randomspread = 0
 	//distro = 15
-	has_integrated_scope = TRUE
+	scoped = TRUE
 	zoom_amt = 8
 	zoom_out_amt = 10
 	weapon_weight = WEAPON_MEDIUM
@@ -1758,3 +1765,340 @@
 	load_sound = 'stalker/sound/weapons/gauss_reload.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/abakan_open.ogg'
 
+/obj/item/gun/ballistic/shotgun/stalker
+	modifications = list("barrel_shotgun" = 0, "frame_shotgun" = 0, "grip_shotgun" = 0)
+	icon = 'stalker/icons/obj/projectile.dmi'
+
+/obj/item/gun/ballistic/shotgun/stalker/bm16
+	name = "BM-16"
+	desc = "The original BM16 rifle. Heavy and dangerous two barrel rifle, and it's effective in high range too."
+	icon_state = "bm16"
+	inhand_icon_state = "bm16"
+	w_class = 4
+	force = 15
+	flags_1 = CONDUCT_1
+	slot_flags = ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/internal/shot/stalker/bm16
+	recoil = 1
+	durability = 150
+	sawn_desc = "Much more compact and lighter than the new double-barreled gun, but effective only in close combat."
+	randomspread = 0
+	spread = 12
+	damagelose = 0.3
+	distro = 25
+	can_scope = 1
+	slowdown = 0.15
+	weapon_weight = WEAPON_MEDIUM
+	semi_auto = TRUE
+	bolt_type = BOLT_TYPE_NO_BOLT
+	fire_sound = 'stalker/sound/weapons/bm16_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/obrez_load.ogg'
+	eject_sound = 'stalker/sound/weapons/unload/obrez_open.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+
+/obj/item/gun/ballistic/shotgun/stalker/bm16/attackby(obj/item/A, mob/user, params)
+	..()
+	if(istype(A, /obj/item/ammo_box) || istype(A, /obj/item/ammo_casing))
+		//playsound(user, load_sound, 50, 1)
+		chamber_round()
+
+/obj/item/gun/ballistic/shotgun/stalker/bm16/attack_self(mob/living/user)
+	var/num_unloaded = 0
+	while (get_ammo() > 0)
+		var/obj/item/ammo_casing/CB
+		CB = magazine.get_round(0)
+		chambered = null
+		CB.loc = get_turf(src.loc)
+		CB.update_icon()
+		num_unloaded++
+	if (num_unloaded)
+		playsound(user, eject_sound, 50, 1)
+		user << "<span class='notice'>You break open \the [src] and unload [num_unloaded] shell\s.</span>"
+	else
+		user << "<span class='warning'>[src] is empty!</span>"
+
+/obj/item/gun/ballistic/shotgun/stalker/bm16/toz34
+	name = "TOZ-34"
+	desc = "This extremely common over-and-under hunting shotgun can offer better protection against mutants than a pistol, thanks to its accuracy and stopping power. Used mostly by rookies on the outskirts of the Zone."
+	icon_state = "toz34"
+	inhand_icon_state = "toz34"
+	recoil = 0.6
+	force = 15
+	durability = 150
+	spread = 6
+	slowdown = 0.15
+	damagelose = 0.15
+	distro = 10
+	can_scope = 1
+	weapon_weight = WEAPON_MEDIUM
+
+/obj/item/gun/ballistic/shotgun
+	modifications = list("barrel_shotgun" = 0, "frame_shotgun" = 0, "grip_shotgun" = 0)
+
+/obj/item/gun/ballistic/shotgun/stalker/ithaca  //  Ithaca M37
+	name = "Ithaca M37"
+	desc = " Pump-action shotgun made in large numbers for the civilian, military, and police markets. It utilizes a novel combination ejection/loading port on the bottom of the gun which leaves the sides closed to the elements. Since shotshells load and eject from the bottom, operation of the gun is equally convenient for both right and left hand shooters. This makes the gun popular with left-handed shooters. The model 37 is considered one of the most durable and reliable shotguns ever produced."
+	icon_state = "ithacam37"
+	inhand_icon_state = "ithacam37"
+	durability = 100
+	slot_flags = ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/internal/shot/stalker/ithaca
+	recoil = 1
+	w_class = 4
+	slowdown = 0.15
+	randomspread = 0
+	spread = 12
+	force = 15
+	damagelose = 0.3
+	distro = 25
+	can_scope = 0
+	weapon_weight = WEAPON_MEDIUM
+	//fire_sound = 'stalker/sound/weapons/winchester1300_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/chaser_load.ogg'
+	rack_sound = 'stalker/sound/weapons/pump/ithacam37_pump.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+
+/obj/item/gun/ballistic/shotgun/stalker/chaser  //  Winchester 1300
+	name = "Chaser-13"
+	desc = "A Western smoothbore shotgun that is extremely popular around the world thanks to its amazing reliability and faster reloading speed. Particularly valued for its functionality by the Zone's hunters. All of its parts are coated with an anticorrosion compound."
+	icon_state = "chaser"
+	inhand_icon_state = "chaser"
+	durability = 100
+	slot_flags = ITEM_SLOT_BELT|ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/internal/shot/chaser
+	recoil = 0.8
+	w_class = 4
+	slowdown = 0.15
+	randomspread = 0
+	spread = 10
+	force = 15
+	damagelose = 0.3
+	distro = 16
+	weapon_weight = WEAPON_MEDIUM
+	//fire_sound = 'stalker/sound/weapons/winchester1300_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/chaser_load.ogg'
+	rack_sound = 'stalker/sound/weapons/pump/chaser_pump.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+
+/obj/item/gun/ballistic/shotgun/stalker/bm16/sawnoff
+	name = "sawed-off BM-16"
+	desc = "A sawed-off hunting shotgun with two side-by-side barrels, making it lighter and more compact than a full shotgun. One of the most popular weapons among bandits due to its combination of ease of concealment and extreme effectiveness in close combat."
+	sawn_off = TRUE
+	weapon_weight = WEAPON_LIGHT
+	inhand_icon_state = "gun"
+	slot_flags = ITEM_SLOT_BELT|ITEM_SLOT_BACK
+	w_class = 3
+	durability = 75
+	force = 15
+	spread = 20
+	recoil = 2.5
+	damagelose = 0.45
+	distro = 35
+
+/obj/item/gun/ballistic/shotgun/stalker/bm16/sawnoff/New()
+	..()
+	update_icon()
+
+/obj/item/gun/ballistic/shotgun/stalker/spsa
+	name = "SPAS-12"
+	desc = "This special purpose smoothbore automatic shotgun was designed in the second half of the 20th century and comes with pump-action and self-cocking firing modes. Used as an all-purpose weapon by the police and assault troops. Notable for its reliability and tactical flexibility. Despite its large weight, complex mechanism and considerable cost it is in demand in the Zone due to its effectiveness against mutants."
+	icon_state = "spsa"
+	inhand_icon_state = "spsa"
+	durability = 150
+	slot_flags = ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/internal/shot/spsa
+	recoil = 0.8
+	w_class = 4
+	slowdown = 0.15
+	randomspread = 0
+	spread = 8
+	force = 15
+	damagelose = 0.35
+	distro = 12
+	weapon_weight = WEAPON_MEDIUM
+	fire_sound = 'stalker/sound/weapons/spsa_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/spsa_load.ogg'
+	rack_sound = 'stalker/sound/weapons/pump/spsa_pump.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+
+///////////////////////////// Bolt-actions ////////////////////////////////////////
+
+/obj/item/gun/ballistic/rifle/boltaction/stalker
+	icon = 'stalker/icons/obj/projectile.dmi'
+
+/obj/item/gun/ballistic/rifle/boltaction/stalker/enfield
+	name = "Lee Enfield"
+	desc = "A heavy and versatile rifle, rechambered in the powerful 7.62x51mm cartridge."
+	icon_state = "enfield"
+	inhand_icon_state = "enfield"
+	durability = 200
+	slot_flags = ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/internal/boltaction/enfield
+	recoil = 1
+	w_class = 4
+	slowdown = 0.15
+	randomspread = 1
+	spread = 3
+	force = 15
+	damagelose = 0.1
+	weapon_weight = WEAPON_MEDIUM
+	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+	can_scope = 1
+
+/obj/item/gun/ballistic/rifle/boltaction/stalker/mosin
+	name = "mosin-nagant"
+	desc = "A heavy and versatile rifle which has served the Soviet Union for over a century, chambered in 7.62×54mm cartridge."
+	icon_state = "mosin"
+	inhand_icon_state = "mosin"
+	durability = 200
+	slot_flags = ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/internal/boltaction/mosin
+	recoil = 1
+	w_class = 4
+	slowdown = 0.15
+	randomspread = 1
+	spread = 4
+	force = 15
+	damagelose = 0.1
+	weapon_weight = WEAPON_MEDIUM
+	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+	can_scope = 1
+
+/obj/item/gun/ballistic/rifle/boltaction/stalker/mosinobrez
+	name = "mosin-nagant sawnoff"
+	desc = "Possibly one of the worst engineering ideas ever to stumble into someone's head. If you manage to kill someone with this (except yourself), then you're beyond robust."
+	icon_state = "mosin-obrez"
+	inhand_icon_state = "mosin-obrez"
+	durability = 160
+	mag_type = /obj/item/ammo_box/magazine/internal/boltaction/mosin
+	recoil = 6
+	w_class = 2
+	randomspread = 3
+	spread = 10
+	force = 10
+	damagelose = 0.3
+	weapon_weight = WEAPON_MEDIUM
+	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+	can_scope = 0
+
+/obj/item/gun/ballistic/rifle/boltaction/stalker/arisaka
+	name = "arisaka"
+	desc = "A versatile bolt-action service rifle that was used by the Empire of Japan predominantly during the Second Sino-Japanese War and Second World War."
+	icon_state = "arisaka"
+	inhand_icon_state = "rifle"
+	durability = 200
+	slot_flags = ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/internal/boltaction/mosin
+	recoil = 1
+	w_class = 4
+	randomspread = 1
+	spread = 4
+	slowdown = 0.15
+	force = 15
+	damagelose = 0.1
+	weapon_weight = WEAPON_MEDIUM
+	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+	can_scope = 1
+
+/obj/item/gun/ballistic/rifle/boltaction/stalker/karabiner
+	name = "karabiner 98K"
+	desc = "A versatile bolt-action service rifle that was used by Germany predominantly during the Second World War."
+	icon_state = "karabiner"
+	inhand_icon_state = "rifle"
+	durability = 200
+	slot_flags = ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/internal/boltaction/mosin
+	recoil = 1
+	w_class = 4
+	randomspread = 1
+	spread = 4
+	slowdown = 0.15
+	force = 15
+	damagelose = 0.1
+	weapon_weight = WEAPON_MEDIUM
+	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+	can_scope = 1
+
+/obj/item/gun/ballistic/rifle/boltaction/stalker/springfield
+	name = "M1903 springfield"
+	desc = "The M1903 Springfield, officially the United States Rifle, Caliber .30-06, Model 1903, is an American five-round magazine-fed, bolt-action service repeating rifle, used primarily during the first half of the 20th century. The M1903 was first used in combat during the Philippine American War, and it was officially adopted by the United States as the standard infantry rifle on June 19, 1903, where it saw service in World War I, and was replaced by the faster-firing semi-automatic eight-round M1 Garand starting in 1936."
+	icon_state = "springfield"
+	inhand_icon_state = "rifle"
+	durability = 200
+	slot_flags = ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/internal/boltaction/mosin
+	recoil = 1
+	w_class = 4
+	randomspread = 1
+	spread = 4
+	slowdown = 0.15
+	force = 15
+	damagelose = 0.1
+	weapon_weight = WEAPON_MEDIUM
+	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+	can_scope = 1
+
+/obj/item/gun/ballistic/rifle/boltaction/stalker/makeshiftbolt
+	name = "makeshift bolt action rifle"
+	desc = "A cobbled together bolt action rifle made out of junk. Maybe this wasn't such a good idea..."
+	icon_state = "makeshiftbolt"
+	inhand_icon_state = "rifle"
+	durability = 200
+	slot_flags = ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/internal/boltaction/mosin
+	recoil = 3
+	w_class = 4
+	randomspread = 6
+	spread = 9
+	slowdown = 0.15
+	force = 15
+	damagelose = 0.1
+	weapon_weight = WEAPON_MEDIUM
+	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+	can_scope = 1
+
+
+
+// AWP - Alternative to SVD.
+// Here because why not.
+
+
+/obj/item/gun/ballistic/awm
+	name = "AWSM"
+	desc = "A heavy and versatile rifle, rechambered in the massive .338 Lapua cartridge. One of the most formidable weapons in the zone."
+	icon_state = "awp"//temp??? shut cho bitchass up figass
+	inhand_icon_state = "awp"
+	durability = 50//Heavily increases chance of jamming or explosion of round in chamber. Required due to power of rifle.
+	slot_flags = ITEM_SLOT_BACK
+	mag_type = /obj/item/ammo_box/magazine/awp
+	recoil = 3
+	w_class = 4
+	randomspread = 0
+	spread = 0
+	force = 15
+	damagelose = 0
+	weapon_weight = WEAPON_HEAVY
+	bolt_type = BOLT_TYPE_LOCKING//Lets try this.
+	semi_auto = FALSE
+	casing_ejector = FALSE
+	bolt_wording = "bolt"
+	fire_sound = 'stalker/sound/weapons/awp_shot.ogg'
+	load_sound = 'stalker/sound/weapons/load/awp_reload.ogg'
+	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
+	scoped = TRUE
+	zoom_amt = 8
+	zoom_out_amt = 10

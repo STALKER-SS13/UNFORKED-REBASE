@@ -128,3 +128,10 @@
 	pellets = 4
 	variance = 10
 	projectile_type = /obj/projectile/bullet/c500calbuck
+
+/obj/item/ammo_casing/p338
+	name = ".338 bullet casing"
+	desc = "A .338 bullet casing."
+	caliber = ".338"
+	projectile_type = /obj/projectile/bullet/p338
+	icon_state = ".50"

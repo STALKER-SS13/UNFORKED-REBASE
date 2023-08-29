@@ -171,3 +171,10 @@
 	range = 30
 	spread = 4
 
+/obj/projectile/bullet/p338
+	name =".338 bullet"
+	speed = 1.2//fuck you carl lapua was shit when you made it slow
+	icon_state = "gaussstrong"
+	damage = 70
+	dismemberment = 25//You're damn right you're going to lose a limb.
+	armour_penetration = 80//Strongest round in the game so far.
