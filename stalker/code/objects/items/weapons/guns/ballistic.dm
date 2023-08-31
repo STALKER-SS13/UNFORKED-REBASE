@@ -1,142 +1,5 @@
-/obj/item/gun
-	var/is_jammed = FALSE // TODO
-	var/durability = 100 // TODO
-	var/is_unique = FALSE
-	var/can_scope = FALSE // TODO
-	var/draw_sound
-	var/list/modifications = list() // TODO
-	var/automatic = FALSE
-	var/autofire_delay = 0.2 SECONDS
-	/// Distance in turfs to move the user's screen forward (the "zoom" effect)
-	var/zoomed = FALSE
-	var/zoom_amt = 0
-	var/zoom_out_amt = 0
-	var/scoped = FALSE // TODO
-
-	var/list/obj/item/attachment/addons = list() // TODO
-
-	var/distro = 0 // TODO
-	var/damagelose = 0 //TODO
-
-/datum/action/toggle_scope_zoom
-	name = "Toggle Scope"
-	check_flags = AB_CHECK_CONSCIOUS|AB_CHECK_INCAPACITATED|AB_CHECK_LYING|AB_CHECK_HANDS_BLOCKED
-	button_icon = 'icons/mob/actions/actions_items.dmi'
-	button_icon_state = "sniper_zoom"
-	var/datum/weakref/gun_ref = null
-
-/datum/action/toggle_scope_zoom/Trigger(trigger_flags)
-	var/obj/item/gun/gun = gun_ref.resolve()
-	if(istype(gun))
-		gun.zoom(owner)
-
-/datum/action/toggle_scope_zoom/IsAvailable(feedback)
-	. = ..()
-	var/obj/item/gun/gun = gun_ref.resolve()
-	if(!. && istype(gun))
-		gun.zoom(owner, FALSE)
-
-/datum/action/toggle_scope_zoom/Remove(mob/living/L)
-	var/obj/item/gun/gun = gun_ref.resolve()
-	if(istype(gun))
-		gun.zoom(L, FALSE)
-	..()
-
-/obj/item/gun/proc/zoom(mob/living/user, forced_zoom = -1)
-	if(!user || !user.client)
-		return
-	if(forced_zoom != -1)
-		zoomed = forced_zoom
-	else
-		zoomed = !zoomed
-
-	if(zoomed)
-		RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(on_zoom_walk))
-		RegisterSignal(user, COMSIG_ATOM_DIR_CHANGE, PROC_REF(zoom_rotate))
-		user.visible_message(span_notice("[user] looks into [src]'s scope."), span_notice("You look into [src]'s scope."))
-		user.client.view_size.zoomOut(zoom_out_amt, zoom_amt, user.dir)
-	else
-		UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
-		UnregisterSignal(user, COMSIG_ATOM_DIR_CHANGE)
-		user.visible_message(span_notice("[user] lowers [src]."), span_notice("You lower [src]."))
-		user.client.view_size.zoomIn()
-
-/obj/item/gun/proc/on_zoom_walk(atom/movable/source)
-	SIGNAL_HANDLER
-
-	if(ismob(source))
-		zoom(source, FALSE)
-
-/obj/item/gun/proc/zoom_rotate(atom/movable/source, old_dir, new_dir)
-	SIGNAL_HANDLER
-
-	if(ismob(source))
-		var/mob/mob = source
-		mob.client.view_size.zoomOut(zoom_out_amt, zoom_amt, new_dir)
-
-/obj/item/gun/ballistic/automatic/stalker
-	icon = 'stalker/icons/obj/projectile.dmi'
-	burst_size = 1
-
-/obj/item/gun/update_overlays()
-	. = ..()
-	if(is_unique)
-		overlays += image('stalker/icons/projectile_overlays32x32.dmi', "unique", layer = FLOAT_LAYER)
-
-/obj/item/gun/Initialize(mapload)
-	. = ..()
-	if(automatic)
-		AddComponent(/datum/component/automatic_fire, autofire_delay)
-	RegisterSignal(src, COMSIG_ITEM_PICKUP, PROC_REF(on_pickup))
-
-
-/obj/item/gun/Destroy()
-	UnregisterSignal(src, COMSIG_ITEM_PICKUP)
-	return ..()
-
-/obj/item/gun/proc/on_pickup()
-	playsound(src, draw_sound, 30, 1)
-
-
-/obj/item/gun/proc/durability_check(mob/user)   //Gun durability
-	if(is_jammed)
-		return
-	if(durability < 0)
-		return
-
-	var/durability_percentage = (durability/(initial(durability)))*100
-	switch(durability_percentage)
-		if(0 to 20)
-			if(prob(60))
-				shake_camera(user, 4, 2)
-				explosion(get_turf(src), -2, -2, 2, flame_range = 0)
-				qdel(src)
-				to_chat(user, span_userdanger("The weapon exploded right in your hands!"))
-				return
-			else
-				if(prob(40))
-					is_jammed = TRUE
-		if(20 to 45)
-			if(prob(10))
-				user.dropItemToGround(src)
-				shake_camera(user, 4, 2)
-				to_chat(user, "<span class='userdanger'It seems like a good time to fix this stuff or throw it away before it shoots you in the face..</span>")
-				is_jammed = TRUE
-			else
-				if(prob(20))
-					is_jammed = TRUE
-		if(45 to 60)
-			if(prob(5))
-				is_jammed = TRUE
-		if(60 to 75)
-			if(prob(2.5))
-				is_jammed = TRUE
-	durability -= 0.075
-
-
 ///////////////////////////// Pistols //////////////////////////////////////
-/obj/item/gun/ballistic/automatic/stalker/pistol
-	modifications = list("barrel_pistol" = 0, "frame_pistol" = 0, "grip_pistol" = 0)
+
 
 /obj/item/gun/ballistic/automatic/stalker/pistol/pm
 	name = "PMm"
@@ -544,37 +407,6 @@
 
 
 ///////////////////////////// ARs,SMGs //////////////////////////////////////
-
-/obj/item/gun/ballistic
-	var/image/mag_overlay 			= null
-	var/image/mag_overlay_inhands 	= null
-	var/image/silencer_overlay 		= null
-	var/image/scope_overlay 		= null
-	var/image/colored_overlay 		= null
-	var/colored 					= null
-
-/obj/item/gun/ballistic/New()
-	..()
-	if(!istype(src, /obj/item/gun/ballistic/automatic/stalker/pistol))
-		mag_overlay = image('stalker/icons/projectile_overlays32x32.dmi', "[initial(icon_state)]-mag", layer = FLOAT_LAYER)
-
-	if(can_suppress)
-		silencer_overlay = image('stalker/icons/projectile_overlays48x48.dmi', "[initial(icon_state)]-silencer", layer = FLOAT_LAYER)
-
-	if(can_scope)
-		scope_overlay = image('stalker/icons/projectile_overlays32x32.dmi', "[initial(icon_state)]-scope", layer = FLOAT_LAYER)
-
-	if(colored)
-		colored_overlay = image('stalker/icons/projectile_overlays32x32.dmi', "[initial(icon_state)]-[colored]", layer = FLOAT_LAYER)
-		overlays += colored_overlay
-
-	update_icon()
-
-
-
-
-/obj/item/gun/ballistic/automatic
-	modifications = list("barrel_automatic" = 0, "frame_automatic" = 0, "grip_automatic" = 0, "compensator_automatic" = 0)
 
 /obj/item/gun/ballistic/automatic/stalker/sten  // Sten MK II
 	name = "Sten MK II"
@@ -1765,10 +1597,6 @@
 	load_sound = 'stalker/sound/weapons/gauss_reload.ogg'
 	eject_sound = 'stalker/sound/weapons/unload/abakan_open.ogg'
 
-/obj/item/gun/ballistic/shotgun/stalker
-	modifications = list("barrel_shotgun" = 0, "frame_shotgun" = 0, "grip_shotgun" = 0)
-	icon = 'stalker/icons/obj/projectile.dmi'
-
 /obj/item/gun/ballistic/shotgun/stalker/bm16
 	name = "BM-16"
 	desc = "The original BM16 rifle. Heavy and dangerous two barrel rifle, and it's effective in high range too."
@@ -1831,9 +1659,6 @@
 	distro = 10
 	can_scope = 1
 	weapon_weight = WEAPON_MEDIUM
-
-/obj/item/gun/ballistic/shotgun
-	modifications = list("barrel_shotgun" = 0, "frame_shotgun" = 0, "grip_shotgun" = 0)
 
 /obj/item/gun/ballistic/shotgun/stalker/ithaca  //  Ithaca M37
 	name = "Ithaca M37"

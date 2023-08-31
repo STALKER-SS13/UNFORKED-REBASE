@@ -3,7 +3,7 @@
 	var/list/types = list()
 	w_class = WEIGHT_CLASS_SMALL
 
-/obj/item/attachment/proc/attach(obj/item/gun/gun)
+/obj/item/attachment/proc/attach(obj/item/gun/ballistic/gun)
 	var/mob/living/carbon/human/user = usr
 	if(!istype(user) || !istype(gun))
 		return
@@ -24,7 +24,7 @@
 	return TRUE
 
 
-/obj/item/attachment/proc/detach(obj/item/gun/gun)
+/obj/item/attachment/proc/detach(obj/item/gun/ballistic/gun)
 	var/mob/living/carbon/human/user = usr
 	if(!istype(user) || !istype(gun))
 		return
@@ -74,7 +74,7 @@
 
 /obj/item/attachment/suppressor/detach(obj/item/gun/gun)
 	if(gun.suppressed)
-		to_chat(usr, span_warning("Silencer already installed on [gun]!"))
+		to_chat(usr, span_warning("Silencer is already installed on [gun]!"))
 		return
 	. = ..()
 	if(!.)
@@ -89,6 +89,21 @@
 	icon = 'stalker/icons/weapon_mods.dmi'
 	icon_state = "susat"
 	var/zoom_add = 2
+
+/obj/item/attachment/scope/attach(obj/item/gun/ballistic/gun)
+	if(gun.scoped)
+		to_chat(usr, span_warning("Scope is already installed on [gun]!"))
+		return
+	. = ..()
+	if(!.)
+		return
+
+	gun.init_zoom()
+
+
+/obj/item/attachment/scope/detach(obj/item/gun/ballistic/gun)
+	. = ..()
+
 
 /obj/item/attachment/scope/susat
 	name = "SUSAT"
