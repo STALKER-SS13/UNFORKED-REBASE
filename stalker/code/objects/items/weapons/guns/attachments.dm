@@ -68,6 +68,7 @@
 		return
 
 	gun.suppressed = src
+	gun.update_icon()
 
 /obj/item/attachment/suppressor/detach(obj/item/gun/gun)
 	if(gun.suppressed)
@@ -78,6 +79,7 @@
 		return
 
 	gun.suppressed = FALSE
+	gun.update_icon()
 
 /obj/item/attachment/scope
 	name = "scope"
@@ -96,6 +98,7 @@
 
 	gun.scoped = TRUE
 	gun.init_zoom()
+	gun.update_icon()
 
 
 /obj/item/attachment/scope/detach(obj/item/gun/ballistic/gun)
@@ -103,6 +106,7 @@
 
 	gun.scoped = FALSE
 	gun.reset_zoom()
+	gun.update_icon()
 
 /obj/item/attachment/scope/susat
 	name = "SUSAT"
