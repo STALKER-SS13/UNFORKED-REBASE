@@ -1,10 +1,22 @@
+/obj/item/ammo_box/magazine/stalker
+	icon = 'stalker/icons/obj/ammo.dmi'
+
+/obj/item/ammo_box/magazine/stalker/update_icon_state()
+	. = ..()
+	var/shells_left = LAZYLEN(stored_ammo)
+	switch(multiple_sprites)
+		if(AMMO_BOX_PER_BULLET)
+			icon_state = "[initial(icon_state)]-[shells_left]"
+		if(AMMO_BOX_FULL_EMPTY)
+			icon_state = "[initial(icon_state)]-[shells_left ? "[max_ammo]" : "0"]"
+
 /obj/item/ammo_box/magazine/stalker/m9x18pm
 	name = "pistol magazine (9x18mm)"
 	icon_state = "9x18pm"
 	ammo_type = /obj/item/ammo_casing/c9x18
 	caliber = "9x18mm"
 	max_ammo = 8
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x18aps
 	name = "aps pistol magazine (9x18mm)"
@@ -12,7 +24,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x18
 	caliber = "9x18mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x18bizon
 	name = "bizon magazine (9x18mm)"
@@ -20,7 +32,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x18
 	caliber = "9x18mm"
 	max_ammo = 64
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x19marta
 	name = "pistol magazine (9x19mm)"
@@ -28,7 +40,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 15
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x19luger
 	name = "luger pistol magazine (9x19mm)"
@@ -36,7 +48,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 8
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x19waltherp38
 	name = "walther P38 pistol magazine (9x19mm)"
@@ -44,7 +56,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 8
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x19glock
 	name = "glock pistol magazine (9x19mm)"
@@ -52,7 +64,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 17
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m57x28fiveseven
 	name = "five seven pistol magazine (5.7×28mm)"
@@ -60,7 +72,7 @@
 	ammo_type = /obj/item/ammo_casing/c57x28
 	caliber = "5.7×28mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x19waltherpp
 	name = "walther PP pistol magazine (9x19mm)"
@@ -68,7 +80,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 10
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x18cz83
 	name = "CZ 83 pistol magazine (9x18mm)"
@@ -76,7 +88,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x18
 	caliber = "9x18mm"
 	max_ammo = 12
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/reising
 	name = "reising magazine (.45)"
@@ -84,7 +96,7 @@
 	ammo_type = /obj/item/ammo_casing/acp45
 	caliber = ".45"
 	max_ammo = 12
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x19mat49
 	name = "mat 49 magazine (9x19mm)"
@@ -92,7 +104,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/sc45
 	name = "pistol magazine (.45)"
@@ -100,7 +112,7 @@
 	ammo_type = /obj/item/ammo_casing/acp45
 	caliber = ".45"
 	max_ammo = 9
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/desert
 	name = "pistol magazine (.44)"
@@ -108,7 +120,7 @@
 	ammo_type = /obj/item/ammo_casing/mag44
 	caliber = ".44"
 	max_ammo = 8
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m545
 	name = "magazine (5.45x39mm)"
@@ -116,7 +128,7 @@
 	ammo_type = /obj/item/ammo_casing/c545
 	caliber = "5.45x39"
 	max_ammo = 30
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x18fort
 	name = "pistol magazine (9x18mm)"
@@ -124,7 +136,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x18
 	caliber = "9x18mm"
 	max_ammo = 12
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x18fort_u
 	name = "pistol magazine (9x18mm)"
@@ -132,7 +144,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x18
 	caliber = "9x18mm"
 	max_ammo = 15
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/internal/shot/stalker/bm16
 	name = "double-barrel shotgun internal magazine"
@@ -166,7 +178,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x51
 	caliber = "7.62x51mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/scarh
 	name = "SCAR magazine (7.62x51)"
@@ -174,7 +186,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x51
 	caliber = "7.62x51mm"
 	max_ammo = 30
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/internal/semiautobolt/sks
 	name = "SKS internal magazine"
@@ -190,7 +202,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x39
 	caliber = "7.62x39"
 	max_ammo = 30
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/vz58
 	name = "vz. 58 magazine (7.62x39)"
@@ -198,7 +210,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x39
 	caliber = "7.62x39"
 	max_ammo = 30
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/fnfal
 	name = "FN FAL magazine (7.62x51)"
@@ -206,7 +218,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x51
 	caliber = "7.62x51mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/usp45
 	name = "pistol magazine (.45)"
@@ -214,7 +226,7 @@
 	ammo_type = /obj/item/ammo_casing/acp45
 	caliber = ".45"
 	max_ammo = 15
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x19mp5
 	name = "SMG magazine (9x19mm)"
@@ -222,7 +234,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 30
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/sp9x39vint
 	name = "sniper magazine (9x39mm)"
@@ -230,7 +242,7 @@
 	ammo_type = /obj/item/ammo_casing/sp9x39
 	caliber = "9x39mm"
 	max_ammo = 10
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/sp9x39val
 	name = "rifle magazine (9x39mm)"
@@ -238,7 +250,7 @@
 	ammo_type = /obj/item/ammo_casing/sp9x39
 	caliber = "9x39mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/sp9x39groza
 	name = "rifle magazine (9x39mm)"
@@ -246,7 +258,7 @@
 	ammo_type = /obj/item/ammo_casing/sp9x39
 	caliber = "9x39mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/testgun
 	name = "testgun magazine"
@@ -261,7 +273,7 @@
 	ammo_type = /obj/item/ammo_casing/c556x45
 	caliber = "5.56x45"
 	max_ammo = 30
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/internal/cylinder/anaconda
 	name = "Colt Anaconda internal magazine"
@@ -282,7 +294,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x25
 	caliber = "7.62x25mm"
 	max_ammo = 35
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/mp40
 	name = "MP-40 magazine (9x19mm)"
@@ -291,7 +303,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 32
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/sten
 	name = "sten MK II magazine (9x19mm)"
@@ -300,7 +312,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 32
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/sterling
 	name = "sterling magazine (9x19mm)"
@@ -309,7 +321,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 32
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m3a1
 	name = "M3A1 grease gun magazine (9x19mm)"
@@ -318,7 +330,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 30
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x19m76
 	name = "S&W M76 magazine (9x19mm)"
@@ -326,7 +338,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 36
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/m9x19skorpion
 	name = "skorpion magazine (9x19mm)"
@@ -334,7 +346,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/ppsh
 	name = "PPSh drum magazine (7.62x25)"
@@ -343,7 +355,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x25
 	caliber = "7.62x25mm"
 	max_ammo = 70
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/pkm
 	name = "PKM ammo belt box"
@@ -352,7 +364,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x54
 	caliber = "7.62x54mm"
 	max_ammo = 200
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/pkm/shottie
 	name = "PTV ammo belt box"
@@ -365,7 +377,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x25
 	caliber = "7.62x25mm"
 	max_ammo = 8
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/mauser
 	name = "mauser pistol magazine (7.62x25mm)"
@@ -373,7 +385,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x25
 	caliber = "7.62x25mm"
 	max_ammo = 10
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/mauser/ext
 	name = "extended mauser pistol magazine (7.62x25mm)"
@@ -381,7 +393,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x25
 	caliber = "7.62x25mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/kiparis
 	name = "SMG magazine (9x18mm)"
@@ -389,7 +401,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x18
 	caliber = "9x18mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/berettam38
 	name = "SMG magazine (9x19mm)"
@@ -397,7 +409,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 20
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/gaussbattery
 	name = "gauss rifle battery"
@@ -405,7 +417,7 @@
 	ammo_type = /obj/item/ammo_casing/tungsten_slug
 	caliber = "2mm"
 	max_ammo = 10
-	multiple_sprites = 1
+	multiple_sprites = AMMO_BOX_PER_BULLET
 
 /obj/item/ammo_box/magazine/stalker/mac10
 	name = "MAC10 SMG magazine (9x19mm)"
@@ -413,7 +425,7 @@
 	ammo_type = /obj/item/ammo_casing/c9x19
 	caliber = "9x19mm"
 	max_ammo = 36
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/stalker/svd
 	name = "SVD magazine (7.62x54)"
@@ -421,7 +433,7 @@
 	ammo_type = /obj/item/ammo_casing/c762x54
 	caliber = "7.62x54mm"
 	max_ammo = 10
-	multiple_sprites = 2
+	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
 /obj/item/ammo_box/magazine/smg57
 	name = "SMG magazine (5.7x28mm)"

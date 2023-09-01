@@ -1,22 +1,19 @@
 /obj/item/gun/ballistic
-	var/is_jammed = FALSE // TODO
-	var/durability = 100 // TODO
+	var/is_jammed = FALSE
+	var/durability = 100
 	var/is_unique = FALSE
-	var/can_scope = FALSE // TODO
-	var/list/modifications = list() // TODO
+	var/can_scope = FALSE
+	var/list/modifications = list()
 	var/automatic = FALSE
 	var/autofire_delay = 0.2 SECONDS
 	/// Distance in turfs to move the user's screen forward (the "zoom" effect)
 	var/zoomed = FALSE
 	var/zoom_amt = 0
 	var/zoom_out_amt = 0
-	var/scoped = FALSE // TODO
+	var/scoped = FALSE
 	var/datum/action/toggle_scope_zoom/zoom_action
 
-	var/list/obj/item/attachment/addons = list() // TODO ?? @
-
-	var/distro = 0 // TODO
-	var/damagelose = 0 //TODO
+	var/list/obj/item/attachment/addons = list()
 
 	// Overlay shit
 	var/image/mag_overlay = null
@@ -34,10 +31,14 @@
 	. = ..()
 	if(automatic)
 		AddComponent(/datum/component/automatic_fire, autofire_delay)
+
+	init_zoom()
+
 	RegisterSignal(src, COMSIG_ITEM_PICKUP, PROC_REF(on_pickup))
 	RegisterSignal(src, COMSIG_ITEM_DROPPED, PROC_REF(on_drop))
+	RegisterSignal(src, COMSIG_GUN_FIRED, PROC_REF(on_fire))
 
-	if(!istype(src, /obj/item/gun/ballistic/ballistic/automatic/stalker/pistol))
+	if(!istype(src, /obj/item/gun/ballistic/automatic/stalker/pistol))
 		mag_overlay = image('stalker/icons/projectile_overlays32x32.dmi', "[initial(icon_state)]-mag", layer = FLOAT_LAYER)
 
 	if(can_suppress)
@@ -52,9 +53,11 @@
 	update_icon()
 
 
+
 /obj/item/gun/ballistic/Destroy()
 	UnregisterSignal(src, COMSIG_ITEM_PICKUP)
 	UnregisterSignal(src, COMSIG_ITEM_DROPPED)
+	UnregisterSignal(src, COMSIG_GUN_FIRED)
 	return ..()
 
 
@@ -72,31 +75,44 @@
 	if(zoom_action)
 		zoom_action.Remove(user)
 
+/obj/item/gun/ballistic/proc/on_fire(obj/item/source, mob/user)
+	SIGNAL_HANDLER
+
+	durability_check(user)
+
 
 
 /obj/item/gun/ballistic/update_overlays()
 	. = ..()
 	if(is_unique)
-		add_overlay(image('stalker/icons/projectile_overlays32x32.dmi', "unique", layer = FLOAT_LAYER))
+		. += image('stalker/icons/projectile_overlays32x32.dmi', "unique", layer = FLOAT_LAYER)
 
 	if(colored)
-		add_overlay(colored_overlay)
+		. += colored_overlay
 
 	if(magazine && mag_overlay)
-		add_overlay(mag_overlay)
+		. += mag_overlay
 
 	if(suppressed && silencer_overlay)
-		add_overlay(silencer_overlay)
+		. += silencer_overlay
 
 	if(scoped && scope_overlay)
-		add_overlay(scope_overlay)
+		. += scope_overlay
 
 /obj/item/gun/ballistic/attackby(obj/item/A, mob/user, params)
 	if(istype(A, /obj/item/attachment))
 		var/obj/item/attachment/addon = A
 		addon.attach(src)
-	else
-		return ..()
+		return
+	return ..()
+
+
+/obj/item/gun/ballistic/rifle/boltaction/attackby(obj/item/A, mob/user, params)
+	if(istype(A, /obj/item/attachment))
+		var/obj/item/attachment/addon = A
+		addon.attach(src)
+		return
+	return ..()
 
 /obj/item/gun/ballistic/proc/durability_check(mob/user)   //Gun durability
 	if(is_jammed)
@@ -132,6 +148,15 @@
 			if(prob(2.5))
 				is_jammed = TRUE
 	durability -= 0.075
+
+/obj/item/gun/ballistic/attack_self(mob/living/user)
+	if(is_jammed)
+		to_chat(user, "You unjam the [src].")
+		is_jammed = FALSE
+		return
+	return ..()
+
+
 
 /datum/action/toggle_scope_zoom
 	name = "Toggle Scope"
@@ -202,15 +227,23 @@
 		if(ismob(loc))
 			zoom_action.Grant(loc)
 
+/obj/item/gun/ballistic/proc/reset_zoom()
+	if(!zoom_action)
+		return
 
-/obj/item/gun/ballistic/ballistic/automatic/stalker
+	if(ismob(loc))
+		zoom_action.Remove(loc)
+	QDEL_NULL(zoom_action)
+
+
+/obj/item/gun/ballistic/automatic/stalker
 	modifications = list("barrel_automatic" = 0, "frame_automatic" = 0, "grip_automatic" = 0, "compensator_automatic" = 0)
 	icon = 'stalker/icons/obj/projectile.dmi'
 	burst_size = 1
 
-/obj/item/gun/ballistic/ballistic/automatic/stalker/pistol
+/obj/item/gun/ballistic/automatic/stalker/pistol
 	modifications = list("barrel_pistol" = 0, "frame_pistol" = 0, "grip_pistol" = 0)
 
-/obj/item/gun/ballistic/ballistic/shotgun/stalker
+/obj/item/gun/ballistic/shotgun/stalker
 	modifications = list("barrel_shotgun" = 0, "frame_shotgun" = 0, "grip_shotgun" = 0)
 	icon = 'stalker/icons/obj/projectile.dmi'

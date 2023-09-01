@@ -61,7 +61,6 @@
 				/obj/item/gun/ballistic/automatic/stalker/m16,
 				/obj/item/gun/ballistic/automatic/stalker/m16a4,
 				/obj/item/gun/ballistic/automatic/stalker/m4)
-	var/old_fire_sound = null
 
 /obj/item/attachment/suppressor/attach(obj/item/gun/gun)
 	. = ..()
@@ -69,8 +68,6 @@
 		return
 
 	gun.suppressed = src
-	old_fire_sound = gun.fire_sound
-	gun.fire_sound = 'stalker/sound/weapons/silencer.ogg'
 
 /obj/item/attachment/suppressor/detach(obj/item/gun/gun)
 	if(gun.suppressed)
@@ -80,7 +77,6 @@
 	if(!.)
 		return
 
-	gun.fire_sound = old_fire_sound
 	gun.suppressed = FALSE
 
 /obj/item/attachment/scope
@@ -98,12 +94,15 @@
 	if(!.)
 		return
 
+	gun.scoped = TRUE
 	gun.init_zoom()
 
 
 /obj/item/attachment/scope/detach(obj/item/gun/ballistic/gun)
 	. = ..()
 
+	gun.scoped = FALSE
+	gun.reset_zoom()
 
 /obj/item/attachment/scope/susat
 	name = "SUSAT"

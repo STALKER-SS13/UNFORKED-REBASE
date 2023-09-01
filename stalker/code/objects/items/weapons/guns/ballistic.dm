@@ -1585,7 +1585,6 @@
 	spread = 0
 	recoil = 0
 	randomspread = 0
-	//distro = 15
 	scoped = TRUE
 	zoom_amt = 8
 	zoom_out_amt = 10
@@ -1612,8 +1611,6 @@
 	sawn_desc = "Much more compact and lighter than the new double-barreled gun, but effective only in close combat."
 	randomspread = 0
 	spread = 12
-	damagelose = 0.3
-	distro = 25
 	can_scope = 1
 	slowdown = 0.15
 	weapon_weight = WEAPON_MEDIUM
@@ -1655,8 +1652,6 @@
 	durability = 150
 	spread = 6
 	slowdown = 0.15
-	damagelose = 0.15
-	distro = 10
 	can_scope = 1
 	weapon_weight = WEAPON_MEDIUM
 
@@ -1674,8 +1669,6 @@
 	randomspread = 0
 	spread = 12
 	force = 15
-	damagelose = 0.3
-	distro = 25
 	can_scope = 0
 	weapon_weight = WEAPON_MEDIUM
 	//fire_sound = 'stalker/sound/weapons/winchester1300_shot.ogg'
@@ -1697,8 +1690,6 @@
 	randomspread = 0
 	spread = 10
 	force = 15
-	damagelose = 0.3
-	distro = 16
 	weapon_weight = WEAPON_MEDIUM
 	//fire_sound = 'stalker/sound/weapons/winchester1300_shot.ogg'
 	load_sound = 'stalker/sound/weapons/load/chaser_load.ogg'
@@ -1717,8 +1708,6 @@
 	force = 15
 	spread = 20
 	recoil = 2.5
-	damagelose = 0.45
-	distro = 35
 
 /obj/item/gun/ballistic/shotgun/stalker/bm16/sawnoff/New()
 	..()
@@ -1738,8 +1727,6 @@
 	randomspread = 0
 	spread = 8
 	force = 15
-	damagelose = 0.35
-	distro = 12
 	weapon_weight = WEAPON_MEDIUM
 	fire_sound = 'stalker/sound/weapons/spsa_shot.ogg'
 	load_sound = 'stalker/sound/weapons/load/spsa_load.ogg'
@@ -1765,7 +1752,6 @@
 	randomspread = 1
 	spread = 3
 	force = 15
-	damagelose = 0.1
 	weapon_weight = WEAPON_MEDIUM
 	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
 	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
@@ -1786,7 +1772,6 @@
 	randomspread = 1
 	spread = 4
 	force = 15
-	damagelose = 0.1
 	weapon_weight = WEAPON_MEDIUM
 	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
 	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
@@ -1805,7 +1790,6 @@
 	randomspread = 3
 	spread = 10
 	force = 10
-	damagelose = 0.3
 	weapon_weight = WEAPON_MEDIUM
 	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
 	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
@@ -1826,7 +1810,6 @@
 	spread = 4
 	slowdown = 0.15
 	force = 15
-	damagelose = 0.1
 	weapon_weight = WEAPON_MEDIUM
 	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
 	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
@@ -1847,7 +1830,6 @@
 	spread = 4
 	slowdown = 0.15
 	force = 15
-	damagelose = 0.1
 	weapon_weight = WEAPON_MEDIUM
 	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
 	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
@@ -1868,7 +1850,6 @@
 	spread = 4
 	slowdown = 0.15
 	force = 15
-	damagelose = 0.1
 	weapon_weight = WEAPON_MEDIUM
 	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
 	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
@@ -1889,7 +1870,6 @@
 	spread = 9
 	slowdown = 0.15
 	force = 15
-	damagelose = 0.1
 	weapon_weight = WEAPON_MEDIUM
 	fire_sound = 'stalker/sound/weapons/enfield_shot.ogg'
 	load_sound = 'stalker/sound/weapons/load/bolt_load.ogg'
@@ -1915,7 +1895,6 @@
 	randomspread = 0
 	spread = 0
 	force = 15
-	damagelose = 0
 	weapon_weight = WEAPON_HEAVY
 	bolt_type = BOLT_TYPE_LOCKING//Lets try this.
 	semi_auto = FALSE
