@@ -17,7 +17,7 @@
 		to_chat(user, span_warning("\The [src] is stuck to your hand, you cannot put it in the [gun]!"))
 		return
 
-	to_chat(user, span_notice("You have screwed [src] onto[gun]."))
+	to_chat(user, span_notice("You have screwed [src] onto [gun]."))
 	playsound (src.loc, 'stalker/sound/weapons/attach_addon.ogg', 50, 1, 0)
 	gun.update_icon()
 	gun.addons |= src

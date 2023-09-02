@@ -31,6 +31,7 @@
 	. = ..()
 	if(automatic)
 		AddComponent(/datum/component/automatic_fire, autofire_delay)
+		actions_types.Remove(/datum/action/item_action/toggle_firemode)
 
 	init_zoom()
 
