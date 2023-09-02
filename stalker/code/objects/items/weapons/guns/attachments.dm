@@ -20,7 +20,7 @@
 	to_chat(user, span_notice("You have screwed [src] onto[gun]."))
 	playsound (src.loc, 'stalker/sound/weapons/attach_addon.ogg', 50, 1, 0)
 	gun.update_icon()
-	gun.addons += src
+	gun.addons |= src
 	return TRUE
 
 
@@ -38,6 +38,37 @@
 	gun.addons.Remove(src)
 	return TRUE
 
+
+/obj/item/gun/ballistic/attackby(obj/item/A, mob/user, params)
+	if(istype(A, /obj/item/attachment))
+		var/obj/item/attachment/addon = A
+		addon.attach(src)
+		return
+	return ..()
+
+/obj/item/gun/ballistic/rifle/boltaction/attackby(obj/item/A, mob/user, params)
+	if(istype(A, /obj/item/attachment))
+		var/obj/item/attachment/addon = A
+		addon.attach(src)
+		return
+	return ..()
+
+/obj/item/gun/ballistic/verb/remove_attachment()
+	set src in usr
+	set category = "Object"
+	set name = "Remove Addon"
+
+	if(usr.stat || usr.incapacitated() || loc != usr || !length(addons))
+		return
+
+	if(length(addons) > 1)
+		var/obj/item/attachment/A = tgui_input_list(usr, "Choose what you want to remove.", "Remove addon", addons)
+		A.detach(src)
+	else
+		var/obj/item/attachment/A = addons[1]
+		A.detach(src)
+	update_icon()
+	return
 
 /obj/item/attachment/suppressor
 	name = "suppressor"
@@ -63,6 +94,9 @@
 				/obj/item/gun/ballistic/automatic/stalker/m4)
 
 /obj/item/attachment/suppressor/attach(obj/item/gun/gun)
+	if(gun.suppressed)
+		to_chat(usr, span_warning("Silencer is already installed on [gun]!"))
+		return
 	. = ..()
 	if(!.)
 		return
@@ -71,9 +105,7 @@
 	gun.update_icon()
 
 /obj/item/attachment/suppressor/detach(obj/item/gun/gun)
-	if(gun.suppressed)
-		to_chat(usr, span_warning("Silencer is already installed on [gun]!"))
-		return
+
 	. = ..()
 	if(!.)
 		return
@@ -161,6 +193,7 @@
 	desc = "Sight for the FN-F2000 rifle."
 	icon_state = "fnf2000-scope"
 	types = list(/obj/item/gun/ballistic/automatic/stalker/fnf2000)
+
 
 /*
 /obj/item/attachment/grenadelauncher

@@ -99,21 +99,6 @@
 	if(scoped && scope_overlay)
 		. += scope_overlay
 
-/obj/item/gun/ballistic/attackby(obj/item/A, mob/user, params)
-	if(istype(A, /obj/item/attachment))
-		var/obj/item/attachment/addon = A
-		addon.attach(src)
-		return
-	return ..()
-
-
-/obj/item/gun/ballistic/rifle/boltaction/attackby(obj/item/A, mob/user, params)
-	if(istype(A, /obj/item/attachment))
-		var/obj/item/attachment/addon = A
-		addon.attach(src)
-		return
-	return ..()
-
 /obj/item/gun/ballistic/proc/durability_check(mob/user)   //Gun durability
 	if(is_jammed)
 		return
