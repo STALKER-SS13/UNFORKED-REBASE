@@ -224,6 +224,8 @@
 /obj/item/gun/ballistic/automatic/stalker
 	modifications = list("barrel_automatic" = 0, "frame_automatic" = 0, "grip_automatic" = 0, "compensator_automatic" = 0)
 	icon = 'stalker/icons/obj/projectile.dmi'
+	lefthand_file = 'stalker/icons/obj/guns_lefthand.dmi'
+	righthand_file = 'stalker/icons/obj/guns_righthand.dmi'
 	burst_size = 1
 
 /obj/item/gun/ballistic/automatic/stalker/pistol
@@ -232,3 +234,10 @@
 /obj/item/gun/ballistic/shotgun/stalker
 	modifications = list("barrel_shotgun" = 0, "frame_shotgun" = 0, "grip_shotgun" = 0)
 	icon = 'stalker/icons/obj/projectile.dmi'
+	lefthand_file = 'stalker/icons/obj/guns_lefthand.dmi'
+	righthand_file = 'stalker/icons/obj/guns_righthand.dmi'
+
+/obj/item/gun/ballistic/rifle/boltaction/stalker
+	icon = 'stalker/icons/obj/projectile.dmi'
+	lefthand_file = 'stalker/icons/obj/guns_lefthand.dmi'
+	righthand_file = 'stalker/icons/obj/guns_righthand.dmi'

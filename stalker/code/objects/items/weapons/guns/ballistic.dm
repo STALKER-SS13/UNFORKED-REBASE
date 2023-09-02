@@ -1420,6 +1420,8 @@
 	name = "PKM"
 	desc = "This belt-fed machine gun is a portable modification with a complex two-stage feeding system. Despite its weight and low precision, this LMG has found admirers in the Zone. Used primarily to fight off outnumbering enemy forces during faction conflicts and clear out mutant lairs"
 	icon = 'stalker/icons/obj/projectile.dmi'
+	lefthand_file = 'stalker/icons/obj/guns_lefthand.dmi'
+	righthand_file = 'stalker/icons/obj/guns_righthand.dmi'
 	icon_state = "PKMclosed200"
 	inhand_icon_state = "l6closedmag"
 	w_class = 5
@@ -1510,6 +1512,8 @@
 	name = "SVD"
 	desc = "Snaiperskaya Vintovka Dragunova, abbreviated as the SVD is a high-caiber, anti-personell sniper rifle developed and deployed originally in 1963. Comes with a high-grade inbuilt scope for long-range scopeouts, and unlike its smaller-caliber cousin (the VSS), is incapable of //burst fire due to the aforementioned higher caliber."
 	icon = 'stalker/icons/obj/projectile.dmi'
+	lefthand_file = 'stalker/icons/obj/guns_lefthand.dmi'
+	righthand_file = 'stalker/icons/obj/guns_righthand.dmi'
 	icon_state = "svd"
 	inhand_icon_state = "svd"
 	fire_sound = 'stalker/sound/weapons/abakan_shoot.ogg'
@@ -1568,6 +1572,8 @@
 	name = "gauss rifle"
 	desc = "Item no. 62, better known as the Gauss Rifle, is an experimental, highly powerful hybrid energy weapon initially designed by members of the infamous Group that operated in the Zone prior to it's creation. Now manufactured by an unknown force, the weapon is made operational by pieces of a Flash artefact, and is by far the most deadly weapon at the disposal of the Monolith's servants."
 	icon = 'stalker/icons/obj/projectile.dmi'
+	lefthand_file = 'stalker/icons/obj/guns_lefthand.dmi'
+	righthand_file = 'stalker/icons/obj/guns_righthand.dmi'
 	icon_state = "gaussrifle"
 	inhand_icon_state = "gaussrifle"
 	colored = 0//"normal"
@@ -1734,9 +1740,6 @@
 	draw_sound = 'stalker/sound/weapons/draw/shotgun_draw.ogg'
 
 ///////////////////////////// Bolt-actions ////////////////////////////////////////
-
-/obj/item/gun/ballistic/rifle/boltaction/stalker
-	icon = 'stalker/icons/obj/projectile.dmi'
 
 /obj/item/gun/ballistic/rifle/boltaction/stalker/enfield
 	name = "Lee Enfield"
