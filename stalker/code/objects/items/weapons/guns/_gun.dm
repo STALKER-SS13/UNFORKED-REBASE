@@ -3,7 +3,7 @@
 	var/durability = 100
 	var/is_unique = FALSE
 	var/can_scope = FALSE
-	var/list/modifications = list()
+	var/list/modifications = list() // TODO
 	var/automatic = FALSE
 	var/autofire_delay = 0.2 SECONDS
 	/// Distance in turfs to move the user's screen forward (the "zoom" effect)
