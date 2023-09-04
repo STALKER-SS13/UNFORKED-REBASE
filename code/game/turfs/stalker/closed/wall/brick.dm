@@ -1,7 +1,7 @@
 /turf/closed/wall/mineral/sandstone/brick
 	name = "brick wall"
 	desc = "A wall, made out of bricks."
-	icon = 'icons/stalker/turf/walls/brick.dmi'
+	icon = 'stalker/icons/turf/walls/brick.dmi'
 	icon_state = "brick-0"
 	base_icon_state = "brick"
 

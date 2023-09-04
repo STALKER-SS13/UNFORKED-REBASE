@@ -1,6 +1,6 @@
 /obj/effect/abstract/radiation // Only does rad damage
 	name = "radiation"
-	icon = 'icons/stalker/effects/radiation.dmi'
+	icon = 'stalker/icons/effects/radiation.dmi'
 	icon_state = "rad"
 	invisibility = INVISIBILITY_ABSTRACT
 	resistance_flags = UNACIDABLE

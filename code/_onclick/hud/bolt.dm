@@ -1,6 +1,6 @@
 /atom/movable/screen/bolt
 	name = "bolt"
-	icon = 'icons/stalker/hud/screen_stalker.dmi'
+	icon = 'stalker/icons/hud/screen_stalker.dmi'
 	icon_state = "bolt"
 	COOLDOWN_DECLARE(cooldown)
 

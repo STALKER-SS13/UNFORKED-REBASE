@@ -1,6 +1,6 @@
 /atom/movable/screen/healths
 	name = "health"
-	icon = 'icons/stalker/hud/screen_stalker.dmi'
+	icon = 'stalker/icons/hud/screen_stalker.dmi'
 	icon_state = "health0"
 	screen_loc = ui_health
 

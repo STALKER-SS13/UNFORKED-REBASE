@@ -59,9 +59,15 @@ When using time2text(), please use "DDD" to find the weekday. Refrain from using
 
 #define SECONDS *10
 
+#define SECOND SECONDS
+
 #define MINUTES SECONDS*60
 
+#define MINUTE MINUTES
+
 #define HOURS MINUTES*60
+
+#define HOUR HOURS
 
 #define TICKS *world.tick_lag
 
