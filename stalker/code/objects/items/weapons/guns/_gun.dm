@@ -228,6 +228,8 @@
 	lefthand_file = 'stalker/icons/obj/guns_lefthand.dmi'
 	righthand_file = 'stalker/icons/obj/guns_righthand.dmi'
 	burst_size = 1
+	can_suppress = FALSE
+	can_unsuppress = FALSE
 
 /obj/item/gun/ballistic/automatic/stalker/pistol
 	modifications = list("barrel_pistol" = 0, "frame_pistol" = 0, "grip_pistol" = 0)
@@ -237,8 +239,19 @@
 	icon = 'stalker/icons/obj/projectile.dmi'
 	lefthand_file = 'stalker/icons/obj/guns_lefthand.dmi'
 	righthand_file = 'stalker/icons/obj/guns_righthand.dmi'
+	can_suppress = FALSE
+	can_unsuppress = FALSE
 
 /obj/item/gun/ballistic/rifle/boltaction/stalker
 	icon = 'stalker/icons/obj/projectile.dmi'
 	lefthand_file = 'stalker/icons/obj/guns_lefthand.dmi'
 	righthand_file = 'stalker/icons/obj/guns_righthand.dmi'
+	can_suppress = FALSE
+	can_unsuppress = FALSE
+
+/obj/item/gun/ballistic/semiauto/stalker
+	icon = 'stalker/icons/obj/projectile.dmi'
+	lefthand_file = 'stalker/icons/obj/guns_lefthand.dmi'
+	righthand_file = 'stalker/icons/obj/guns_righthand.dmi'
+	can_suppress = FALSE
+	can_unsuppress = FALSE
