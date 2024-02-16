@@ -1,5 +1,5 @@
 /turf/open/floor/wood/stalker
-	icon = 'icons/stalker/turf/floor.dmi'
+	icon = 'stalker/icons/turf/floor.dmi'
 	icon_state = "wooden_floor1"
 	base_icon_state = "wooden_floor1"
 
@@ -12,7 +12,7 @@
 	base_icon_state = "wooden_floor3"
 
 /turf/open/floor/wood/stalker/fucked
-	icon = 'icons/stalker/turf/floor.dmi'
+	icon = 'stalker/icons/turf/floor.dmi'
 	icon_state = "wood"
 	base_icon_state = "wood"
 

@@ -1,7 +1,7 @@
 /turf/open/misc/road
 	name = "road"
 	desc = "An old road."
-	icon = 'icons/stalker/turfs/road.dmi'
+	icon = 'stalker/icons/turfs/road.dmi'
 	icon_state = "road"
 	base_icon_state = "road"
 	var/random_icon_states = 5

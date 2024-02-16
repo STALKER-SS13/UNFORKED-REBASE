@@ -1,6 +1,6 @@
 /atom/movable/screen/human/toggle
 	name = "toggle"
-	icon = 'icons/stalker/hud/screen_stalker.dmi'
+	icon = 'stalker/icons/hud/screen_stalker.dmi'
 	icon_state = "toggle_left"
 	screen_loc = ui_inventory
 	/// Used to make it look prettier when open
@@ -45,13 +45,13 @@
 /// THIS. FUCKING. SUCKS.
 /atom/movable/screen/inventory_decor
 	name = "inventory border"
-	icon = 'icons/stalker/hud/screen_stalker_autism.dmi'
+	icon = 'stalker/icons/hud/screen_stalker_autism.dmi'
 	icon_state = "autism"
 	plane = HUD_PLANE
 
 /atom/movable/screen/inventory
 	name = "inventory"
-	icon = 'icons/stalker/hud/screen_stalker.dmi'
+	icon = 'stalker/icons/hud/screen_stalker.dmi'
 	plane = HUD_PLANE
 	/// The identifier for the slot. It has nothing to do with ID cards.
 	var/slot_id

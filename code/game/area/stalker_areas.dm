@@ -1,6 +1,6 @@
 /area/stalker
 	name = "Strange Location"
-	icon = 'icons/stalker/areas/areas.dmi'
+	icon = 'stalker/icons/areas/areas.dmi'
 	icon_state = "away"
 	has_gravity = STANDARD_GRAVITY
 	flags_1 = NONE
@@ -44,17 +44,17 @@
 
 /area/stalker/blowout/outdoors
 	name = "Outdoors"
-	icon = 'icons/stalker/areas/areas_outdoor_blowout.dmi'
+	icon = 'stalker/icons/areas/areas_outdoor_blowout.dmi'
 	icon_state = "outdoor"
 
 /area/stalker/blowout/buildings
 	name = "Buildings"
-	icon = 'icons/stalker/areas/areas_buildings_blowout.dmi'
+	icon = 'stalker/icons/areas/areas_buildings_blowout.dmi'
 	icon_state = "buildings"
 	requires_power = TRUE
 
 /area/stalker/buildings
 	name = "Buildings"
-	icon = 'icons/stalker/areas/areas_buildings.dmi'
+	icon = 'stalker/icons/areas/areas_buildings.dmi'
 	icon_state = "buildings"
 	requires_power = TRUE
