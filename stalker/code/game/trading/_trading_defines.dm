@@ -247,6 +247,7 @@ GLOBAL_LIST_INIT(global_sidormat_list, list(
 
 	"Food" = list(
 		///////////////////////////////// Food ///////////////////////////////////////////
+
 		new /datum/data/stalker_equipment("Canned stew", /obj/item/reagent_containers/food/snacks/stalker/konserva, 550, RANK_ROOKIE),
 		new /datum/data/stalker_equipment("Canned fish", /obj/item/reagent_containers/food/snacks/stalker/konserva/shproti, 750, RANK_ROOKIE),
 		new /datum/data/stalker_equipment("Vodka \"Kazaki\"", /obj/item/reagent_containers/food/drinks/bottle/vodka/kazaki, 1500, RANK_ROOKIE),
