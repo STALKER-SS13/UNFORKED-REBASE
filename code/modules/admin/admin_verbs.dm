@@ -945,8 +945,8 @@ GLOBAL_PROTECT(admin_verbs_poll)
 
 		// Finally, ensure the minds are tracked and in the manifest.
 		SSticker.minds += character.mind
-		if(ishuman(character))
-			GLOB.manifest.inject(character)
+		//if(ishuman(character))
+			//GLOB.manifest.inject(character)
 
 		number_made++
 		CHECK_TICK
