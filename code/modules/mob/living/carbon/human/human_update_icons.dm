@@ -93,26 +93,26 @@ There are several things that need to be remembered:
 
 		var/mutable_appearance/uniform_overlay
 		//This is how non-humanoid clothing works. You check if the mob has the right bodyflag, and the clothing has the corresponding clothing flag.
-		//handled_by_bodytype is used to track whether or not we successfully used an alternate sprite. It's set to TRUE to ease up on copy-paste.
+		//handled_by_bodyshape is used to track whether or not we successfully used an alternate sprite. It's set to TRUE to ease up on copy-paste.
 		//icon_file MUST be set to null by default, or it causes issues.
-		//handled_by_bodytype MUST be set to FALSE under the if(!icon_exists()) statement, or everything breaks.
-		//"override_file = handled_by_bodytype ? icon_file : null" MUST be added to the arguments of build_worn_icon()
+		//handled_by_bodyshape MUST be set to FALSE under the if(!icon_exists()) statement, or everything breaks.
+		//"override_file = handled_by_bodyshape ? icon_file : null" MUST be added to the arguments of build_worn_icon()
 		//Friendly reminder that icon_exists(file, state, scream = TRUE) is your friend when debugging this code.
-		var/handled_by_bodytype = TRUE
+		var/handled_by_bodyshape = TRUE
 		var/icon_file
 		var/woman
 		//BEGIN SPECIES HANDLING
-		if((dna?.species.bodytype & BODYTYPE_MONKEY) && (uniform.supports_variations_flags & CLOTHING_MONKEY_VARIATION))
+		if((bodyshape & BODYSHAPE_MONKEY) && (uniform.supports_variations_flags & CLOTHING_MONKEY_VARIATION))
 			icon_file = MONKEY_UNIFORM_FILE
-		else if((dna?.species.bodytype & BODYTYPE_DIGITIGRADE) && (uniform.supports_variations_flags & CLOTHING_DIGITIGRADE_VARIATION))
+		else if((bodyshape & BODYSHAPE_DIGITIGRADE) && (uniform.supports_variations_flags & CLOTHING_DIGITIGRADE_VARIATION))
 			icon_file = DIGITIGRADE_UNIFORM_FILE
 		//Female sprites have lower priority than digitigrade sprites
-		else if(dna.species.sexes && (dna.species.bodytype & BODYTYPE_HUMANOID) && physique == FEMALE && !(uniform.female_sprite_flags & NO_FEMALE_UNIFORM)) //Agggggggghhhhh
+		else if(dna.species.sexes && (bodyshape & BODYSHAPE_HUMANOID) && physique == FEMALE && !(uniform.female_sprite_flags & NO_FEMALE_UNIFORM)) //Agggggggghhhhh
 			woman = TRUE
 
 		if(!icon_exists(icon_file, RESOLVE_ICON_STATE(uniform)))
 			icon_file = DEFAULT_UNIFORM_FILE
-			handled_by_bodytype = FALSE
+			handled_by_bodyshape = FALSE
 
 		//END SPECIES HANDLING
 		uniform_overlay = uniform.build_worn_icon(
@@ -121,7 +121,7 @@ There are several things that need to be remembered:
 			isinhands = FALSE,
 			female_uniform = woman ? uniform.female_sprite_flags : null,
 			override_state = target_overlay,
-			override_file = handled_by_bodytype ? icon_file : null,
+			override_file = handled_by_bodyshape ? icon_file : null,
 		)
 
 		var/obj/item/bodypart/chest/my_chest = get_bodypart(BODY_ZONE_CHEST)
@@ -165,18 +165,16 @@ There are several things that need to be remembered:
 		inv.update_icon()
 
 	//Bloody hands begin
-	var/mutable_appearance/bloody_overlay = mutable_appearance('icons/effects/blood.dmi', "bloodyhands", -GLOVES_LAYER)
-	cut_overlay(bloody_overlay)
+	var/mutable_appearance/bloody_lefthand_overlay = mutable_appearance('icons/effects/blood.dmi', "bloodyhands_left", -GLOVES_LAYER)
+	var/mutable_appearance/bloody_righthand_overlay = mutable_appearance('icons/effects/blood.dmi', "bloodyhands_right", -GLOVES_LAYER)
+	cut_overlay(bloody_lefthand_overlay)
+	cut_overlay(bloody_righthand_overlay)
 	if(!gloves && blood_in_hands && (num_hands > 0))
-		bloody_overlay = mutable_appearance('icons/effects/blood.dmi', "bloodyhands", -GLOVES_LAYER)
-		if(num_hands < 2)
-			if(has_left_hand(FALSE))
-				bloody_overlay.icon_state = "bloodyhands_left"
-			else if(has_right_hand(FALSE))
-				bloody_overlay.icon_state = "bloodyhands_right"
-
-		add_overlay(bloody_overlay)
-	//Bloody hands end
+		if(has_left_hand(check_disabled = FALSE))
+			add_overlay(bloody_lefthand_overlay)
+		if(has_right_hand(check_disabled = FALSE))
+			add_overlay(bloody_righthand_overlay)
+	// Bloody hands end
 
 	if(gloves)
 		var/obj/item/worn_item = gloves
@@ -190,9 +188,10 @@ There are several things that need to be remembered:
 		var/mutable_appearance/gloves_overlay = gloves.build_worn_icon(default_layer = GLOVES_LAYER, default_icon_file = icon_file)
 
 		var/feature_y_offset = 0
-		for (var/obj/item/bodypart/arm/my_hand as anything in hand_bodyparts)
+		//needs to be typed, hand_bodyparts can have nulls
+		for (var/obj/item/bodypart/arm/my_hand in hand_bodyparts)
 			var/list/glove_offset = my_hand.worn_glove_offset?.get_offset()
-			if (glove_offset && glove_offset["y"] > feature_y_offset)
+			if (glove_offset && (!feature_y_offset || glove_offset["y"] > feature_y_offset))
 				feature_y_offset = glove_offset["y"]
 
 		gloves_overlay.pixel_y += feature_y_offset
@@ -472,20 +471,7 @@ There are several things that need to be remembered:
 		overlays_standing[BACK_LAYER] = back_overlay
 	apply_overlay(BACK_LAYER)
 
-/mob/living/carbon/human/update_worn_legcuffs()
-	remove_overlay(LEGCUFF_LAYER)
-	clear_alert("legcuffed")
-	if(legcuffed)
-		overlays_standing[LEGCUFF_LAYER] = mutable_appearance('icons/mob/simple/mob.dmi', "legcuff1", -LEGCUFF_LAYER)
-		apply_overlay(LEGCUFF_LAYER)
-		throw_alert("legcuffed", /atom/movable/screen/alert/restrained/legcuffed, new_master = src.legcuffed)
-
-/mob/living/carbon/human/update_held_items()
-	remove_overlay(HANDS_LAYER)
-	if (handcuffed)
-		drop_all_held_items()
-		return
-
+/mob/living/carbon/human/get_held_overlays()
 	var/list/hands = list()
 	for(var/obj/item/worn_item in held_items)
 		var/held_index = get_held_index_of_item(worn_item)
@@ -514,8 +500,7 @@ There are several things that need to be remembered:
 		held_in_hand?.held_hand_offset?.apply_offset(hand_overlay)
 
 		hands += hand_overlay
-	overlays_standing[HANDS_LAYER] = hands
-	apply_overlay(HANDS_LAYER)
+	return hands
 
 /proc/wear_female_version(t_color, icon, layer, type, greyscale_colors)
 	var/index = "[t_color]-[greyscale_colors]"
@@ -649,6 +634,7 @@ generate/load female uniform sprites matching all previously decided variables
 	female_uniform = NO_FEMALE_UNIFORM,
 	override_state = null,
 	override_file = null,
+	use_height_offset = TRUE,
 )
 
 	//Find a valid icon_state from variables+arguments
@@ -677,7 +663,7 @@ generate/load female uniform sprites matching all previously decided variables
 	//eg: ammo counters, primed grenade flashes, etc.
 	var/list/worn_overlays = worn_overlays(standing, isinhands, file2use)
 	if(worn_overlays?.len)
-		if(!isinhands && default_layer && ishuman(loc))
+		if(!isinhands && default_layer && ishuman(loc) && use_height_offset)
 			var/mob/living/carbon/human/human_loc = loc
 			if(human_loc.get_mob_height() != HUMAN_HEIGHT_MEDIUM)
 				var/string_form_layer = num2text(default_layer)
@@ -759,31 +745,12 @@ generate/load female uniform sprites matching all previously decided variables
 
 	var/obj/item/bodypart/head/my_head = get_bodypart(BODY_ZONE_HEAD)
 
-	if (!istype(my_head))
+	if(!istype(my_head))
 		return
 
 	my_head.update_limb(is_creating = update_limb_data)
 
 	add_overlay(my_head.get_limb_icon())
-	update_damage_overlays()
-
-	if(my_head && !(HAS_TRAIT(src, TRAIT_HUSK)))
-		// lipstick
-		if(lip_style && (LIPS in dna.species.species_traits))
-			var/mutable_appearance/lip_overlay = mutable_appearance('icons/mob/species/human/human_face.dmi', "lips_[lip_style]", -BODY_LAYER)
-			lip_overlay.color = lip_color
-			my_head.worn_face_offset?.apply_offset(lip_overlay)
-			add_overlay(lip_overlay)
-
-		// eyes
-		if(!(NOEYESPRITES in dna.species.species_traits))
-			var/obj/item/organ/internal/eyes/parent_eyes = get_organ_slot(ORGAN_SLOT_EYES)
-			if(parent_eyes)
-				add_overlay(parent_eyes.generate_body_overlay(src))
-			else
-				var/mutable_appearance/missing_eyes = mutable_appearance('icons/mob/species/human/human_face.dmi', "eyes_missing", -BODY_LAYER)
-				my_head.worn_face_offset?.apply_offset(missing_eyes)
-				add_overlay(missing_eyes)
 	update_worn_head()
 	update_worn_mask()
 
@@ -867,9 +834,12 @@ generate/load female uniform sprites matching all previously decided variables
 			appearance.add_filter("Cut_Legs", 1, displacement_map_filter(cut_legs_mask, x = 0, y = 0, size = 1))
 		if(HUMAN_HEIGHT_TALL)
 			appearance.add_filter("Lenghten_Legs", 1, displacement_map_filter(lenghten_legs_mask, x = 0, y = 0, size = 1))
-		if(HUMAN_HEIGHT_TALLEST)
+		if(HUMAN_HEIGHT_TALLER)
 			appearance.add_filter("Lenghten_Torso", 1, displacement_map_filter(lenghten_torso_mask, x = 0, y = 0, size = 1))
 			appearance.add_filter("Lenghten_Legs", 1, displacement_map_filter(lenghten_legs_mask, x = 0, y = 0, size = 1))
+		if(HUMAN_HEIGHT_TALLEST)
+			appearance.add_filter("Lenghten_Torso", 1, displacement_map_filter(lenghten_torso_mask, x = 0, y = 0, size = 1))
+			appearance.add_filter("Lenghten_Legs", 1, displacement_map_filter(lenghten_legs_mask, x = 0, y = 0, size = 2))
 
 	return appearance
 

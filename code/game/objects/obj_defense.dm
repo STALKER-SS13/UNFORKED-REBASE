@@ -23,14 +23,29 @@
 
 	return TRUE
 
-/obj/bullet_act(obj/projectile/P)
+/obj/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
 	. = ..()
-	playsound(src, P.hitsound, 50, TRUE)
-	var/damage
+	if(. != BULLET_ACT_HIT)
+		return .
+
+	playsound(src, hitting_projectile.hitsound, 50, TRUE)
+	var/damage_sustained = 0
 	if(!QDELETED(src)) //Bullet on_hit effect might have already destroyed this object
-		damage = take_damage(P.damage, P.damage_type, P.armor_flag, 0, turn(P.dir, 180), P.armour_penetration)
-	if(P.suppressed != SUPPRESSED_VERY)
-		visible_message(span_danger("[src] is hit by \a [P][damage ? "" : ", without leaving a mark"]!"), null, null, COMBAT_MESSAGE_RANGE)
+		damage_sustained = take_damage(
+			hitting_projectile.damage * hitting_projectile.demolition_mod,
+			hitting_projectile.damage_type,
+			hitting_projectile.armor_flag,
+			FALSE,
+			REVERSE_DIR(hitting_projectile.dir),
+			hitting_projectile.armour_penetration,
+		)
+	if(hitting_projectile.suppressed != SUPPRESSED_VERY)
+		visible_message(
+			span_danger("[src] is hit by \a [hitting_projectile][damage_sustained ? "" : ", [no_damage_feedback]"]!"),
+			vision_distance = COMBAT_MESSAGE_RANGE,
+		)
+
+	return damage_sustained > 0 ? BULLET_ACT_HIT : BULLET_ACT_BLOCK
 
 /obj/attack_hulk(mob/living/carbon/human/user)
 	..()
@@ -39,7 +54,7 @@
 	else
 		playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
 	var/damage = take_damage(hulk_damage(), BRUTE, MELEE, 0, get_dir(src, user))
-	user.visible_message(span_danger("[user] smashes [src][damage ? "" : ", without leaving a mark"]!"), span_danger("You smash [src][damage ? "" : ", without leaving a mark"]!"), null, COMBAT_MESSAGE_RANGE)
+	user.visible_message(span_danger("[user] smashes [src][damage ? "" : ", [no_damage_feedback]"]!"), span_danger("You smash [src][damage ? "" : ", [no_damage_feedback]"]!"), null, COMBAT_MESSAGE_RANGE)
 	return TRUE
 
 /obj/blob_act(obj/structure/blob/B)
@@ -82,12 +97,6 @@
 /obj/proc/collision_damage(atom/movable/pusher, force = MOVE_FORCE_DEFAULT, direction)
 	var/amt = max(0, ((force - (move_resist * MOVE_FORCE_CRUSH_RATIO)) / (move_resist * MOVE_FORCE_CRUSH_RATIO)) * 10)
 	take_damage(amt, BRUTE)
-
-/obj/attack_slime(mob/living/simple_animal/slime/user, list/modifiers)
-	if(!user.is_adult)
-		return
-	if(attack_generic(user, rand(10, 15), BRUTE, MELEE, 1))
-		log_combat(user, src, "attacked")
 
 /obj/singularity_act()
 	SSexplosions.high_mov_atom += src
@@ -144,7 +153,7 @@
 	if(has_buckled_mobs())
 		for(var/m in buckled_mobs)
 			var/mob/living/buckled_mob = m
-			buckled_mob.electrocute_act((clamp(round(strength/400), 10, 90) + rand(-5, 5)), src, flags = SHOCK_TESLA)
+			buckled_mob.electrocute_act((clamp(round(strength * 1.25e-3), 10, 90) + rand(-5, 5)), src, flags = SHOCK_TESLA)
 
 ///the obj is deconstructed into pieces, whether through careful disassembly or when destroyed.
 /obj/proc/deconstruct(disassembled = TRUE)

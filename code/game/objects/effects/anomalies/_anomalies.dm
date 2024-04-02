@@ -27,7 +27,8 @@
 /obj/effect/anomaly/Initialize(mapload, new_lifespan, drops_core = TRUE)
 	. = ..()
 
-	SSpoints_of_interest.make_point_of_interest(src)
+	if(!mapload)
+		SSpoints_of_interest.make_point_of_interest(src)
 
 	START_PROCESSING(SSobj, src)
 	impact_area = get_area(src)
@@ -41,10 +42,7 @@
 		aSignal.code = rand(1,100)
 		aSignal.anomaly_type = type
 
-		var/frequency = rand(MIN_FREE_FREQ, MAX_FREE_FREQ)
-		if(ISMULTIPLE(frequency, 2))//signaller frequencies are always uneven!
-			frequency++
-		aSignal.set_frequency(frequency)
+		aSignal.set_frequency(sanitize_frequency(rand(MIN_FREE_FREQ, MAX_FREE_FREQ), free = TRUE))
 
 	if(new_lifespan)
 		lifespan = new_lifespan

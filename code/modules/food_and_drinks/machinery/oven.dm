@@ -11,7 +11,7 @@
 /obj/machinery/oven
 	name = "oven"
 	desc = "Why do they call it oven when you of in the cold food of out hot eat the food?"
-	icon = 'icons/obj/machines/kitchenmachines.dmi'
+	icon = 'icons/obj/machines/kitchen.dmi'
 	icon_state = "oven_off"
 	base_icon_state = "oven"
 	density = TRUE
@@ -93,7 +93,7 @@
 			visible_message(span_danger("You smell a burnt smell coming from [src]!"))
 	set_smoke_state(worst_cooked_food_state)
 	update_appearance()
-	use_power(active_power_usage)
+	use_energy(active_power_usage)
 
 
 /obj/machinery/oven/attackby(obj/item/I, mob/user, params)
@@ -184,7 +184,7 @@
 	update_appearance()
 	update_baking_audio()
 	return TRUE
-	
+
 /obj/machinery/oven/proc/update_baking_audio()
 	if(!oven_loop)
 		return
@@ -213,7 +213,7 @@
 
 /obj/machinery/oven/wrench_act(mob/living/user, obj/item/tool)
 	default_unfasten_wrench(user, tool, time = 2 SECONDS)
-	return TOOL_ACT_TOOLTYPE_SUCCESS
+	return ITEM_INTERACT_SUCCESS
 
 /obj/machinery/oven/range
 	name = "range"
@@ -237,6 +237,7 @@
 	desc = "Time to bake cookies!"
 	icon_state = "oven_tray"
 	max_items = 6
+	biggest_w_class = WEIGHT_CLASS_BULKY
 
 #undef OVEN_SMOKE_STATE_NONE
 #undef OVEN_SMOKE_STATE_GOOD
