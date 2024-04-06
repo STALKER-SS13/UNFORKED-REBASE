@@ -1,3 +1,5 @@
+#define SHOW_HEALTH "health"
+
 /atom/movable/screen/zone_sel
 	name = "damage zone"
 	icon = 'stalker/icons/hud/screen_stalker_zone_sel.dmi'
@@ -276,13 +278,13 @@
 		if(52) //Health, mouth
 			switch(icon_x)
 				if(6 to 8)
-					return "health"
+					return SHOW_HEALTH
 				if(14 to 18)
 					return BODY_ZONE_PRECISE_MOUTH
 		if(53) //Health, head, mouth
 			switch(icon_x)
 				if(6 to 8)
-					return "health"
+					return SHOW_HEALTH
 				if(13)
 					return BODY_ZONE_HEAD
 				if(14 to 18)
@@ -292,7 +294,7 @@
 		if(54) //Health, head, mouth
 			switch(icon_x)
 				if(4 to 10)
-					return "health"
+					return SHOW_HEALTH
 				if(13)
 					return BODY_ZONE_HEAD
 				if(14 to 18)
@@ -302,7 +304,7 @@
 		if(55, 56) //Health, head, eyes
 			switch(icon_x)
 				if(4 to 10)
-					return "health"
+					return SHOW_HEALTH
 				if(13)
 					return BODY_ZONE_HEAD
 				if(14 to 18)
@@ -312,7 +314,7 @@
 		if(57, 58) //Health, head
 			switch(icon_x)
 				if(6 to 8)
-					return "health"
+					return SHOW_HEALTH
 				if(13 to 19)
 					return BODY_ZONE_HEAD
 		if(59) //Head
@@ -324,7 +326,7 @@
 	if(user != hud?.mymob)
 		return
 
-	if(choice == "health")
+	if(choice == SHOW_HEALTH)
 		if(iscarbon(usr))
 			var/mob/living/carbon/carbon_user = usr
 			carbon_user.check_self_for_injuries()
@@ -430,3 +432,5 @@
 						if(icon_x in 15 to 17)
 							return BODY_ZONE_PRECISE_EYES
 				return BODY_ZONE_HEAD
+
+#undef SHOW_HEALTH
