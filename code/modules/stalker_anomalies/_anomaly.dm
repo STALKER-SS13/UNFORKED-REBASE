@@ -205,6 +205,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 		equipped_items |= affected.held_items
 		//throw the guys items around, strip his ass naked lol
 		for(var/obj/item/equipped_item in equipped_items)
+			affected.dropItemToGround(equipped_item)
 			random_move_item(equipped_item)
 		//bye bye
 		affected.gib()
