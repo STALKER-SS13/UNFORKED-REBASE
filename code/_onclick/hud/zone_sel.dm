@@ -13,6 +13,7 @@
 	var/static/list/hover_overlays_cache = list()
 	/// Zone we are currently hovering over
 	var/hovering
+
 /obj/effect/overlay/zone_sel
 	icon = 'icons/hud/screen_gen.dmi'
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
