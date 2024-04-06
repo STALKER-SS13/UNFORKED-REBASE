@@ -145,9 +145,7 @@
 
 /obj/effect/zona_anomaly/fruit_punch/process()
 	. = ..()
-	if(!can_have_son)
-		return
-	if(son)
+	if(!can_have_son || son)
 		return
 	var/mob/living/my_enemy = locate(/mob/living) in oview(1, src)
 	if(my_enemy)
