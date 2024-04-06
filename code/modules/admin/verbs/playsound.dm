@@ -41,7 +41,7 @@
 			SEND_SOUND(M, admin_sound)
 			admin_sound.volume = vol
 
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Play Global Sound") // If you are copy-pasting this, ensure the 4th parameter is unique to the new proc!
+	BLACKBOX_LOG_ADMIN_VERB("Play Global Sound")
 
 
 /client/proc/play_local_sound(S as sound)
@@ -53,7 +53,7 @@
 	log_admin("[key_name(src)] played a local sound [S]")
 	message_admins("[key_name_admin(src)] played a local sound [S]")
 	playsound(get_turf(src.mob), S, 50, FALSE, FALSE)
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Play Local Sound") // If you are copy-pasting this, ensure the 4th parameter is unique to the new proc!
+	BLACKBOX_LOG_ADMIN_VERB("Play Local Sound")
 
 /client/proc/play_direct_mob_sound(S as sound, mob/M)
 	set category = "Admin.Fun"
@@ -68,10 +68,10 @@
 	log_admin("[key_name(src)] played a direct mob sound [S] to [M].")
 	message_admins("[key_name_admin(src)] played a direct mob sound [S] to [ADMIN_LOOKUPFLW(M)].")
 	SEND_SOUND(M, S)
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Play Direct Mob Sound") // If you are copy-pasting this, ensure the 4th parameter is unique to the new proc!
+	BLACKBOX_LOG_ADMIN_VERB("Play Direct Mob Sound")
 
 ///Takes an input from either proc/play_web_sound or the request manager and runs it through youtube-dl and prompts the user before playing it to the server.
-/proc/web_sound(mob/user, input)
+/proc/web_sound(mob/user, input, credit)
 	if(!check_rights(R_SOUND))
 		return
 	var/ytdl = CONFIG_GET(string/invoke_youtubedl)
@@ -82,9 +82,9 @@
 	var/stop_web_sounds = FALSE
 	var/list/music_extra_data = list()
 	var/duration = 0
-
 	if(istext(input))
-		var/list/output = world.shelleo("[ytdl] --geo-bypass --format \"bestaudio\[ext=mp3]/best\[ext=mp4]\[height <= 360]/bestaudio\[ext=m4a]/bestaudio\[ext=aac]\" --dump-single-json --no-playlist -- \"[input]\"")
+		var/shell_scrubbed_input = shell_url_scrub(input)
+		var/list/output = world.shelleo("[ytdl] --geo-bypass --format \"bestaudio\[ext=mp3]/best\[ext=mp4]\[height <= 360]/bestaudio\[ext=m4a]/bestaudio\[ext=aac]\" --dump-single-json --no-playlist -- \"[shell_scrubbed_input]\"")
 		var/errorlevel = output[SHELLEO_ERRORLEVEL]
 		var/stdout = output[SHELLEO_STDOUT]
 		var/stderr = output[SHELLEO_STDERR]
@@ -138,6 +138,8 @@
 					to_chat(world, span_boldannounce("An admin played: [webpage_url]"), confidential = TRUE)
 			if("Cancel", null)
 				return
+		if(credit)
+			to_chat(world, span_boldannounce(credit), confidential = TRUE)
 		SSblackbox.record_feedback("nested tally", "played_url", 1, list("[user.ckey]", "[input]"))
 		log_admin("[key_name(user)] played web sound: [input]")
 		message_admins("[key_name(user)] played web sound: [input]")
@@ -165,7 +167,7 @@
 
 	S_TIMER_COOLDOWN_START(SStimer, COOLDOWN_INTERNET_SOUND, duration)
 
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Play Internet Sound")
+	BLACKBOX_LOG_ADMIN_VERB("Play Internet Sound")
 
 
 /client/proc/play_web_sound()
@@ -192,8 +194,7 @@
 			to_chat(src, span_boldwarning("Non-http(s) URIs are not allowed."), confidential = TRUE)
 			to_chat(src, span_warning("For youtube-dl shortcuts like ytsearch: please use the appropriate full URL from the website."), confidential = TRUE)
 			return
-		var/shell_scrubbed_input = shell_url_scrub(web_sound_input)
-		web_sound(usr, shell_scrubbed_input)
+		web_sound(usr, web_sound_input)
 	else
 		web_sound(usr, null)
 
@@ -207,7 +208,7 @@
 
 	log_admin("[key_name(src)] set the round end sound to [S]")
 	message_admins("[key_name_admin(src)] set the round end sound to [S]")
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Set Round End Sound") // If you are copy-pasting this, ensure the 4th parameter is unique to the new proc!
+	BLACKBOX_LOG_ADMIN_VERB("Set Round End Sound")
 
 /client/proc/stop_sounds()
 	set category = "Debug"
@@ -223,7 +224,7 @@
 		C?.tgui_panel?.stop_music()
 
 	S_TIMER_COOLDOWN_RESET(SStimer, COOLDOWN_INTERNET_SOUND)
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Stop All Playing Sounds") // If you are copy-pasting this, ensure the 4th parameter is unique to the new proc!
+	BLACKBOX_LOG_ADMIN_VERB("Stop All Playing Sounds")
 
 //world/proc/shelleo
 #undef SHELLEO_ERRORLEVEL

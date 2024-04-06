@@ -50,10 +50,6 @@
 		ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
 	return TRUE
 
-/turf/open/floor/engine/acid_act(acidpwr, acid_volume)
-	acidpwr = min(acidpwr, 50) //we reduce the power so reinf floor never get melted.
-	return ..()
-
 /turf/open/floor/engine/ex_act(severity, target)
 	if(target == src)
 		ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
@@ -187,7 +183,9 @@
 	name = "air floor"
 	initial_gas_mix = ATMOS_TANK_AIRMIX
 
-
+/turf/open/floor/engine/xenobio
+	name = "xenobio bz floor"
+	initial_gas_mix = XENOBIO_BZ
 
 /turf/open/floor/engine/cult
 	name = "engraved floor"

@@ -18,7 +18,7 @@ GLOBAL_LIST_INIT(marker_beacon_colors, sort_list(list(
 	name = "marker beacon"
 	singular_name = "marker beacon"
 	desc = "Prism-brand path illumination devices. Used by miners to mark paths and warn of danger."
-	icon = 'icons/obj/marker.dmi'
+	icon = 'icons/obj/mining.dmi'
 	icon_state = "marker"
 	merge_type = /obj/item/stack/marker_beacon
 	max_amount = 100
@@ -73,7 +73,7 @@ GLOBAL_LIST_INIT(marker_beacon_colors, sort_list(list(
 /obj/structure/marker_beacon
 	name = "marker beacon"
 	desc = "A Prism-brand path illumination device. It is anchored in place and glowing steadily."
-	icon = 'icons/obj/marker.dmi'
+	icon = 'icons/obj/mining.dmi'
 	icon_state = "marker"
 	layer = BELOW_OPEN_DOOR_LAYER
 	armor_type = /datum/armor/structure_marker_beacon
@@ -99,12 +99,10 @@ GLOBAL_LIST_INIT(marker_beacon_colors, sort_list(list(
 		picked_color = set_color
 	update_appearance()
 
-/obj/structure/marker_beacon/deconstruct(disassembled = TRUE)
-	if(!(flags_1 & NODECONSTRUCT_1))
-		var/obj/item/stack/marker_beacon/M = new(loc)
-		M.picked_color = picked_color
-		M.update_appearance()
-	qdel(src)
+/obj/structure/marker_beacon/atom_deconstruct(disassembled = TRUE)
+	var/obj/item/stack/marker_beacon/beacon = new(loc)
+	beacon.picked_color = picked_color
+	beacon.update_appearance()
 
 /obj/structure/marker_beacon/examine(mob/user)
 	. = ..()
