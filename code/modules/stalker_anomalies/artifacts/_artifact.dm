@@ -17,6 +17,8 @@ GLOBAL_LIST_EMPTY(zona_artifacts)
 	/// Artifact armor we apply to the user when worn
 	var/datum/armor/artifact_armor
 
+/datum/armor/artifact //base armor type for artifacts, for convenience
+
 /obj/item/artifact/Initialize(mapload)
 	. = ..()
 	GLOB.zona_artifacts += src
@@ -39,7 +41,7 @@ GLOBAL_LIST_EMPTY(zona_artifacts)
 	. = ..()
 	if(!has_been_picked)
 		has_been_picked = TRUE
-		invisibility = 0
+		invisibility = INVISIBILITY_NONE
 	if(detector_appearance)
 		user.client?.images -= detector_appearance
 	detector_appearance = null

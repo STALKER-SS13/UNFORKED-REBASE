@@ -4,18 +4,20 @@
 #define CHANNEL_VOX 1022
 #define CHANNEL_JUKEBOX 1021
 #define CHANNEL_HEARTBEAT 1020 //sound channel for heartbeats
-#define CHANNEL_AMBIENCE 1019
-#define CHANNEL_BUZZ 1018
-#define CHANNEL_TRAITOR 1017
-#define CHANNEL_CHARGED_SPELL 1016
-#define CHANNEL_BLOWOUT_AMBIENT 1015
-#define CHANNEL_BLOWOUT_WAVE 1014
-#define CHANNEL_BLOWOUT_WIND 1013
-#define CHANNEL_BLOWOUT_RUMBLE 1012
-#define CHANNEL_BLOWOUT_BOOM 1011
-#define CHANNEL_BLOWOUT_LIGHTING 1010
-#define CHANNEL_BLOWOUT_IMPACT 1009
-#define CHANNEL_BLOWOUT_SIREN 1008
+#define CHANNEL_BOSS_MUSIC 1019
+#define CHANNEL_AMBIENCE 1018
+#define CHANNEL_BUZZ 1017
+#define CHANNEL_TRAITOR 1016
+#define CHANNEL_CHARGED_SPELL 1015
+#define CHANNEL_ELEVATOR 1014
+#define CHANNEL_BLOWOUT_AMBIENT 1014
+#define CHANNEL_BLOWOUT_WAVE 1013
+#define CHANNEL_BLOWOUT_WIND 1012
+#define CHANNEL_BLOWOUT_RUMBLE 1011
+#define CHANNEL_BLOWOUT_BOOM 1010
+#define CHANNEL_BLOWOUT_LIGHTING 1009
+#define CHANNEL_BLOWOUT_IMPACT 1008
+#define CHANNEL_BLOWOUT_SIREN 1007
 
 ///Default range of a sound.
 #define SOUND_RANGE 17
@@ -51,6 +53,7 @@
 #define AMBIENCE_RUINS "ruins"
 #define AMBIENCE_ENGI "engi"
 #define AMBIENCE_MINING "mining"
+#define AMBIENCE_ICEMOON "icemoon"
 #define AMBIENCE_MEDICAL "med"
 #define AMBIENCE_VIROLOGY "viro"
 #define AMBIENCE_SPOOKY "spooky"
@@ -154,6 +157,7 @@ GLOBAL_LIST_INIT(announcer_keys, list(
 #define SFX_EXPLOSION_CREAKING "explosion_creaking"
 #define SFX_HISS "hiss"
 #define SFX_HONKBOT_E "honkbot_e"
+#define SFX_GOOSE "goose"
 #define SFX_HULL_CREAKING "hull_creaking"
 #define SFX_HYPERTORUS_CALM "hypertorus_calm"
 #define SFX_HYPERTORUS_MELTING "hypertorus_melting"
@@ -175,3 +179,6 @@ GLOBAL_LIST_INIT(announcer_keys, list(
 #define SFX_CRUNCHY_BUSH_WHACK "crunchy_bush_whack"
 #define SFX_TREE_CHOP "tree_chop"
 #define SFX_ROCK_TAP "rock_tap"
+#define SFX_SEAR "sear"
+#define SFX_REEL "reel"
+#define SFX_RATTLE "rattle"

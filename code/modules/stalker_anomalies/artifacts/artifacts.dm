@@ -12,9 +12,9 @@
 	icon_state = "stoneflower"
 	rads_amount = 2
 	artifact_level = 2
-	artifact_armor = /datum/armor/artifact_stoneflower
+	artifact_armor = /datum/armor/artifact/stoneflower
 
-/datum/armor/artifact_stoneflower
+/datum/armor/artifact/stoneflower
 	bullet = 10
 
 /obj/item/artifact/stoneflower/depleted
@@ -27,9 +27,9 @@
 	icon_state = "nightstar"
 	rads_amount = 3
 	artifact_level = 3
-	artifact_armor = /datum/armor/artifact_nightstar
+	artifact_armor = /datum/armor/artifact/nightstar
 
-/datum/armor/artifact_nightstar
+/datum/armor/artifact/nightstar
 	bullet = 20
 
 /obj/item/artifact/nightstar/depleted
@@ -56,9 +56,9 @@
 	icon_state = "flash"
 	rads_amount = 1
 	artifact_level = 1
-	artifact_armor = /datum/armor/artifact_flash
+	artifact_armor = /datum/armor/artifact/flash
 
-/datum/armor/artifact_flash
+/datum/armor/artifact/flash
 	energy = 10
 
 /obj/item/artifact/moonlight
@@ -67,9 +67,9 @@
 	icon_state = "moonlight"
 	rads_amount = 2
 	artifact_level = 2
-	artifact_armor = /datum/armor/artifact_moonlight
+	artifact_armor = /datum/armor/artifact/moonlight
 
-/datum/armor/artifact_moonlight
+/datum/armor/artifact/moonlight
 	energy = 20
 
 /obj/item/artifact/pustishka
@@ -78,9 +78,9 @@
 	icon_state = "pustishka"
 	rads_amount = 2
 	artifact_level = 3
-	artifact_armor = /datum/armor/artifact_pustishka
+	artifact_armor = /datum/armor/artifact/pustishka
 
-/datum/armor/artifact_pustishka
+/datum/armor/artifact/pustishka
 	energy = 30
 
 /obj/item/artifact/battery
@@ -88,9 +88,9 @@
 	desc = "The composition of this artifact includes electrostatic elements, but scientists have yet to identify the exact physical conditions required for its formation. The artifact is popular in the Zone and valued by its residents and visitors for its energizing properties, although it can tire the body out through prolonged use. Doesn't emit radiation."
 	icon_state = "battery"
 	artifact_level = 4
-	artifact_armor = /datum/armor/artifact_battery
+	artifact_armor = /datum/armor/artifact/battery
 
-/datum/armor/artifact_battery
+/datum/armor/artifact/battery
 	energy = 40
 
 /////////////////////////////////////////Fire artifacts/////////////////////////////////////////
@@ -100,9 +100,9 @@
 	icon_state = "droplet"
 	rads_amount = -1
 	artifact_level = 1
-	artifact_armor = /datum/armor/artifact_droplet
+	artifact_armor = /datum/armor/artifact/droplet
 
-/datum/armor/artifact_droplet
+/datum/armor/artifact/droplet
 	/* rads armor doesn't exist, wtf do i do?
 	rad = 10
 	*/
@@ -113,9 +113,9 @@
 	icon_state = "fireball"
 	rads_amount = -2
 	artifact_level = 2
-	artifact_armor = /datum/armor/artifact_fireball
+	artifact_armor = /datum/armor/artifact/fireball
 
-/datum/armor/artifact_fireball
+/datum/armor/artifact/fireball
 	/* rads armor doesn't exist, wtf do i do?
 	rad = 15
 	*/
@@ -147,9 +147,9 @@
 	icon_state = "stone_blood"
 	rads_amount = 1
 	artifact_level = 1
-	artifact_armor = /datum/armor/artifact_stone_blood
+	artifact_armor = /datum/armor/artifact/stone_blood
 
-/datum/armor/artifact_stone_blood
+/datum/armor/artifact/stone_blood
 	bio = 10
 
 /obj/item/artifact/bubble
@@ -165,9 +165,9 @@
 	icon_state = "mica"
 	rads_amount = 3
 	artifact_level = 3
-	artifact_armor = /datum/armor/artifact_mica
+	artifact_armor = /datum/armor/artifact/mica
 
-/datum/armor/artifact_mica
+/datum/armor/artifact/mica
 	bio = 10
 	laser = 10
 

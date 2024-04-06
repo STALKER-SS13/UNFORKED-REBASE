@@ -8,8 +8,9 @@
 /turf/open/floor/holofloor/attackby(obj/item/I, mob/living/user)
 	return // HOLOFLOOR DOES NOT GIVE A FUCK
 
-/turf/open/floor/holofloor/tool_act(mob/living/user, obj/item/I, tool_type)
-	return
+/turf/open/floor/holofloor/item_interaction(mob/living/user, obj/item/tool, list/modifiers, is_right_clicking)
+	SHOULD_CALL_PARENT(FALSE)
+	return NONE // Fuck you
 
 /turf/open/floor/holofloor/burn_tile()
 	return //you can't burn a hologram!
@@ -90,6 +91,10 @@
 	icon = 'icons/turf/beach.dmi'
 	icon_state = "water"
 	bullet_sizzle = TRUE
+
+/turf/open/floor/holofloor/beach/water/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/fishing_spot, /datum/fish_source/holographic)
 
 /turf/open/floor/holofloor/asteroid
 	gender = PLURAL
@@ -175,9 +180,6 @@
 	bullet_sizzle = TRUE
 	bullet_bounce_sound = null
 	tiled_dirt = FALSE
-
-/turf/open/floor/holofloor/snow/cold
-	initial_gas_mix = "nob=7500;TEMP=2.7"
 
 /turf/open/floor/holofloor/dark
 	icon_state = "darkfull"

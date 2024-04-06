@@ -10,7 +10,7 @@
 	if(!istype(extract))
 		return FALSE
 
-	return extract.Uses > 0
+	return extract.extract_uses > 0
 
 /datum/chemical_reaction/slime/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	use_slime_core(holder)
@@ -22,7 +22,7 @@
 
 /datum/chemical_reaction/slime/proc/delete_extract(datum/reagents/holder)
 	var/obj/item/slime_extract/M = holder.my_atom
-	if(M.Uses <= 0 && !results.len) //if the slime doesn't output chemicals
+	if(M.extract_uses <= 0 && !results.len) //if the slime doesn't output chemicals
 		qdel(M)
 
 //Grey
@@ -31,8 +31,8 @@
 	required_container = /obj/item/slime_extract/grey
 
 /datum/chemical_reaction/slime/slimespawn/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	var/mob/living/simple_animal/slime/S = new(get_turf(holder.my_atom), "grey")
-	S.visible_message(span_danger("Infused with plasma, the core begins to quiver and grow, and a new baby slime emerges from it!"))
+	var/mob/living/basic/slime/spawning_slime = new(get_turf(holder.my_atom), /datum/slime_type/grey)
+	spawning_slime.visible_message(span_danger("Infused with plasma, the core begins to quiver and grow, and a new baby slime emerges from it!"))
 	..()
 
 /datum/chemical_reaction/slime/slimeinaprov
@@ -125,7 +125,7 @@
 
 /datum/chemical_reaction/slime/slimemobspawn/spider/summon_mobs(datum/reagents/holder, turf/T)
 	T.visible_message(span_danger("The slime extract begins to vibrate crikey-ingly!"))
-	addtimer(CALLBACK(src, PROC_REF(chemical_mob_spawn), holder, 3, "Traitor Spider Slime", /mob/living/basic/giant_spider/midwife, FACTION_NEUTRAL, FALSE), 50)
+	addtimer(CALLBACK(src, PROC_REF(chemical_mob_spawn), holder, 3, "Traitor Spider Slime", /mob/living/basic/spider/giant/midwife, FACTION_NEUTRAL, FALSE), 50)
 
 
 //Silver
@@ -149,7 +149,7 @@
 		if(prob(5))//Fry it!
 			food_item.AddElement(/datum/element/fried_item, rand(15, 60))
 		if(prob(5))//Grill it!
-			food_item.AddElement(/datum/element/grilled_item, rand(30, 100))
+			food_item.AddElement(/datum/element/grilled_item, rand(30 SECONDS, 100 SECONDS))
 		if(prob(50))
 			for(var/j in 1 to rand(1, 3))
 				step(food_item, pick(NORTH,SOUTH,EAST,WEST))
@@ -205,7 +205,7 @@
 		var/turf/open/T = get_turf(holder.my_atom)
 		if(istype(T))
 			var/datum/gas/gastype = /datum/gas/nitrogen
-			T.atmos_spawn_air("[initial(gastype.id)]=50;TEMP=2.7")
+			T.atmos_spawn_air("[initial(gastype.id)]=50;[TURF_TEMPERATURE(2.7)]")
 
 /datum/chemical_reaction/slime/slimefireproof
 	required_reagents = list(/datum/reagent/water = 1)
@@ -239,7 +239,7 @@
 	if(holder?.my_atom)
 		var/turf/open/T = get_turf(holder.my_atom)
 		if(istype(T))
-			T.atmos_spawn_air("plasma=50;TEMP=1000")
+			T.atmos_spawn_air("[GAS_PLASMA]=50;[TURF_TEMPERATURE(1000)]")
 
 
 /datum/chemical_reaction/slime/slimesmoke
@@ -313,13 +313,13 @@
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_SLIME | REACTION_TAG_DANGEROUS
 
 /datum/chemical_reaction/slime/slimebloodlust/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	for(var/mob/living/simple_animal/slime/slime in viewers(get_turf(holder.my_atom), null))
-		if(slime.docile) //Undoes docility, but doesn't make rabid.
+	for(var/mob/living/basic/slime/slime in viewers(get_turf(holder.my_atom), null))
+		if(slime.hunger_disabled) //Undoes docility, but doesn't make rabid.
 			slime.visible_message(span_danger("[slime] forgets its training, becoming wild once again!"))
-			slime.docile = FALSE
+			slime.set_default_behaviour()
 			slime.update_name()
 			continue
-		slime.rabid = 1
+		slime.set_enraged_behaviour()
 		slime.visible_message(span_danger("The [slime] is driven into a frenzy!"))
 	..()
 
@@ -383,8 +383,8 @@
 		explosion(holder.my_atom, devastation_range = 1, heavy_impact_range = 3, light_impact_range = 6, explosion_cause = src)
 
 
-/datum/chemical_reaction/slime/slimecornoil
-	results = list(/datum/reagent/consumable/cornoil = 10)
+/datum/chemical_reaction/slime/slimeoil
+	results = list(/datum/reagent/consumable/nutriment/fat/oil = 10)
 	required_reagents = list(/datum/reagent/blood = 1)
 	required_container = /obj/item/slime_extract/oil
 
@@ -472,7 +472,7 @@
 	var/turf/T = get_turf(holder.my_atom)
 	new /obj/effect/timestop(T, null, null, null)
 	if(istype(extract))
-		if(extract.Uses > 0)
+		if(extract.extract_uses > 0)
 			var/mob/lastheld = get_mob_by_key(holder.my_atom.fingerprintslast)
 			if(lastheld && !lastheld.equip_to_slot_if_possible(extract, ITEM_SLOT_HANDS, disable_warning = TRUE))
 				extract.forceMove(get_turf(lastheld))
@@ -527,8 +527,8 @@
 		S.active = TRUE
 		addtimer(CALLBACK(S, TYPE_PROC_REF(/obj/item/grenade, detonate)), rand(15,60))
 	else
-		var/mob/living/simple_animal/slime/random/S = new (get_turf(holder.my_atom))
-		S.visible_message(span_danger("Infused with plasma, the core begins to quiver and grow, and a new baby slime emerges from it!"))
+		var/mob/living/basic/slime/random/random_slime = new (get_turf(holder.my_atom))
+		random_slime.visible_message(span_danger("Infused with plasma, the core begins to quiver and grow, and a new baby slime emerges from it!"))
 	..()
 
 /datum/chemical_reaction/slime/slimebomb

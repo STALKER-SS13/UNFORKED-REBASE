@@ -1,3 +1,5 @@
+#define SHOW_HEALTH "health"
+
 /atom/movable/screen/zone_sel
 	name = "damage zone"
 	icon = 'stalker/icons/hud/screen_stalker_zone_sel.dmi'
@@ -20,6 +22,20 @@
 	alpha = 128
 	anchored = TRUE
 	plane = ABOVE_HUD_PLANE
+
+/atom/movable/screen/zone_sel/Initialize(mapload, datum/hud/hud_owner)
+	. = ..()
+	if(healthdoll)
+		register_context()
+
+/atom/movable/screen/zone_sel/add_context(atom/source, list/context, obj/item/held_item, mob/user)
+	. = ..()
+	if(!healthdoll)
+		return NONE
+
+	context[SCREENTIP_CONTEXT_LMB] = "Change selected zone"
+	context[SCREENTIP_CONTEXT_SHIFT_LMB] = "Examine your injuries"
+	return CONTEXTUAL_SCREENTIP_SET
 
 /atom/movable/screen/zone_sel/Click(location, control,params)
 	if(isobserver(usr))
@@ -262,13 +278,13 @@
 		if(52) //Health, mouth
 			switch(icon_x)
 				if(6 to 8)
-					return "health"
+					return SHOW_HEALTH
 				if(14 to 18)
 					return BODY_ZONE_PRECISE_MOUTH
 		if(53) //Health, head, mouth
 			switch(icon_x)
 				if(6 to 8)
-					return "health"
+					return SHOW_HEALTH
 				if(13)
 					return BODY_ZONE_HEAD
 				if(14 to 18)
@@ -278,7 +294,7 @@
 		if(54) //Health, head, mouth
 			switch(icon_x)
 				if(4 to 10)
-					return "health"
+					return SHOW_HEALTH
 				if(13)
 					return BODY_ZONE_HEAD
 				if(14 to 18)
@@ -288,7 +304,7 @@
 		if(55, 56) //Health, head, eyes
 			switch(icon_x)
 				if(4 to 10)
-					return "health"
+					return SHOW_HEALTH
 				if(13)
 					return BODY_ZONE_HEAD
 				if(14 to 18)
@@ -298,7 +314,7 @@
 		if(57, 58) //Health, head
 			switch(icon_x)
 				if(6 to 8)
-					return "health"
+					return SHOW_HEALTH
 				if(13 to 19)
 					return BODY_ZONE_HEAD
 		if(59) //Head
@@ -310,7 +326,7 @@
 	if(user != hud?.mymob)
 		return
 
-	if(choice == "health")
+	if(choice == SHOW_HEALTH)
 		if(iscarbon(usr))
 			var/mob/living/carbon/carbon_user = usr
 			carbon_user.check_self_for_injuries()
@@ -332,6 +348,48 @@
 	if(length(healthdoll_overlays))
 		. += healthdoll_overlays
 	. += mutable_appearance(overlay_icon, "[hud.mymob.zone_selected]")
+
+/atom/movable/screen/zone_sel/robot
+	healthdoll = FALSE
+	icon = 'icons/hud/screen_cyborg.dmi'
+
+/atom/movable/screen/zone_sel/robot/get_zone_at(icon_x, icon_y)
+	switch(icon_y)
+		if(1 to 9) //Legs
+			switch(icon_x)
+				if(10 to 15)
+					return BODY_ZONE_R_LEG
+				if(17 to 22)
+					return BODY_ZONE_L_LEG
+		if(10 to 13) //Hands and groin
+			switch(icon_x)
+				if(8 to 11)
+					return BODY_ZONE_R_ARM
+				if(12 to 20)
+					return BODY_ZONE_PRECISE_GROIN
+				if(21 to 24)
+					return BODY_ZONE_L_ARM
+		if(14 to 22) //Chest and arms to shoulders
+			switch(icon_x)
+				if(8 to 11)
+					return BODY_ZONE_R_ARM
+				if(12 to 20)
+					return BODY_ZONE_CHEST
+				if(21 to 24)
+					return BODY_ZONE_L_ARM
+		if(23 to 30) //Head, but we need to check for eye or mouth
+			if(icon_x in 12 to 20)
+				switch(icon_y)
+					if(23 to 24)
+						if(icon_x in 15 to 17)
+							return BODY_ZONE_PRECISE_MOUTH
+					if(26) //Eyeline, eyes are on 15 and 17
+						if(icon_x in 14 to 18)
+							return BODY_ZONE_PRECISE_EYES
+					if(25 to 27)
+						if(icon_x in 15 to 17)
+							return BODY_ZONE_PRECISE_EYES
+				return BODY_ZONE_HEAD
 
 /atom/movable/screen/zone_sel/alien
 	icon = 'icons/hud/screen_alien.dmi'
@@ -375,43 +433,4 @@
 							return BODY_ZONE_PRECISE_EYES
 				return BODY_ZONE_HEAD
 
-/atom/movable/screen/zone_sel/robot
-	icon = 'icons/hud/screen_cyborg.dmi'
-
-/atom/movable/screen/zone_sel/robot/get_zone_at(icon_x, icon_y)
-	switch(icon_y)
-		if(1 to 9) //Legs
-			switch(icon_x)
-				if(10 to 15)
-					return BODY_ZONE_R_LEG
-				if(17 to 22)
-					return BODY_ZONE_L_LEG
-		if(10 to 13) //Hands and groin
-			switch(icon_x)
-				if(8 to 11)
-					return BODY_ZONE_R_ARM
-				if(12 to 20)
-					return BODY_ZONE_PRECISE_GROIN
-				if(21 to 24)
-					return BODY_ZONE_L_ARM
-		if(14 to 22) //Chest and arms to shoulders
-			switch(icon_x)
-				if(8 to 11)
-					return BODY_ZONE_R_ARM
-				if(12 to 20)
-					return BODY_ZONE_CHEST
-				if(21 to 24)
-					return BODY_ZONE_L_ARM
-		if(23 to 30) //Head, but we need to check for eye or mouth
-			if(icon_x in 12 to 20)
-				switch(icon_y)
-					if(23 to 24)
-						if(icon_x in 15 to 17)
-							return BODY_ZONE_PRECISE_MOUTH
-					if(26) //Eyeline, eyes are on 15 and 17
-						if(icon_x in 14 to 18)
-							return BODY_ZONE_PRECISE_EYES
-					if(25 to 27)
-						if(icon_x in 15 to 17)
-							return BODY_ZONE_PRECISE_EYES
-				return BODY_ZONE_HEAD
+#undef SHOW_HEALTH

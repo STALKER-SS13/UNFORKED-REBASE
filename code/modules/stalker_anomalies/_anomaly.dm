@@ -158,13 +158,13 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 /obj/effect/zona_anomaly/proc/trap_mob(mob/living/affected)
 	if(affected in trapped)
 		return
-	RegisterSignal(affected, COMSIG_PARENT_QDELETING, PROC_REF(trapped_mob_deleted))
+	RegisterSignal(affected, COMSIG_QDELETING, PROC_REF(trapped_mob_deleted))
 	LAZYADD(trapped, affected)
 	if(!constant_processing)
 		START_PROCESSING(SSzona_anomalies, src)
 
 /obj/effect/zona_anomaly/proc/untrap_mob(mob/living/affected)
-	UnregisterSignal(affected, COMSIG_PARENT_QDELETING)
+	UnregisterSignal(affected, COMSIG_QDELETING)
 	LAZYREMOVE(trapped, affected)
 	if(!length(trapped) && !constant_processing)
 		STOP_PROCESSING(SSzona_anomalies, src)
@@ -205,6 +205,7 @@ GLOBAL_LIST_EMPTY(zona_anomalies)
 		equipped_items |= affected.held_items
 		//throw the guys items around, strip his ass naked lol
 		for(var/obj/item/equipped_item in equipped_items)
+			affected.dropItemToGround(equipped_item)
 			random_move_item(equipped_item)
 		//bye bye
 		affected.gib()
