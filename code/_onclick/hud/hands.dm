@@ -1,6 +1,6 @@
 /atom/movable/screen/swap_hand
-	plane = HUD_PLANE
 	name = "swap hand"
+	plane = HUD_PLANE
 
 /atom/movable/screen/swap_hand/Click()
 	// At this point in client Click() code we have passed the 1/10 sec check and little else
@@ -25,7 +25,7 @@
 	. = ..()
 
 	if(!handcuff_overlay)
-		var/state = (!(held_index % 2)) ? "markus" : "gabrielle"
+		var/state = (!(held_index % RIGHT_HANDS)) ? "markus" : "gabrielle"
 		handcuff_overlay = mutable_appearance('icons/hud/screen_gen.dmi', state)
 
 	if(!hud?.mymob)

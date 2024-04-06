@@ -36,19 +36,32 @@
 	var/datum/language_holder/H = M.get_language_holder()
 	H.open_language_menu(usr)
 
-/atom/movable/screen/lookup
-	name = "look up"
+/atom/movable/screen/floor_menu
+	name = "look up/down"
 	icon = 'stalker/icons/hud/screen_stalker.dmi'
 	icon_state = "level"
-	screen_loc = ui_lookup
+	screen_loc = ui_floor_menu
 
-/atom/movable/screen/lookup/Click(location, control, params)
-	var/mob/living/user = usr
+/atom/movable/screen/floor_menu/Initialize(mapload)
+	. = ..()
+	register_context()
+
+/atom/movable/screen/floor_menu/add_context(atom/source, list/context, obj/item/held_item, mob/user)
+	. = ..()
+
+	context[SCREENTIP_CONTEXT_LMB] = "Go up a floor"
+	context[SCREENTIP_CONTEXT_RMB] = "Go down a floor"
+	return CONTEXTUAL_SCREENTIP_SET
+
+/atom/movable/screen/floor_menu/Click(location,control,params)
 	var/list/modifiers = params2list(params)
-	if(LAZYACCESS(modifiers, RIGHT_CLICK))
-		user.look_down()
-	else
-		user.look_up()
+
+	if(LAZYACCESS(modifiers, RIGHT_CLICK) || LAZYACCESS(modifiers, ALT_CLICK))
+		usr.down()
+		return
+
+	usr.up()
+	return
 
 /atom/movable/screen/navigate
 	name = "navigate"

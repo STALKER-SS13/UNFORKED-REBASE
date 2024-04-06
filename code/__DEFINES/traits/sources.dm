@@ -291,3 +291,8 @@
 
 /// Trait when a drink was renamed by a shaker
 #define SHAKER_LABEL_TRAIT "shaker_trait"
+
+/// Trait applied by an area, should be removed when you leave said area
+#define AREA_TRAIT "area_trait"
+/// Trait applied by a spawner
+#define SPAWNER_TRAIT "spawner_trait"

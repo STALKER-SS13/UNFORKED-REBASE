@@ -165,7 +165,7 @@
 
 /obj/effect/zona_anomaly/fruit_punch/proc/create_son(turf/creation_loc, qdel_time = 4 SECONDS)
 	son = new /obj/effect/zona_anomaly/fruit_punch/splash(creation_loc)
-	RegisterSignal(son, COMSIG_PARENT_QDELETING, PROC_REF(son_deleted))
+	RegisterSignal(son, COMSIG_QDELETING, PROC_REF(son_deleted))
 	if(qdel_time)
 		QDEL_IN(son, qdel_time)
 

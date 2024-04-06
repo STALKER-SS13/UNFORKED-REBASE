@@ -79,7 +79,7 @@
 #define ui_crafting "WEST:+4,SOUTH"
 #define ui_building "WEST:+4,SOUTH"
 #define ui_language_menu "WEST:+4,SOUTH"
-#define ui_lookup "WEST:+4,SOUTH"
+#define ui_floor_menu "WEST:+4,SOUTH"
 #define ui_navigate_menu "WEST:+4,SOUTH"
 #define ui_iphone "WEST+1:+4,SOUTH"
 

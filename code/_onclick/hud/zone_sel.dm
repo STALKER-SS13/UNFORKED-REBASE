@@ -13,13 +13,21 @@
 	var/static/list/hover_overlays_cache = list()
 	/// Zone we are currently hovering over
 	var/hovering
-
 /obj/effect/overlay/zone_sel
 	icon = 'icons/hud/screen_gen.dmi'
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	alpha = 128
 	anchored = TRUE
 	plane = ABOVE_HUD_PLANE
+
+/atom/movable/screen/zone_sel/add_context(atom/source, list/context, obj/item/held_item, mob/user)
+	. = ..()
+	if(!healthdoll)
+		return NONE
+
+	context[SCREENTIP_CONTEXT_LMB] = "Change selected zone"
+	context[SCREENTIP_CONTEXT_SHIFT_LMB] = "Examine your injuries"
+	return CONTEXTUAL_SCREENTIP_SET
 
 /atom/movable/screen/zone_sel/Click(location, control,params)
 	if(isobserver(usr))
@@ -333,11 +341,11 @@
 		. += healthdoll_overlays
 	. += mutable_appearance(overlay_icon, "[hud.mymob.zone_selected]")
 
-/atom/movable/screen/zone_sel/alien
-	icon = 'icons/hud/screen_alien.dmi'
-	overlay_icon = 'icons/hud/screen_alien.dmi'
+/atom/movable/screen/zone_sel/robot
+	healthdoll = FALSE
+	icon = 'icons/hud/screen_cyborg.dmi'
 
-/atom/movable/screen/zone_sel/alien/get_zone_at(icon_x, icon_y)
+/atom/movable/screen/zone_sel/robot/get_zone_at(icon_x, icon_y)
 	switch(icon_y)
 		if(1 to 9) //Legs
 			switch(icon_x)
@@ -375,10 +383,11 @@
 							return BODY_ZONE_PRECISE_EYES
 				return BODY_ZONE_HEAD
 
-/atom/movable/screen/zone_sel/robot
-	icon = 'icons/hud/screen_cyborg.dmi'
+/atom/movable/screen/zone_sel/alien
+	icon = 'icons/hud/screen_alien.dmi'
+	overlay_icon = 'icons/hud/screen_alien.dmi'
 
-/atom/movable/screen/zone_sel/robot/get_zone_at(icon_x, icon_y)
+/atom/movable/screen/zone_sel/alien/get_zone_at(icon_x, icon_y)
 	switch(icon_y)
 		if(1 to 9) //Legs
 			switch(icon_x)

@@ -4,10 +4,10 @@ GLOBAL_LIST_EMPTY(blowout_spawners)
 	name = "blowout spawner"
 	icon = 'stalker/icons/effects/spawners.dmi'
 	icon_state = "blowout"
+	faction = list("mining")
 	var/spawn_range = 3
 	var/mob_types = list(/mob/living/basic/carp)
 	var/max_mobs = 5
-	var/list/faction = list("mining")
 	var/list/spawned_mobs = list()
 	var/list/traits = list(TRAIT_BLOWOUT_IMMUNE)
 
@@ -42,7 +42,7 @@ GLOBAL_LIST_EMPTY(blowout_spawners)
 		spawned_mobs += spawned_mob
 		for(var/trait in traits)
 			ADD_TRAIT(spawned_mob, trait, SPAWNER_TRAIT)
-		RegisterSignal(spawned_mob, COMSIG_PARENT_QDELETING, PROC_REF(remove_mob_from_list))
+		RegisterSignal(spawned_mob, COMSIG_QDELETING, PROC_REF(remove_mob_from_list))
 
 /obj/effect/abstract/blowout_spawner/proc/remove_mob_from_list(mob/source)
 	SIGNAL_HANDLER

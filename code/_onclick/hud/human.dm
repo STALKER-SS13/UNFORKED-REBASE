@@ -28,14 +28,13 @@
 
 	using = new/atom/movable/screen/cutedecor(null, src)
 	using.icon = ui_style
-	using.hud = src
 	static_inventory += using
 
 	using = new /atom/movable/screen/language_menu(null, src)
 	using.icon = ui_style
 	static_inventory += using
 
-	using = new /atom/movable/screen/navigate(null, src)
+	using = new /atom/movable/screen/floor_menu(null, src)
 	using.icon = ui_style
 	static_inventory += using
 
@@ -47,12 +46,7 @@
 	using.icon = ui_style
 	static_inventory += using
 
-	using = new /atom/movable/screen/floor_menu(null, src)
-	using.icon = ui_style
-	static_inventory += using
-
 	action_intent = new /atom/movable/screen/combattoggle(null, src)
-	action_intent.hud = src
 	action_intent.icon = ui_style
 	action_intent.screen_loc = ui_combat_toggle
 	static_inventory += action_intent
@@ -218,6 +212,7 @@
 	inv_box.screen_loc = ui_glasses
 	inv_box.slot_id = ITEM_SLOT_EYES
 	inv_box.update_appearance()
+	toggleable_inventory += inv_box
 
 	inv_box = new /atom/movable/screen/inventory(null, src)
 	inv_box.name = "ears"

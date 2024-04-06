@@ -19,24 +19,23 @@
 	name = "fence"
 	icon = 'stalker/icons/structure.dmi'
 	icon_state = "fence1"
-	density = 1
+	density = TRUE
 	anchored = 1
-	flags_1 = CONDUCT_1
 	layer = CLOSED_DOOR_LAYER
 	max_integrity = 10000000
 
 /obj/structure/grille/stalker/wood
 	desc = "Old wooden fence."
 	icon_state = "zabor_horizontal1"
-	density = 1
-	opacity = 1
+	density = TRUE
+	opacity = TRUE
 
 /obj/structure/grille/stalker/beton
 	icon = 'stalker/icons/beton_zabor.dmi'
 	desc = "Too strong."
 	icon_state = "1"
-	density = 1
-	opacity = 1
+	density = TRUE
+	opacity = TRUE
 
 /obj/structure/grille/stalker/beton/green
 	icon = 'stalker/icons/green_zabor.dmi'
