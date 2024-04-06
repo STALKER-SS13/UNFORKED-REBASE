@@ -20,6 +20,11 @@
 	anchored = TRUE
 	plane = ABOVE_HUD_PLANE
 
+/atom/movable/screen/zone_sel/Initialize(mapload, datum/hud/hud_owner)
+	. = ..()
+	if(healthdoll)
+		register_context()
+
 /atom/movable/screen/zone_sel/add_context(atom/source, list/context, obj/item/held_item, mob/user)
 	. = ..()
 	if(!healthdoll)
