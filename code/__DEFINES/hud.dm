@@ -93,9 +93,9 @@
 //Middle right (status indicators)
 #define ui_healthdoll "EAST,CENTER-3"
 #define ui_health "EAST,CENTER-1"
-#define ui_internal "EAST,CENTER+1"
+#define ui_internal "EAST,CENTER+2"
+#define ui_hunger "EAST,CENTER+1"
 #define ui_mood "EAST,CENTER"
-#define ui_hunger "EAST-1:2,CENTER:21"
 #define ui_spacesuit "EAST,CENTER+1"
 #define ui_stamina "EAST,CENTER-2"
 
